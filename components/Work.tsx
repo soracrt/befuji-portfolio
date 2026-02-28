@@ -1,40 +1,7 @@
-'use client'
-
-import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import FadeIn from './FadeIn'
 
-const YOUTUBE_EMBED = 'https://www.youtube.com/embed/BoR6L2oM-x8?modestbranding=1&rel=0'
-
 export default function Work() {
-  const [blobUrl, setBlobUrl] = useState<string | null>(null)
-  const [failed, setFailed] = useState(false)
-  const blobRef = useRef<string | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-
-    fetch('/api/video')
-      .then((res) => {
-        if (!res.ok) throw new Error('fetch failed')
-        return res.blob()
-      })
-      .then((blob) => {
-        if (cancelled) return
-        const url = URL.createObjectURL(blob)
-        blobRef.current = url
-        setBlobUrl(url)
-      })
-      .catch(() => {
-        if (!cancelled) setFailed(true)
-      })
-
-    return () => {
-      cancelled = true
-      if (blobRef.current) URL.revokeObjectURL(blobRef.current)
-    }
-  }, [])
-
   return (
     <section id="work" className="px-8 py-24">
       <div className="max-w-6xl mx-auto">
@@ -51,29 +18,16 @@ export default function Work() {
 
         {/* Featured video card */}
         <FadeIn delay={80}>
-          <div className="w-full rounded-2xl overflow-hidden" style={{ backgroundColor: '#F2F2EF' }}>
+          <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-
-              {blobUrl ? (
-                <video
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src={blobUrl}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-              ) : failed ? (
-                <iframe
-                  src={YOUTUBE_EMBED}
-                  title="Featured work"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                  style={{ border: 'none' }}
-                />
-              ) : null}
-
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/NSX.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
             </div>
           </div>
         </FadeIn>
