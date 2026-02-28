@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
 
-const LOCAL_VIDEO_URL = 'https://befuji.ngrok.app/NSX.mp4'
+const NGROK_VIDEO_URL = 'https://befuji.ngrok.app/NSX.mp4'
 
 export async function GET() {
   try {
-    console.log('[video proxy] fetching:', LOCAL_VIDEO_URL)
+    const videoUrl = `${NGROK_VIDEO_URL}?t=${Date.now()}`
+    console.log('[video proxy] fetching:', videoUrl)
 
-    const res = await fetch(LOCAL_VIDEO_URL, {
+    const res = await fetch(videoUrl, {
       headers: { 'ngrok-skip-browser-warning': 'true' },
       signal: AbortSignal.timeout(10000),
     })
@@ -20,7 +21,8 @@ export async function GET() {
     headers.set('Content-Type', res.headers.get('Content-Type') ?? 'video/mp4')
     const contentLength = res.headers.get('Content-Length')
     if (contentLength) headers.set('Content-Length', contentLength)
-    headers.set('Cache-Control', 'no-store')
+    headers.set('Cache-Control', 'no-store, no-cache, must-revalidate')
+    headers.set('Pragma', 'no-cache')
 
     return new NextResponse(res.body, { status: 200, headers })
   } catch (err) {
