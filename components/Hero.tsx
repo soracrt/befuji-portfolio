@@ -32,7 +32,7 @@ export default function Hero() {
 
         {/* Line 3 — open for work */}
         <FadeIn delay={230}>
-          <div className="flex items-center justify-center gap-2.5">
+          <div className="open-for-work flex items-center justify-center gap-2.5">
             <span
               className="animate-pulse-dot block w-2.5 h-2.5 rounded-full shrink-0"
               style={{ backgroundColor: '#16a34a' }}

@@ -5,6 +5,12 @@
 html {
   scrollbar-gutter: stable;
   scrollbar-width: none;
+  filter: invert(1);
+  transition: filter 0.3s ease;
+}
+
+html.dark {
+  filter: none;
 }
 
 html::-webkit-scrollbar {
@@ -32,4 +38,8 @@ body {
 
 .animate-pulse-dot {
   animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+html:not(.dark) .open-for-work {
+  filter: invert(1);
 }

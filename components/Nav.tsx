@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Link as ScrollLink } from 'react-scroll'
+import ThemeToggle from './ThemeToggle'
 
 const linkClass = 'cursor-pointer font-sans text-xs tracking-[0.15em] uppercase text-ink hover:opacity-40 transition-opacity duration-200'
 
@@ -20,6 +21,7 @@ export default function Nav() {
       </Link>
 
       <div className="flex items-center gap-7">
+        <ThemeToggle />
         {isHome ? (
           <ScrollLink to="work" smooth offset={-70} duration={500} className={linkClass}>
             work
