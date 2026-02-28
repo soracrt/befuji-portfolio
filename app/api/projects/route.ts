@@ -33,11 +33,13 @@ export async function GET() {
         const key = obj.Key ?? ''
         const baseName = key.replace(/\.[^/.]+$/, '')
         const name = baseName.replace(/[-_]/g, ' ')
+        const videoUrl = `${publicUrl}/${key}`
+        console.log('[api/projects] video URL:', videoUrl)
         return {
           id: key,
           title: name,
           category: categoryMap[baseName] ?? null,
-          video: `${publicUrl}/${key}`,
+          video: videoUrl,
         }
       })
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
@@ -12,59 +12,165 @@ type Project = {
   video: string
 }
 
+const PROJECTS: Project[] = [
+  { id: 'NSX', title: 'NSX', category: 'Ads', video: '/NSX.mp4' },
+]
+
+function fmt(t: number) {
+  const m = Math.floor(t / 60)
+  const s = Math.floor(t % 60).toString().padStart(2, '0')
+  return `${m}:${s}`
+}
+
 function VideoCard({ project }: { project: Project }) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [unmuted, setUnmuted] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [playing, setPlaying] = useState(true)
+  const [muted, setMuted] = useState(true)
+  const [progress, setProgress] = useState(0)
+  const [currentTime, setCurrentTime] = useState('0:00')
+  const [duration, setDuration] = useState('0:00')
 
-  const handleVideoClick = (e: React.MouseEvent) => {
-    e.preventDefault()
+  const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (videoRef.current && !unmuted) {
-      videoRef.current.muted = false
-      videoRef.current.play()
-      setUnmuted(true)
+    const v = videoRef.current
+    if (!v) return
+    if (v.paused) { v.play() } else { v.pause() }
+  }
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setMuted(v.muted)
+  }
+
+  const toggleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const el = containerRef.current
+    if (!el) return
+    if (!document.fullscreenElement) {
+      el.requestFullscreen()
+    } else {
+      document.exitFullscreen()
     }
+  }
+
+  const handleTimeUpdate = () => {
+    const v = videoRef.current
+    if (!v || !v.duration) return
+    setProgress((v.currentTime / v.duration) * 100)
+    setCurrentTime(fmt(v.currentTime))
+  }
+
+  const handleLoadedMetadata = () => {
+    const v = videoRef.current
+    if (!v) return
+    setDuration(fmt(v.duration))
+  }
+
+  const handleScrub = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    const v = videoRef.current
+    if (!v) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    v.currentTime = ((e.clientX - rect.left) / rect.width) * v.duration
   }
 
   return (
     <div>
-      {/* Video area — click to unmute */}
-      <div
-        className="rounded-2xl overflow-hidden bg-[#111] cursor-pointer"
-        onClick={handleVideoClick}
-      >
+      <div ref={containerRef} className="rounded-2xl overflow-hidden bg-[#111]">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover cursor-pointer"
             src={project.video}
             autoPlay
             muted
             loop
             playsInline
-            controls={unmuted}
+            onClick={togglePlay}
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoadedMetadata}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
           />
-          {/* Muted indicator */}
-          {!unmuted && (
-            <div className="absolute bottom-3 right-3 pointer-events-none">
-              <div className="bg-black/40 backdrop-blur-sm rounded-full p-2">
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <line x1="23" y1="9" x2="17" y2="15" />
-                  <line x1="17" y1="9" x2="23" y2="15" />
-                </svg>
-              </div>
+
+          {/* Controls overlay */}
+          <div className="absolute bottom-0 left-0 right-0 px-3 pt-8 pb-3 bg-gradient-to-t from-black/60 to-transparent">
+            {/* Progress bar */}
+            <div
+              className="w-full h-[4px] bg-white/20 rounded-full mb-3 cursor-pointer"
+              onClick={handleScrub}
+            >
+              <div
+                className="h-full bg-white/80 rounded-full"
+                style={{ width: `${progress}%` }}
+              />
             </div>
-          )}
+
+            {/* Button row */}
+            <div className="flex items-center gap-3">
+              {/* Play / Pause */}
+              <button
+                onClick={togglePlay}
+                className="text-white/70 hover:text-white transition-colors"
+                aria-label={playing ? 'Pause' : 'Play'}
+              >
+                {playing ? (
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="5" y="4" width="4" height="16" rx="1" />
+                    <rect x="15" y="4" width="4" height="16" rx="1" />
+                  </svg>
+                ) : (
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Mute / Unmute */}
+              <button
+                onClick={toggleMute}
+                className="text-white/70 hover:text-white transition-colors"
+                aria-label={muted ? 'Unmute' : 'Mute'}
+              >
+                {muted ? (
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <line x1="23" y1="9" x2="17" y2="15" />
+                    <line x1="17" y1="9" x2="23" y2="15" />
+                  </svg>
+                ) : (
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Time */}
+              <span className="ml-auto font-mono text-[11px] text-white/40 tabular-nums">
+                {currentTime} / {duration}
+              </span>
+
+              {/* Fullscreen */}
+              <button
+                onClick={toggleFullscreen}
+                className="text-white/70 hover:text-white transition-colors"
+                aria-label="Fullscreen"
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 3 21 3 21 9" />
+                  <polyline points="9 21 3 21 3 15" />
+                  <line x1="21" y1="3" x2="14" y2="10" />
+                  <line x1="3" y1="21" x2="10" y2="14" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -82,26 +188,6 @@ function VideoCard({ project }: { project: Project }) {
 }
 
 export default function WorkPage() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/projects')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load projects')
-        return res.json()
-      })
-      .then((data) => {
-        setProjects(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError(err.message)
-        setLoading(false)
-      })
-  }, [])
-
   return (
     <main>
       <Nav />
@@ -133,21 +219,13 @@ export default function WorkPage() {
           </FadeIn>
 
           {/* Video grid — 2 columns */}
-          {loading && (
-            <p className="font-sans text-sm text-ink/40 text-center">Loading…</p>
-          )}
-          {error && (
-            <p className="font-sans text-sm text-red-400 text-center">{error}</p>
-          )}
-          {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
-              {projects.map((project, i) => (
-                <FadeIn key={project.id} delay={i * 60}>
-                  <VideoCard project={project} />
-                </FadeIn>
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
+            {PROJECTS.map((project, i) => (
+              <FadeIn key={project.id} delay={i * 60}>
+                <VideoCard project={project} />
+              </FadeIn>
+            ))}
+          </div>
 
         </div>
       </div>
