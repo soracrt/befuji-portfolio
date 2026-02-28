@@ -5,12 +5,6 @@
 html {
   scrollbar-gutter: stable;
   scrollbar-width: none;
-  filter: invert(1);
-  transition: filter 0.3s ease;
-}
-
-html.dark {
-  filter: none;
 }
 
 html::-webkit-scrollbar {
@@ -18,16 +12,16 @@ html::-webkit-scrollbar {
 }
 
 body {
-  background-color: #0A0A0A;
-  color: #F5F5F0;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Selection */
 ::selection {
-  background-color: #F5F5F0;
-  color: #0A0A0A;
+  background-color: #0A0A0A;
+  color: #FFFFFF;
 }
 
 /* Open for work pulse dot */
@@ -38,8 +32,4 @@ body {
 
 .animate-pulse-dot {
   animation: pulse-dot 1.8s ease-in-out infinite;
-}
-
-html:not(.dark) .open-for-work {
-  filter: invert(1);
 }

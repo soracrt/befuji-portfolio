@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import Nav from '@/components/Nav'
 
 const fieldClass =
-  'font-sans text-sm text-white bg-transparent border-b border-white/20 py-3 outline-none focus:border-white transition-colors duration-200 w-full placeholder:text-white/30'
+  'font-sans text-sm text-ink bg-transparent border-b border-ink/20 py-3 outline-none focus:border-ink transition-colors duration-200 w-full placeholder:text-ink/30'
 
 const SERVICES = [
   { value: 'ads',   label: 'Ads' },
@@ -42,8 +42,8 @@ function ServiceDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between border-b border-white/20 py-3 bg-transparent outline-none focus:border-white transition-colors duration-200"
-        style={{ color: value ? '#F5F5F0' : 'rgba(245,245,240,0.3)' }}
+        className="w-full flex items-center justify-between border-b border-ink/20 py-3 bg-transparent outline-none focus:border-ink transition-colors duration-200"
+        style={{ color: value ? '#0A0A0A' : 'rgba(10,10,10,0.3)' }}
       >
         <span className="font-sans text-sm">{selected?.label ?? 'Service'}</span>
         <svg
@@ -54,7 +54,7 @@ function ServiceDropdown({
           className="shrink-0 transition-transform duration-200"
           style={{
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            color: 'rgba(245,245,240,0.35)',
+            color: 'rgba(10,10,10,0.35)',
           }}
         >
           <path
@@ -75,7 +75,7 @@ function ServiceDropdown({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute top-full left-0 right-0 z-20 bg-[#141414] shadow-[0_6px_28px_rgba(0,0,0,0.4)]"
+            className="absolute top-full left-0 right-0 z-20 bg-[#F2F2EF] shadow-[0_6px_28px_rgba(0,0,0,0.1)]"
           >
             {SERVICES.map((s) => (
               <button
@@ -138,7 +138,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="font-sans font-black text-white leading-[0.88] tracking-[-0.04em] whitespace-nowrap"
+            className="font-sans font-black text-ink leading-[0.88] tracking-[-0.04em] whitespace-nowrap"
             style={{ fontSize: 'clamp(3.5rem, 7.5vw, 10rem)' }}
           >
             Contact me
@@ -151,18 +151,18 @@ export default function ContactPage() {
             className="flex flex-col gap-5 mt-auto pt-16 mb-3"
           >
             <div className="flex flex-col gap-0.5">
-              <span className="font-sans text-sm" style={{ color: 'rgba(245,245,240,0.65)' }}>
+              <span className="font-sans text-sm" style={{ color: 'rgba(10,10,10,0.65)' }}>
                 Jakarta, Indonesia
               </span>
-              <span className="font-sans text-sm" style={{ color: 'rgba(245,245,240,0.65)' }}>
+              <span className="font-sans text-sm" style={{ color: 'rgba(10,10,10,0.65)' }}>
                 {new Date().getFullYear()}
               </span>
             </div>
             <div className="flex flex-col gap-0.5">
-              <span className="font-sans text-sm" style={{ color: 'rgba(245,245,240,0.65)' }}>
+              <span className="font-sans text-sm" style={{ color: 'rgba(10,10,10,0.65)' }}>
                 Available for work
               </span>
-              <span className="font-sans text-sm" style={{ color: 'rgba(245,245,240,0.65)' }}>
+              <span className="font-sans text-sm" style={{ color: 'rgba(10,10,10,0.65)' }}>
                 Mon – Fri / async
               </span>
             </div>
@@ -248,7 +248,7 @@ export default function ContactPage() {
                     onChange={(e) => setForm((d) => ({ ...d, newsletter: e.target.checked }))}
                     className="w-3 h-3 accent-ink shrink-0"
                   />
-                  <span className="font-sans text-xs" style={{ color: 'rgba(245,245,240,0.4)' }}>
+                  <span className="font-sans text-xs" style={{ color: 'rgba(10,10,10,0.4)' }}>
                     Sign up for news and updates
                   </span>
                 </label>
@@ -280,7 +280,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="font-sans text-xs tracking-[0.15em] uppercase bg-white text-black px-6 py-3 hover:opacity-70 transition-opacity duration-200 disabled:opacity-50"
+                  className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg px-6 py-3 hover:opacity-70 transition-opacity duration-200 disabled:opacity-50"
                 >
                   {status === 'sending' ? 'sending...' : 'Submit'}
                 </button>

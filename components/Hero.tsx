@@ -13,7 +13,7 @@ export default function Hero() {
         {/* Line 1 — Inter Black, large */}
         <FadeIn>
           <h1
-            className="font-sans font-black text-white leading-[1.05] tracking-[-0.03em]"
+            className="font-sans font-black text-ink leading-[1.05] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2rem, 4.2vw, 4rem)' }}
           >
             motion designed to move.
@@ -68,16 +68,16 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{
               scale: 1.02,
-              boxShadow: '0 0 28px rgba(255,255,255,0.15), 0 0 56px rgba(255,255,255,0.08)',
+              boxShadow: '0 0 28px rgba(0,0,0,0.12), 0 0 56px rgba(0,0,0,0.06)',
               transition: { duration: 0.3, ease: 'easeOut' },
             }}
-            style={{ boxShadow: '0 0 20px rgba(255,255,255,0.10), 0 0 40px rgba(255,255,255,0.05)', borderRadius: '9999px' }}
+            style={{ boxShadow: '0 0 20px rgba(0,0,0,0.08), 0 0 40px rgba(0,0,0,0.04)', borderRadius: '9999px' }}
           >
             <a
               href="https://cal.com/befuji"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-sans text-xs tracking-[0.15em] uppercase bg-white text-black border border-white px-7 py-3 rounded-full inline-block"
+              className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg border border-ink px-7 py-3 rounded-full inline-block"
             >
               book a call
             </a>
@@ -95,7 +95,7 @@ export default function Hero() {
           >
             <Link
               href="/contact"
-              className="font-sans text-xs tracking-[0.15em] uppercase text-white border border-white px-7 py-3 rounded-full hover:border-white transition-colors duration-300 inline-block"
+              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border border-ink px-7 py-3 rounded-full transition-colors duration-300 inline-block"
             >
               get in touch
             </Link>

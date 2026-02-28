@@ -9,10 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#0A0A0A',
-        ink: '#F5F5F0',
-        divider: '#1A1A1A',
-        card: '#141414',
+        bg: '#FFFFFF',
+        ink: '#0A0A0A',
+        divider: '#E0E0DB',
+        card: '#F2F2EF',
       },
       fontFamily: {
         serif: ['var(--font-cormorant)', 'Georgia', 'serif'],

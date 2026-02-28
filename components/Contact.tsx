@@ -4,7 +4,7 @@ import { useState } from 'react'
 import FadeIn from './FadeIn'
 
 const inputClass =
-  'font-sans text-sm text-white bg-transparent placeholder:text-white/30 border-b border-divider py-2.5 outline-none focus:border-white transition-colors duration-200 w-full'
+  'font-sans text-sm text-ink bg-transparent placeholder:text-ink/30 border-b border-divider py-2.5 outline-none focus:border-ink transition-colors duration-200 w-full'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -21,7 +21,7 @@ export default function Contact() {
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <FadeIn>
           <h2
-            className="font-serif text-white tracking-[-0.02em] mb-14"
+            className="font-serif text-ink tracking-[-0.02em] mb-14"
             style={{ fontSize: 'clamp(2.5rem, 6vw, 5.5rem)' }}
           >
             Let's talk.
@@ -33,7 +33,7 @@ export default function Contact() {
           <div className="flex flex-col items-center gap-5 mb-20">
             <a
               href="mailto:hello@befuji.com"
-              className="font-sans text-xs tracking-[0.2em] uppercase text-white hover:opacity-40 transition-opacity duration-200"
+              className="font-sans text-xs tracking-[0.2em] uppercase text-ink hover:opacity-40 transition-opacity duration-200"
             >
               hello@befuji.com
             </a>
@@ -44,7 +44,7 @@ export default function Contact() {
               href="https://linkedin.com/in/befuji"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-sans text-xs tracking-[0.2em] uppercase text-white hover:opacity-40 transition-opacity duration-200"
+              className="font-sans text-xs tracking-[0.2em] uppercase text-ink hover:opacity-40 transition-opacity duration-200"
             >
               LinkedIn
             </a>
@@ -56,7 +56,7 @@ export default function Contact() {
               href="https://cal.com/befuji"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-sans text-xs tracking-[0.2em] uppercase text-white border border-white px-6 py-3 hover:bg-white hover:text-black transition-colors duration-200"
+              className="font-sans text-xs tracking-[0.2em] uppercase text-ink border border-ink px-6 py-3 hover:bg-ink hover:text-bg transition-colors duration-200"
             >
               Book a call
             </a>
@@ -69,7 +69,7 @@ export default function Contact() {
             {sent ? (
               <p
                 className="font-sans text-sm tracking-wide text-center"
-                style={{ color: 'rgba(245,245,240,0.4)' }}
+                style={{ color: 'rgba(10,10,10,0.4)' }}
               >
                 Message received.
               </p>
@@ -102,7 +102,7 @@ export default function Contact() {
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="font-sans text-xs tracking-[0.2em] uppercase text-white border border-white px-6 py-3 hover:bg-white hover:text-black transition-colors duration-200"
+                    className="font-sans text-xs tracking-[0.2em] uppercase text-ink border border-ink px-6 py-3 hover:bg-ink hover:text-bg transition-colors duration-200"
                   >
                     Send
                   </button>
@@ -115,7 +115,7 @@ export default function Contact() {
         <FadeIn delay={320}>
           <p
             className="font-sans text-xs tracking-widest mt-24"
-            style={{ color: 'rgba(245,245,240,0.2)' }}
+            style={{ color: 'rgba(10,10,10,0.2)' }}
           >
             &copy; {new Date().getFullYear()} befuji
           </p>
