@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 
-// swap this out with new ngrok URL when restarting
-const LOCAL_VIDEO_URL = 'https://dino-nonlogistic-jewel.ngrok-free.dev/NSX.mp4'
+const LOCAL_VIDEO_URL = 'https://befuji.ngrok.app/NSX.mp4'
 
 export async function GET() {
   try {
