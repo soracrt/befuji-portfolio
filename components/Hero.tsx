@@ -13,7 +13,7 @@ export default function Hero() {
         {/* Line 1 — Inter Black, large */}
         <FadeIn>
           <h1
-            className="font-sans font-black text-ink leading-[1.05] tracking-[-0.03em]"
+            className="font-display font-black text-ink leading-[1.05] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2rem, 4.2vw, 4rem)' }}
           >
             motion designed to move.
@@ -73,14 +73,12 @@ export default function Hero() {
             }}
             style={{ boxShadow: '0 0 20px rgba(0,0,0,0.08), 0 0 40px rgba(0,0,0,0.04)', borderRadius: '9999px' }}
           >
-            <a
-              href="https://cal.com/befuji"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/work"
               className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg border border-ink px-7 py-3 rounded-full inline-block"
             >
-              book a call
-            </a>
+              view projects
+            </Link>
           </motion.div>
 
           {/* Get in touch — outlined */}

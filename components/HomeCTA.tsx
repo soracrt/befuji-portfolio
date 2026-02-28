@@ -6,7 +6,7 @@ export default function HomeCTA() {
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <FadeIn>
           <h2
-            className="font-serif text-ink tracking-[-0.025em] mb-4"
+            className="font-sans font-medium text-ink tracking-[-0.025em] mb-4"
             style={{ fontSize: 'clamp(3rem, 7vw, 6rem)' }}
           >
             let's talk.

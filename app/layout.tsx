@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   title: 'befuji',
   description: 'motion designed to move.',
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
 }
 

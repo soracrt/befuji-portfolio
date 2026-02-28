@@ -138,7 +138,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="font-sans font-black text-ink leading-[0.88] tracking-[-0.04em] whitespace-nowrap"
+            className="font-sans font-medium text-ink leading-[0.88] tracking-[-0.04em] whitespace-nowrap"
             style={{ fontSize: 'clamp(3.5rem, 7.5vw, 10rem)' }}
           >
             Contact me

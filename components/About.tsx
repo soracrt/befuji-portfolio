@@ -9,7 +9,7 @@ export default function About() {
         <FadeIn>
           <div>
             <h2
-              className="font-serif text-ink tracking-[-0.02em] mb-8"
+              className="font-sans font-medium text-ink tracking-[-0.02em] mb-8"
               style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
             >
               About

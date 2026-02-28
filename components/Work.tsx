@@ -9,10 +9,10 @@ export default function Work() {
         {/* Heading */}
         <FadeIn>
           <h2
-            className="font-serif text-ink tracking-[-0.02em] mb-14"
+            className="font-sans font-medium text-ink tracking-[-0.02em] mb-14"
             style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
           >
-            Work
+            Recent Projects
           </h2>
         </FadeIn>
 
@@ -39,7 +39,7 @@ export default function Work() {
               href="/work"
               className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 hover:opacity-40 transition-opacity duration-200"
             >
-              See more of my work →
+              View More →
             </Link>
           </div>
         </FadeIn>

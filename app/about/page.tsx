@@ -19,7 +19,7 @@ export default function AboutPage() {
           {/* Heading */}
           <FadeIn>
             <h1
-              className="font-serif text-ink tracking-[-0.025em] mb-20"
+              className="font-sans font-medium text-ink tracking-[-0.025em] mb-20"
               style={{ fontSize: 'clamp(3rem, 7vw, 6rem)' }}
             >
               About
@@ -74,7 +74,7 @@ export default function AboutPage() {
                 },
               ].map((col) => (
                 <div key={col.label} className="px-8 py-10 border-r border-b border-divider">
-                  <h3 className="font-serif text-lg text-ink tracking-tight mb-4">{col.label}</h3>
+                  <h3 className="font-sans text-lg text-ink tracking-tight mb-4">{col.label}</h3>
                   <p className="font-sans text-sm leading-relaxed" style={{ color: 'rgba(10,10,10,0.48)' }}>
                     {col.text}
                   </p>

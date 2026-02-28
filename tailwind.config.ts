@@ -15,8 +15,9 @@ const config: Config = {
         card: '#F2F2EF',
       },
       fontFamily: {
+        display: ['var(--font-inter)', 'Inter', 'sans-serif'],
         serif: ['var(--font-cormorant)', 'Georgia', 'serif'],
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
       },
     },
   },

@@ -21,7 +21,7 @@ export default function Contact() {
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <FadeIn>
           <h2
-            className="font-serif text-ink tracking-[-0.02em] mb-14"
+            className="font-display font-black text-ink tracking-[-0.02em] mb-14"
             style={{ fontSize: 'clamp(2.5rem, 6vw, 5.5rem)' }}
           >
             Let's talk.
