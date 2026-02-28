@@ -21,7 +21,7 @@ export default function Services() {
       <div className="max-w-6xl mx-auto">
         <FadeIn>
           <h2
-            className="font-serif text-ink tracking-[-0.02em] mb-14"
+            className="font-serif text-white tracking-[-0.02em] mb-14"
             style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
           >
             Services
@@ -33,14 +33,14 @@ export default function Services() {
             <FadeIn key={service.title} delay={i * 80} className="border-r border-b border-divider">
               <div className="px-8 py-10 md:px-10 md:py-14 h-full">
                 <h3
-                  className="font-serif text-ink tracking-tight mb-4"
+                  className="font-serif text-white tracking-tight mb-4"
                   style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.8rem)' }}
                 >
                   {service.title}
                 </h3>
                 <p
                   className="font-sans text-sm leading-relaxed"
-                  style={{ color: 'rgba(10,10,10,0.42)' }}
+                  style={{ color: 'rgba(245,245,240,0.42)' }}
                 >
                   {service.description}
                 </p>

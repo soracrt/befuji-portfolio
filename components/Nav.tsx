@@ -16,7 +16,7 @@ export default function Nav() {
         href="/"
         className="hover:opacity-60 transition-opacity duration-200"
       >
-        <img src="/logo.png" alt="befuji" className="h-12 w-auto" style={{ mixBlendMode: 'multiply' }} />
+        <img src="/logo.png" alt="befuji" className="h-12 w-auto" />
       </Link>
 
       <div className="flex items-center gap-7">

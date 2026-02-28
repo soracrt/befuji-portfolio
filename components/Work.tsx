@@ -65,7 +65,7 @@ export default function Work() {
         <FadeIn>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-14">
             <h2
-              className="font-serif text-ink tracking-[-0.02em]"
+              className="font-serif text-white tracking-[-0.02em]"
               style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
             >
               Work
@@ -77,9 +77,9 @@ export default function Work() {
                   onClick={() => setActiveFilter(f)}
                   className="font-sans text-xs tracking-[0.14em] uppercase pb-1 transition-all duration-200"
                   style={{
-                    color: '#0A0A0A',
+                    color: '#F5F5F0',
                     opacity: activeFilter === f ? 1 : 0.28,
-                    borderBottom: activeFilter === f ? '1px solid #0A0A0A' : '1px solid transparent',
+                    borderBottom: activeFilter === f ? '1px solid #F5F5F0' : '1px solid transparent',
                   }}
                 >
                   {f}
@@ -95,9 +95,9 @@ export default function Work() {
             <FadeIn
               key={`${project.name}-${activeFilter}`}
               delay={i * 55}
-              className="bg-bg"
+              className="bg-[#141414]"
             >
-              <div className="group cursor-pointer bg-bg h-full">
+              <div className="group cursor-pointer bg-[#141414] h-full">
                 <div
                   className="relative w-full overflow-hidden"
                   style={{ aspectRatio: '16 / 10', backgroundColor: project.placeholderBg }}
@@ -116,12 +116,12 @@ export default function Work() {
                 </div>
 
                 <div className="px-5 py-4 border-t border-divider">
-                  <h3 className="font-serif text-xl text-ink tracking-tight leading-tight">
+                  <h3 className="font-serif text-xl text-white tracking-tight leading-tight">
                     {project.name}
                   </h3>
                   <span
                     className="font-sans text-[0.65rem] tracking-[0.14em] uppercase mt-1.5 inline-block"
-                    style={{ color: 'rgba(10,10,10,0.38)' }}
+                    style={{ color: 'rgba(245,245,240,0.38)' }}
                   >
                     {project.displayCategory}
                   </span>

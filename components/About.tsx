@@ -9,14 +9,14 @@ export default function About() {
         <FadeIn>
           <div>
             <h2
-              className="font-serif text-ink tracking-[-0.02em] mb-8"
+              className="font-serif text-white tracking-[-0.02em] mb-8"
               style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
             >
               About
             </h2>
             <p
               className="font-sans text-sm leading-[1.85] mb-4 max-w-sm"
-              style={{ color: 'rgba(10,10,10,0.6)' }}
+              style={{ color: 'rgba(245,245,240,0.6)' }}
             >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
@@ -24,14 +24,14 @@ export default function About() {
             </p>
             <p
               className="font-sans text-sm leading-[1.85] max-w-sm"
-              style={{ color: 'rgba(10,10,10,0.6)' }}
+              style={{ color: 'rgba(245,245,240,0.6)' }}
             >
               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
               eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
             </p>
             <Link
               href="/about"
-              className="inline-block font-sans text-xs tracking-[0.15em] uppercase text-ink mt-8 border-b border-ink pb-0.5 hover:opacity-40 transition-opacity duration-200"
+              className="inline-block font-sans text-xs tracking-[0.15em] uppercase text-white mt-8 border-b border-white pb-0.5 hover:opacity-40 transition-opacity duration-200"
             >
               Full story →
             </Link>
@@ -42,7 +42,7 @@ export default function About() {
         <FadeIn delay={160}>
           <div
             className="w-full aspect-square md:aspect-[4/5] ml-auto max-w-md"
-            style={{ backgroundColor: '#D8D8D3' }}
+            style={{ backgroundColor: '#141414' }}
           />
         </FadeIn>
       </div>

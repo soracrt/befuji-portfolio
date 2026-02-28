@@ -6,14 +6,14 @@ export default function HomeCTA() {
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <FadeIn>
           <h2
-            className="font-serif text-ink tracking-[-0.025em] mb-4"
+            className="font-serif text-white tracking-[-0.025em] mb-4"
             style={{ fontSize: 'clamp(3rem, 7vw, 6rem)' }}
           >
             let's talk.
           </h2>
           <a
             href="mailto:hello@befuji.com"
-            className="font-sans text-sm text-ink hover:opacity-40 transition-opacity duration-200 inline-block mb-12"
+            className="font-sans text-sm text-white hover:opacity-40 transition-opacity duration-200 inline-block mb-12"
           >
             hello@befuji.com
           </a>
@@ -22,7 +22,7 @@ export default function HomeCTA() {
         <FadeIn delay={160}>
           <p
             className="font-sans text-xs tracking-widest mt-20"
-            style={{ color: 'rgba(10,10,10,0.2)' }}
+            style={{ color: 'rgba(245,245,240,0.2)' }}
           >
             &copy; {new Date().getFullYear()} befuji
           </p>
