@@ -1,4 +1,6 @@
 import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3'
+import { NodeHttpHandler } from '@smithy/node-http-handler'
+import { Agent } from 'https'
 import { NextResponse } from 'next/server'
 
 // Map R2 filenames (without extension) to categories.
@@ -14,6 +16,11 @@ const s3 = new S3Client({
     accessKeyId: process.env.R2_ACCESS_KEY_ID ?? '',
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY ?? '',
   },
+  requestHandler: new NodeHttpHandler({
+    httpsAgent: new Agent({ keepAlive: false }),
+    connectionTimeout: 10000,
+    requestTimeout: 30000,
+  }),
 })
 
 export async function GET() {
