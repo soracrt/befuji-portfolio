@@ -10,7 +10,6 @@ const fieldClass =
 const SERVICES = [
   { value: 'ads',   label: 'Ads' },
   { value: 'saas',  label: 'SaaS Film' },
-  { value: 'music', label: 'Artist Content' },
   { value: 'other', label: 'Other' },
 ]
 
@@ -104,11 +103,27 @@ export default function ContactPage() {
     newsletter: false,
     description: '',
   })
-  const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSent(true)
+    setStatus('sending')
+
+    const formData = new FormData(e.target as HTMLFormElement)
+
+    const res = await fetch('https://formspree.io/f/xzdawkgy', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' },
+    })
+
+    if (res.ok) {
+      setStatus('success');
+      (e.target as HTMLFormElement).reset()
+      setForm({ firstName: '', lastName: '', service: '', email: '', newsletter: false, description: '' })
+    } else {
+      setStatus('error')
+    }
   }
 
   return (
@@ -156,9 +171,9 @@ export default function ContactPage() {
 
         {/* ── Right column — form ── */}
         <div className="flex flex-col justify-center px-8 md:px-14 py-14">
-          {sent ? (
-            <p className="font-sans text-sm" style={{ color: 'rgba(10,10,10,0.4)' }}>
-              Message received.
+          {status === 'success' ? (
+            <p className="font-sans text-sm text-center" style={{ color: '#22c55e' }}>
+              message sent.
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-8 w-full max-w-md">
@@ -172,6 +187,7 @@ export default function ContactPage() {
               >
                 <input
                   type="text"
+                  name="firstName"
                   placeholder="First name"
                   required
                   value={form.firstName}
@@ -180,6 +196,7 @@ export default function ContactPage() {
                 />
                 <input
                   type="text"
+                  name="lastName"
                   placeholder="Last name"
                   required
                   value={form.lastName}
@@ -198,6 +215,7 @@ export default function ContactPage() {
                   value={form.service}
                   onChange={(v) => setForm((d) => ({ ...d, service: v }))}
                 />
+                <input type="hidden" name="service" value={form.service} />
               </motion.div>
 
               {/* Email */}
@@ -208,6 +226,7 @@ export default function ContactPage() {
               >
                 <input
                   type="email"
+                  name="email"
                   placeholder="Email"
                   required
                   value={form.email}
@@ -243,6 +262,7 @@ export default function ContactPage() {
               >
                 <input
                   type="text"
+                  name="projectDescription"
                   placeholder="Project description"
                   value={form.description}
                   onChange={(e) => setForm((d) => ({ ...d, description: e.target.value }))}
@@ -255,13 +275,20 @@ export default function ContactPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6, ease }}
+                className="flex flex-col items-start gap-3"
               >
                 <button
                   type="submit"
-                  className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg px-6 py-3 hover:opacity-70 transition-opacity duration-200"
+                  disabled={status === 'sending'}
+                  className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg px-6 py-3 hover:opacity-70 transition-opacity duration-200 disabled:opacity-50"
                 >
-                  Submit
+                  {status === 'sending' ? 'sending...' : 'Submit'}
                 </button>
+                {status === 'error' && (
+                  <p className="font-sans text-sm text-center w-full" style={{ color: '#ef4444' }}>
+                    something went wrong. try again.
+                  </p>
+                )}
               </motion.div>
 
             </form>
