@@ -63,7 +63,7 @@ export default function Hero() {
 
           {/* Book a call — filled black with glow */}
           <motion.a
-            href="https://calendly.com/befuji"
+            href="https://cal.com/befuji"
             target="_blank"
             rel="noopener noreferrer"
             initial={{ opacity: 0, y: 10 }}

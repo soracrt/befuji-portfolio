@@ -53,7 +53,7 @@ export default function Contact() {
 
             {/* Calendly */}
             <a
-              href="https://calendly.com/befuji"
+              href="https://cal.com/befuji"
               target="_blank"
               rel="noopener noreferrer"
               className="font-sans text-xs tracking-[0.2em] uppercase text-ink border border-ink px-6 py-3 hover:bg-ink hover:text-bg transition-colors duration-200"
