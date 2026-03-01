@@ -225,10 +225,23 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
         ))}
       </nav>
 
-      <div className="px-5 pb-6">
+      <div className="px-5 pb-6 flex flex-col gap-3">
+        <Link
+          href="/"
+          target="_blank"
+          className="font-sans text-[#585858] hover:text-[#909090] transition-colors inline-flex items-center gap-1.5"
+          style={{ fontSize: '12px', letterSpacing: '-0.005em' }}
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+          View website
+        </Link>
         <button
           onClick={signOut}
-          className="font-sans text-[#585858] hover:text-[#909090] transition-colors"
+          className="font-sans text-[#585858] hover:text-[#909090] transition-colors text-left"
           style={{ fontSize: '12px', letterSpacing: '-0.005em' }}
         >
           Sign out

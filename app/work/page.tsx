@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
@@ -12,9 +12,6 @@ type Project = {
   video: string
 }
 
-const PROJECTS: Project[] = [
-  { id: 'NSX', title: 'NSX', category: 'Ads', video: '/NSX.mp4' },
-]
 
 function fmt(t: number) {
   const m = Math.floor(t / 60)
@@ -188,6 +185,15 @@ function VideoCard({ project }: { project: Project }) {
 }
 
 export default function WorkPage() {
+  const [projects, setProjects] = useState<Project[]>([])
+
+  useEffect(() => {
+    fetch('/api/admin/projects')
+      .then(r => r.json())
+      .then((data: Project[]) => setProjects(data))
+      .catch(() => {})
+  }, [])
+
   return (
     <main>
       <Nav />
@@ -220,7 +226,7 @@ export default function WorkPage() {
 
           {/* Video grid — 2 columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
-            {PROJECTS.map((project, i) => (
+            {projects.map((project, i) => (
               <FadeIn key={project.id} delay={i * 60}>
                 <VideoCard project={project} />
               </FadeIn>
