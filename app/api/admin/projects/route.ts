@@ -31,11 +31,16 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const project = await req.json()
-  const projects = await readProjects()
-  projects.push(project)
-  await writeProjects(projects)
-  return NextResponse.json(project)
+  try {
+    const project = await req.json()
+    const projects = await readProjects()
+    projects.push(project)
+    await writeProjects(projects)
+    return NextResponse.json(project)
+  } catch (err) {
+    console.error('[api/admin/projects POST]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
 
 export async function PUT(req: Request) {
@@ -61,15 +66,21 @@ export async function PUT(req: Request) {
     await writeProjects(projects)
     return NextResponse.json(projects[idx])
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
     console.error('[api/admin/projects PUT]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 
 export async function DELETE(req: Request) {
-  const { id } = await req.json()
-  const projects = await readProjects()
-  const filtered = projects.filter((p: { id: string }) => p.id !== id)
-  await writeProjects(filtered)
-  return NextResponse.json({ ok: true })
+  try {
+    const { id } = await req.json()
+    const projects = await readProjects()
+    const filtered = projects.filter((p: { id: string }) => p.id !== id)
+    await writeProjects(filtered)
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[api/admin/projects DELETE]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

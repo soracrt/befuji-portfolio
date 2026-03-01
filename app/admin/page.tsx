@@ -905,11 +905,14 @@ function RecentSection({
     const newValue = !project.isRecent
     if (newValue && featuredCount >= 3) return
     setProjects(prev => prev.map(p => (p.id === id ? { ...p, isRecent: newValue } : p)))
-    await fetch('/api/admin/projects', {
+    const res = await fetch('/api/admin/projects', {
       method: 'PUT',
       body: JSON.stringify({ id, isRecent: newValue }),
       headers: { 'Content-Type': 'application/json' },
     })
+    if (!res.ok) {
+      setProjects(prev => prev.map(p => (p.id === id ? { ...p, isRecent: !newValue } : p)))
+    }
   }
 
   return (
