@@ -13,6 +13,9 @@ type Project = {
 }
 
 
+// Tracks the currently unmuted card so we can mute it when another is unmuted
+let activeUnmute: { mute: () => void } | null = null
+
 function fmt(t: number) {
   const m = Math.floor(t / 60)
   const s = Math.floor(t % 60).toString().padStart(2, '0')
@@ -65,8 +68,19 @@ function VideoCard({ project }: { project: Project }) {
     e.stopPropagation()
     const v = videoRef.current
     if (!v) return
-    v.muted = !v.muted
-    setMuted(v.muted)
+    if (v.muted) {
+      // Unmuting — silence whoever was active before
+      if (activeUnmute) activeUnmute.mute()
+      v.muted = false
+      setMuted(false)
+      activeUnmute = {
+        mute: () => { if (videoRef.current) videoRef.current.muted = true; setMuted(true) },
+      }
+    } else {
+      v.muted = true
+      setMuted(true)
+      activeUnmute = null
+    }
   }
 
   const toggleFullscreen = (e: React.MouseEvent) => {
