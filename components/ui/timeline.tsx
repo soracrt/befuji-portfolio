@@ -106,7 +106,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
           className="absolute left-8 top-0 w-px pointer-events-none"
           style={{
             height: `${height}px`,
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(161,7,2,0.1) 8%, rgba(161,7,2,0.1) 92%, transparent 100%)',
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.08) 8%, rgba(255,255,252,0.08) 92%, transparent 100%)',
           }}
         />
 
@@ -120,8 +120,8 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             style={{
               height: heightTransform,
               opacity: opacityTransform,
-              background: 'linear-gradient(to bottom, #3d0100, #7a0301, #a10702, #d4160a, #e8220a)',
-              boxShadow: '0 0 6px rgba(161,7,2,1), 0 0 16px rgba(161,7,2,0.6), 0 0 32px rgba(232,34,10,0.25)',
+              background: 'linear-gradient(to bottom, rgba(255,255,252,0.4), #fffffc)',
+              boxShadow: '0 0 6px rgba(255,255,252,0.6), 0 0 16px rgba(255,255,252,0.2)',
             }}
           />
         </div>
