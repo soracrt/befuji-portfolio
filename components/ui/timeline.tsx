@@ -62,7 +62,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
                 style={{ backgroundColor: '#000000' }}
               >
                 <div
-                  className="h-3 w-3 rounded-full"
+                  className="h-5 w-5 rounded-full"
                   style={{
                     backgroundColor: passedDots[index] ? '#fffffc' : 'rgba(255,255,252,0.2)',
                     boxShadow: passedDots[index]
@@ -103,25 +103,26 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
 
         {/* Static faint background line */}
         <div
-          className="absolute left-8 top-0 w-px pointer-events-none"
+          className="absolute top-0 w-[3px] pointer-events-none"
           style={{
+            left: '30px',
             height: `${height}px`,
             background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.08) 8%, rgba(255,255,252,0.08) 92%, transparent 100%)',
           }}
         />
 
-        {/* Scroll-driven glowing red fill */}
+        {/* Scroll-driven white fill */}
         <div
-          className="absolute left-8 top-0 overflow-hidden w-px pointer-events-none"
-          style={{ height: `${height}px` }}
+          className="absolute top-0 overflow-hidden w-[3px] pointer-events-none"
+          style={{ left: '30px', height: `${height}px` }}
         >
           <motion.div
-            className="absolute inset-x-0 top-0 w-px"
+            className="absolute inset-x-0 top-0 w-[3px]"
             style={{
               height: heightTransform,
               opacity: opacityTransform,
-              background: 'linear-gradient(to bottom, rgba(255,255,252,0.4), #fffffc)',
-              boxShadow: '0 0 6px rgba(255,255,252,0.6), 0 0 16px rgba(255,255,252,0.2)',
+              background: 'linear-gradient(to bottom, rgba(255,255,252,0.5), #fffffc)',
+              boxShadow: '0 0 8px rgba(255,255,252,0.7), 0 0 20px rgba(255,255,252,0.25)',
             }}
           />
         </div>
