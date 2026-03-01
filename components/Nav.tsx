@@ -32,6 +32,8 @@ export default function Nav() {
           <Link href="/#about" className={linkClass}>about</Link>
         )}
 
+        <Link href="/reviews" className={linkClass}>reviews</Link>
+
         <Link
           href="/contact"
           className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg px-5 py-2.5 rounded-full hover:opacity-70 transition-opacity duration-200"

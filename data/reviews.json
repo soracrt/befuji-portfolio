@@ -1,0 +1,83 @@
+[
+  {
+    "id": "r1",
+    "name": "Marcus Chen",
+    "service": "ADs",
+    "company": "Apex Motors",
+    "text": "Insane attention to detail. The ad came out better than we imagined. Will definitely work with befuji again.",
+    "featured": true,
+    "createdAt": "2025-11-02"
+  },
+  {
+    "id": "r2",
+    "name": "Sofia Reyes",
+    "service": "SaaS",
+    "company": "Loopkit",
+    "text": "Super clean motion work. Everything was delivered on time and the whole process was zero stress.",
+    "featured": true,
+    "createdAt": "2025-10-18"
+  },
+  {
+    "id": "r3",
+    "name": "James Okafor",
+    "service": "Film",
+    "company": "",
+    "text": "We needed something cinematic but fast — befuji delivered. Smooth collab from start to finish.",
+    "featured": true,
+    "createdAt": "2025-09-30"
+  },
+  {
+    "id": "r4",
+    "name": "Layla Haddad",
+    "service": "ADs",
+    "company": "Volta Brand",
+    "text": "The visual style matched our brand perfectly. Fast revisions and great communication throughout.",
+    "featured": false,
+    "createdAt": "2025-09-05"
+  },
+  {
+    "id": "r5",
+    "name": "Tom Wallace",
+    "service": "SaaS",
+    "company": "Frameshifts",
+    "text": "Clean, modern, exactly what a SaaS brand needs. The animation loops are used across all our socials.",
+    "featured": false,
+    "createdAt": "2025-08-22"
+  },
+  {
+    "id": "r6",
+    "name": "Priya Menon",
+    "service": "Other",
+    "company": "",
+    "text": "Reached out on short notice and befuji pulled it off. Honestly surprised by how fast it all came together.",
+    "featured": false,
+    "createdAt": "2025-08-10"
+  },
+  {
+    "id": "r7",
+    "name": "Diego Fuentes",
+    "service": "Film",
+    "company": "Nocturne Visuals",
+    "text": "Title sequence felt like a real film production. Brought a level of polish we couldn't get anywhere else.",
+    "featured": false,
+    "createdAt": "2025-07-14"
+  },
+  {
+    "id": "r8",
+    "name": "Aiko Tanaka",
+    "service": "ADs",
+    "company": "Kura Studio",
+    "text": "Our campaign performance improved massively after the refresh. The motion work elevated everything.",
+    "featured": false,
+    "createdAt": "2025-07-01"
+  },
+  {
+    "id": "r9",
+    "name": "Elias Marsh",
+    "service": "SaaS",
+    "company": "Stackline",
+    "text": "Exactly the aesthetic we wanted for our product launch. Looks incredibly sharp at any size.",
+    "featured": false,
+    "createdAt": "2025-06-20"
+  }
+]
