@@ -12,7 +12,7 @@ html::-webkit-scrollbar {
 }
 
 body {
-  background-color: #242423;
+  background-color: #000000;
   color: #fffffc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

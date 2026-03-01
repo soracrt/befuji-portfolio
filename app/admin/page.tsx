@@ -95,7 +95,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
   return (
     <div
       className="min-h-screen flex flex-col relative"
-      style={{ background: 'radial-gradient(ellipse at 50% 36%, #353534 0%, #242423 64%)' }}
+      style={{ background: 'radial-gradient(ellipse at 50% 36%, #353534 0%, #000000 64%)' }}
     >
       <div className="absolute top-6 left-7">
         <Link
@@ -264,7 +264,7 @@ function TopBar({ section, updatedAt }: { section: Section; updatedAt: string })
   return (
     <div
       className="flex items-center justify-between px-8 shrink-0"
-      style={{ height: '50px', borderBottom: '1px solid #2f2f2e', background: '#242423' }}
+      style={{ height: '50px', borderBottom: '1px solid #2f2f2e', background: '#000000' }}
     >
       <h1
         className="font-sans text-white/80 font-medium"
@@ -981,7 +981,7 @@ function RecentSection({
                     style={{ width: '30px', height: '17px', background: p.isRecent ? '#a10702' : '#383837' }}
                   >
                     <div
-                      className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#242423] transition-all duration-200"
+                      className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#000000] transition-all duration-200"
                       style={{ left: p.isRecent ? '16px' : '3px' }}
                     />
                   </div>
@@ -1028,7 +1028,7 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#242423' }}>
+    <div className="flex min-h-screen" style={{ background: '#000000' }}>
       <Sidebar active={section} setActive={setSection} />
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         <TopBar section={section} updatedAt={updatedAt} />
@@ -1060,7 +1060,7 @@ export default function AdminPage() {
   }, [])
 
   if (authed === null) {
-    return <div className="min-h-screen" style={{ background: '#242423' }} />
+    return <div className="min-h-screen" style={{ background: '#000000' }} />
   }
 
   if (!authed) {

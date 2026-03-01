@@ -47,7 +47,7 @@ export default function HeroBackground() {
           left: 0,
           right: 0,
           height: '55%',
-          background: 'linear-gradient(to bottom, transparent 0%, #242423 75%)',
+          background: 'linear-gradient(to bottom, transparent 0%, #000000 75%)',
           pointerEvents: 'none',
         }}
       />
