@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { motion } from 'motion/react'
 import FadeIn from './FadeIn'
 import ShinyText from './ShinyText'
+import { ShimmerButton } from './ui/shimmer-button'
 
 export default function Hero() {
   return (
@@ -61,32 +62,36 @@ export default function Hero() {
         {/* CTA buttons — staggered individually */}
         <div className="flex flex-wrap items-center justify-center gap-4">
 
-          {/* Book a call — filled black with glow */}
+          {/* Get in touch — shimmer white pill */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
             style={{ boxShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 40px rgba(255,255,255,0.12)', borderRadius: '9999px' }}
           >
-            <Link
-              href="/work"
-              className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg border border-ink px-7 py-3 rounded-full inline-block transition-all duration-300 ease-out hover:opacity-80"
-            >
-              view projects
+            <Link href="/contact">
+              <ShimmerButton
+                background="rgba(255,255,252,1)"
+                shimmerColor="#a10702"
+                borderRadius="9999px"
+                className="font-sans text-xs tracking-[0.15em] uppercase text-bg px-7 py-3 border-white/20"
+              >
+                get in touch
+              </ShimmerButton>
             </Link>
           </motion.div>
 
-          {/* Get in touch — outlined */}
+          {/* View projects — outlined black pill */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.05, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link
-              href="/contact"
+              href="/work"
               className="font-sans text-xs tracking-[0.15em] uppercase text-ink border border-ink px-7 py-3 rounded-full inline-block transition-all duration-300 ease-out hover:bg-ink hover:text-bg"
             >
-              get in touch
+              view projects
             </Link>
           </motion.div>
 
