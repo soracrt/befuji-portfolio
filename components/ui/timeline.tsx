@@ -74,8 +74,8 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
               </div>
               {/* Year — desktop */}
               <h3
-                className="hidden md:block font-sans text-xs tracking-[0.12em] uppercase font-semibold leading-tight"
-                style={{ color: '#a10702', paddingLeft: '58px', paddingTop: '16px' }}
+                className="hidden md:block font-display text-xs tracking-[0.12em] uppercase font-bold leading-tight"
+                style={{ color: '#fffffc', paddingLeft: '58px', paddingTop: '16px' }}
               >
                 {item.title}
               </h3>
@@ -91,8 +91,8 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             >
               {/* Year — mobile */}
               <h3
-                className="md:hidden font-sans text-xs tracking-[0.1em] uppercase font-semibold mb-4"
-                style={{ color: '#a10702' }}
+                className="md:hidden font-display text-xs tracking-[0.1em] uppercase font-bold mb-4"
+                style={{ color: '#fffffc' }}
               >
                 {item.title}
               </h3>
