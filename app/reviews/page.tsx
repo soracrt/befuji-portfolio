@@ -97,22 +97,24 @@ export default function ReviewsPage() {
             </h1>
           </FadeIn>
 
-          {/* Reviews grid */}
-          {pageReviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12" style={{ minHeight: '420px', alignContent: 'start' }}>
-              {pageReviews.map((review, i) => (
-                <FadeIn key={review.id} delay={i * 60}>
-                  <ReviewCard review={review} />
-                </FadeIn>
-              ))}
-            </div>
-          ) : (
-            <FadeIn>
-              <p className="font-sans text-sm mb-12" style={{ color: 'rgba(255,255,252,0.3)' }}>
-                No reviews yet. Be the first.
-              </p>
-            </FadeIn>
-          )}
+          {/* Reviews grid — outer wrapper always reserves height to prevent layout jump on load */}
+          <div className="mb-12" style={{ minHeight: '420px' }}>
+            {pageReviews.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5" style={{ alignContent: 'start' }}>
+                {pageReviews.map((review, i) => (
+                  <FadeIn key={review.id} delay={i * 60}>
+                    <ReviewCard review={review} />
+                  </FadeIn>
+                ))}
+              </div>
+            ) : reviews.length > 0 ? (
+              <FadeIn>
+                <p className="font-sans text-sm" style={{ color: 'rgba(255,255,252,0.3)' }}>
+                  No reviews yet. Be the first.
+                </p>
+              </FadeIn>
+            ) : null}
+          </div>
 
           {/* Pagination */}
           {totalPages > 1 && (
