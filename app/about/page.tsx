@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import React from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
@@ -6,6 +7,17 @@ import FadeIn from '@/components/FadeIn'
 export const metadata: Metadata = {
   title: 'About — Befuji',
   description: 'Motion designer working with brands, labels, and startups.',
+}
+
+function Highlight({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      className="font-semibold"
+      style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 0 18px rgba(255,255,255,0.45)' }}
+    >
+      {children}
+    </span>
+  )
 }
 
 export default function AboutPage() {
@@ -44,17 +56,17 @@ export default function AboutPage() {
             <FadeIn>
               <div className="flex flex-col gap-5">
                 <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Ghazi is a motion designer based in Jakarta. He works under his studio, doing
-                  motion design for music artists, ads, and films.
+                  Ghazi is a <Highlight>motion designer</Highlight> based in <Highlight>Jakarta</Highlight>. He works under his studio, doing
+                  motion design for <Highlight>music artists, ads, and films</Highlight>.
                 </p>
                 <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Fast turnaround and smooth collabs are kind of his thing. Projects get done without
+                  <Highlight>Fast turnaround</Highlight> and <Highlight>smooth collabs</Highlight> are kind of his thing. Projects get done without
                   the back-and-forth headaches, and people tend to actually enjoy the process. Whether
-                  it&apos;s a quick ad or a full creative rollout, the work stays clean and the
-                  communication stays easy.
+                  it&apos;s a quick ad or a full creative rollout, the <Highlight>work stays clean</Highlight> and the
+                  <Highlight> communication stays easy</Highlight>.
                 </p>
                 <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Currently taking on commissions for music artists and working on a few personal
+                  Currently taking on <Highlight>commissions for music artists</Highlight> and working on a few personal
                   projects on the side.
                 </p>
               </div>
