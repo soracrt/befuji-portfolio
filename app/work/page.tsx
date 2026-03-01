@@ -28,6 +28,23 @@ function VideoCard({ project }: { project: Project }) {
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration] = useState('0:00')
 
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          video.src = project.video
+          video.load()
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '300px' }
+    )
+    observer.observe(video)
+    return () => observer.disconnect()
+  }, [project.video])
+
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation()
     const v = videoRef.current
@@ -82,7 +99,6 @@ function VideoCard({ project }: { project: Project }) {
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-            src={project.video}
             autoPlay
             muted
             loop

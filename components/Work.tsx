@@ -1,8 +1,40 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import FadeIn from './FadeIn'
+
+function LazyVideo({ src }: { src: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          video.src = src
+          video.load()
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '300px' }
+    )
+    observer.observe(video)
+    return () => observer.disconnect()
+  }, [src])
+
+  return (
+    <video
+      ref={videoRef}
+      className="absolute inset-0 w-full h-full object-cover"
+      autoPlay
+      muted
+      loop
+      playsInline
+    />
+  )
+}
 
 type Project = {
   id: string
@@ -48,14 +80,7 @@ export default function Work() {
               <FadeIn key={project.id} delay={i * 80}>
                 <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <video
-                      className="absolute inset-0 w-full h-full object-cover"
-                      src={project.video}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                    />
+                    <LazyVideo src={project.video} />
                   </div>
                 </div>
                 <div className="mt-3 px-0.5 flex items-baseline justify-between gap-3">
@@ -76,14 +101,7 @@ export default function Work() {
           <FadeIn delay={80}>
             <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
               <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                <video
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src="/NSX.mp4"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
+                <LazyVideo src="/NSX.mp4" />
               </div>
             </div>
           </FadeIn>
