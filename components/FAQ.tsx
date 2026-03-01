@@ -1,7 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'motion/react'
 import FadeIn from './FadeIn'
+import ShinyText from './ShinyText'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 
 const faqItems = [
@@ -77,17 +79,17 @@ export default function FAQ() {
           >
             FAQ
           </h2>
-          <p
-            className="font-sans text-sm mt-4 leading-[1.85]"
-            style={{ color: 'rgba(255,255,252,0.35)' }}
-          >
+          <p className="font-sans text-sm mt-4 leading-[1.85] text-ink">
             Still have questions?{' '}
-            <a
-              href="mailto:hello@befuji.com"
-              className="text-ink underline underline-offset-4 hover:opacity-60 transition-opacity"
-            >
-              reach out.
-            </a>
+            <Link href="/contact" className="inline-block">
+              <ShinyText
+                text="reach out."
+                speed={3}
+                color="#fffffc"
+                shineColor="#ffffff"
+                spread={120}
+              />
+            </Link>
           </p>
         </FadeIn>
 
