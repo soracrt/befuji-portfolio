@@ -23,13 +23,7 @@ export default function Nav() {
       </Link>
 
       <div className="flex items-center gap-7">
-        {isHome ? (
-          <ScrollLink to="work" smooth offset={-70} duration={500} className={linkClass} style={linkGlow}>
-            work
-          </ScrollLink>
-        ) : (
-          <Link href="/#work" className={linkClass} style={linkGlow}>work</Link>
-        )}
+        <Link href="/work" className={linkClass} style={linkGlow}>work</Link>
 
         {isHome ? (
           <ScrollLink to="about" smooth offset={-70} duration={500} className={linkClass} style={linkGlow}>

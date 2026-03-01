@@ -28,8 +28,8 @@ export default function Work() {
   }, [])
 
   return (
-    <section id="work" className="px-8 py-24">
-      <div className="max-w-6xl mx-auto">
+    <section id="work" className="px-8 py-24" style={{ scrollMarginTop: '250px' }}>
+      <div className="max-w-4xl mx-auto">
 
         {/* Heading */}
         <FadeIn>

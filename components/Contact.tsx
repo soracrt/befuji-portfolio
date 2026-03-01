@@ -4,7 +4,7 @@ import { useState } from 'react'
 import FadeIn from './FadeIn'
 
 const inputClass =
-  'font-sans text-sm text-ink bg-transparent placeholder:text-ink/30 border-b border-divider py-2.5 outline-none focus:border-ink transition-colors duration-200 w-full'
+  'font-sans text-sm text-white bg-transparent placeholder:text-[#888] border-b border-white/20 py-2.5 outline-none focus:border-white transition-colors duration-200 w-full'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -69,7 +69,7 @@ export default function Contact() {
             {sent ? (
               <p
                 className="font-sans text-sm tracking-wide text-center"
-                style={{ color: 'rgba(10,10,10,0.4)' }}
+                style={{ color: 'rgba(255,255,255,0.4)' }}
               >
                 Message received.
               </p>
@@ -115,7 +115,7 @@ export default function Contact() {
         <FadeIn delay={320}>
           <p
             className="font-sans text-xs tracking-widest mt-24"
-            style={{ color: 'rgba(10,10,10,0.2)' }}
+            style={{ color: 'rgba(255,255,255,0.2)' }}
           >
             &copy; {new Date().getFullYear()} befuji
           </p>
