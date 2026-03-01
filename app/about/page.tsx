@@ -61,27 +61,14 @@ const timelineData = [
     ),
   },
   {
-    title: 'September 2025',
+    title: 'Late 2025',
     content: (
       <div className="pb-4">
         <p className="font-sans text-base md:text-lg font-medium mb-3" style={{ color: '#fffffc' }}>
-          soracrt
+          soracrt & The Pivot
         </p>
         <p className="font-sans text-sm md:text-[15px] leading-[1.95]" style={{ color: 'rgba(255,255,252,0.45)' }}>
-          launched soracrt, started working with music artists worldwide.
-        </p>
-      </div>
-    ),
-  },
-  {
-    title: 'December 2025',
-    content: (
-      <div className="pb-4">
-        <p className="font-sans text-base md:text-lg font-medium mb-3" style={{ color: '#fffffc' }}>
-          The Business Side
-        </p>
-        <p className="font-sans text-sm md:text-[15px] leading-[1.95]" style={{ color: 'rgba(255,255,252,0.45)' }}>
-          pivoted into motion graphics for SaaS and startups.
+          launched soracrt, started working with music artists worldwide — then pivoted into motion graphics for SaaS and startups.
         </p>
       </div>
     ),
@@ -91,7 +78,7 @@ const timelineData = [
     content: (
       <div className="pb-4">
         <p className="font-sans text-base md:text-lg font-medium mb-3" style={{ color: '#fffffc' }}>
-          Now
+          present.
         </p>
         <p className="font-sans text-sm md:text-[15px] leading-[1.95]" style={{ color: 'rgba(255,255,252,0.45)' }}>
           befuji. motion design for brands that refuse to blend in.
