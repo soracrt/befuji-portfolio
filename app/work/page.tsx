@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
@@ -24,12 +24,14 @@ function VideoCard({ project }: { project: Project }) {
   const glowRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
+  const fillRef = useRef<HTMLDivElement>(null)
+  const draggingRef = useRef(false)
+  const rafRef = useRef(0)
   const [playing, setPlaying] = useState(true)
   const [muted, setMuted] = useState(true)
   const [progress, setProgress] = useState(0)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration] = useState('0:00')
-  const [dragging, setDragging] = useState(false)
 
   useEffect(() => {
     const video = videoRef.current
@@ -79,6 +81,7 @@ function VideoCard({ project }: { project: Project }) {
   }
 
   const handleTimeUpdate = () => {
+    if (draggingRef.current) return
     const v = videoRef.current
     if (!v || !v.duration) return
     setProgress((v.currentTime / v.duration) * 100)
@@ -91,25 +94,40 @@ function VideoCard({ project }: { project: Project }) {
     setDuration(fmt(v.duration))
   }
 
-  const seekToX = (clientX: number) => {
+  const seekToX = useCallback((clientX: number) => {
     const v = videoRef.current
     const bar = progressBarRef.current
     if (!v || !bar || !v.duration) return
     const rect = bar.getBoundingClientRect()
-    v.currentTime = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * v.duration
-  }
+    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
+    // Directly mutate DOM — no React re-render during drag
+    if (fillRef.current) fillRef.current.style.width = `${pct * 100}%`
+    setCurrentTime(fmt(pct * v.duration))
+    // Throttle actual seek to one per animation frame
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(() => {
+      if (!videoRef.current) return
+      videoRef.current.currentTime = pct * videoRef.current.duration
+      if (glowRef.current) glowRef.current.currentTime = videoRef.current.currentTime
+    })
+  }, [])
 
+  // Register drag listeners once
   useEffect(() => {
-    if (!dragging) return
-    const onMove = (e: MouseEvent) => seekToX(e.clientX)
-    const onUp = () => setDragging(false)
+    const onMove = (e: MouseEvent) => { if (draggingRef.current) seekToX(e.clientX) }
+    const onUp = () => {
+      if (!draggingRef.current) return
+      draggingRef.current = false
+      const v = videoRef.current
+      if (v?.duration) setProgress((v.currentTime / v.duration) * 100)
+    }
     document.addEventListener('mousemove', onMove)
     document.addEventListener('mouseup', onUp)
     return () => {
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onUp)
     }
-  }, [dragging])
+  }, [seekToX])
 
   return (
     <div>
@@ -137,8 +155,8 @@ function VideoCard({ project }: { project: Project }) {
             onClick={togglePlay}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
+            onPlay={() => { setPlaying(true); glowRef.current?.play() }}
+            onPause={() => { setPlaying(false); glowRef.current?.pause() }}
           />
 
           {/* Controls overlay — hidden until hover */}
@@ -147,9 +165,10 @@ function VideoCard({ project }: { project: Project }) {
             <div
               ref={progressBarRef}
               className="w-full h-[4px] bg-white/20 rounded-full mb-3 cursor-pointer relative"
-              onMouseDown={(e) => { e.stopPropagation(); setDragging(true); seekToX(e.clientX) }}
+              onMouseDown={(e) => { e.stopPropagation(); draggingRef.current = true; seekToX(e.clientX) }}
             >
               <div
+                ref={fillRef}
                 className="h-full bg-white/80 rounded-full relative"
                 style={{ width: `${progress}%` }}
               >
