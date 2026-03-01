@@ -16,6 +16,7 @@ type Review = {
 
 export default function ReviewsSection() {
   const [featured, setFeatured] = useState<Review[]>([])
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     fetch('/api/reviews')
@@ -24,11 +25,12 @@ export default function ReviewsSection() {
         if (Array.isArray(data)) {
           setFeatured(data.filter(r => r.featured).slice(0, 3))
         }
+        setLoaded(true)
       })
-      .catch(() => {})
+      .catch(() => setLoaded(true))
   }, [])
 
-  if (featured.length === 0) return null
+  if (!loaded) return null
 
   return (
     <section className="px-8 py-24">
@@ -43,24 +45,37 @@ export default function ReviewsSection() {
           </h2>
         </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {featured.map((review, i) => (
-            <FadeIn key={review.id} delay={i * 80}>
-              <ReviewCard review={review} />
-            </FadeIn>
-          ))}
-        </div>
-
-        <FadeIn delay={160}>
-          <div className="mt-10 flex justify-center">
-            <Link
-              href="/reviews"
-              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 link-glow-red"
+        {featured.length === 0 ? (
+          <FadeIn>
+            <p
+              className="font-sans"
+              style={{ fontSize: '1rem', color: 'rgba(255,255,252,0.25)', letterSpacing: '-0.01em' }}
             >
-              View all reviews →
-            </Link>
-          </div>
-        </FadeIn>
+              No reviews at the moment — check back soon.
+            </p>
+          </FadeIn>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {featured.map((review, i) => (
+                <FadeIn key={review.id} delay={i * 80}>
+                  <ReviewCard review={review} />
+                </FadeIn>
+              ))}
+            </div>
+
+            <FadeIn delay={160}>
+              <div className="mt-10 flex justify-center">
+                <Link
+                  href="/reviews"
+                  className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 link-glow-red"
+                >
+                  View all reviews →
+                </Link>
+              </div>
+            </FadeIn>
+          </>
+        )}
 
       </div>
     </section>

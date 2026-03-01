@@ -181,8 +181,8 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                 ))}
               </div>
             ) : (
-              <p className="font-sans text-sm" style={{ color: 'rgba(255,255,252,0.3)' }}>
-                No reviews yet. Be the first.
+              <p className="font-sans text-sm" style={{ color: 'rgba(255,255,252,0.25)' }}>
+                No reviews at the moment — check back soon.
               </p>
             )}
           </div>
