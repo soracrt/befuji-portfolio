@@ -14,7 +14,6 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
   const [height, setHeight] = useState(0)
   const [passedDots, setPassedDots] = useState<boolean[]>(data.map(() => false))
 
-  // Refs for each dot container (not sticky — measured at natural scroll position)
   const dotRefs = useRef<(HTMLDivElement | null)[]>([])
   const dotOffsets = useRef<number[]>([])
 
@@ -56,21 +55,35 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Left: dot + year label, in-flow so dot aligns with year */}
+            {/* Left: dot + year label */}
             <div
               className="self-start flex items-center shrink-0 md:w-40"
               style={{ paddingLeft: '22px' }}
             >
-              {/* Dot — measured for scroll tracking */}
-              <div
-                ref={el => { dotRefs.current[index] = el }}
+              {/* Dot */}
+              <motion.div
+                ref={el => { dotRefs.current[index] = el as HTMLDivElement | null }}
                 className="h-5 w-5 rounded-full shrink-0"
-                style={{
-                  backgroundColor: passedDots[index] ? '#fffffc' : 'rgba(255,255,252,0.2)',
-                  boxShadow: passedDots[index]
-                    ? '0 0 10px rgba(255,255,252,0.45), 0 0 24px rgba(255,255,252,0.15)'
-                    : 'none',
-                  transition: 'background-color 0.5s ease, box-shadow 0.5s ease',
+                animate={passedDots[index] ? {
+                  backgroundColor: '#fffffc',
+                  scale: [1, 1.22, 1],
+                  boxShadow: [
+                    '0 0 0px rgba(255,255,252,0)',
+                    '0 0 14px rgba(255,255,252,0.55)',
+                    '0 0 0px rgba(255,255,252,0)',
+                  ],
+                } : {
+                  backgroundColor: 'rgba(255,255,252,0.28)',
+                  scale: 1,
+                  boxShadow: '0 0 0px rgba(255,255,252,0)',
+                }}
+                transition={passedDots[index] ? {
+                  backgroundColor: { duration: 0.5, ease: 'easeInOut' },
+                  scale: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+                  boxShadow: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+                } : {
+                  duration: 0.4,
+                  ease: 'easeInOut',
                 }}
               />
               {/* Year — desktop only */}
@@ -96,17 +109,17 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
           </motion.div>
         ))}
 
-        {/* Static faint background line */}
+        {/* Static grey background line */}
         <div
           className="absolute top-0 w-[3px] pointer-events-none"
           style={{
             left: '30px',
             height: `${height}px`,
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.08) 8%, rgba(255,255,252,0.08) 80%, transparent 100%)',
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.2) 8%, rgba(255,255,252,0.2) 80%, transparent 100%)',
           }}
         />
 
-        {/* Scroll-driven white fill — fades at bottom via mask */}
+        {/* Scroll-driven grey-to-white fill */}
         <div
           className="absolute top-0 overflow-hidden w-[3px] pointer-events-none"
           style={{
@@ -121,8 +134,8 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             style={{
               height: heightTransform,
               opacity: opacityTransform,
-              background: 'linear-gradient(to bottom, rgba(255,255,252,0.5), #fffffc)',
-              boxShadow: '0 0 8px rgba(255,255,252,0.7), 0 0 20px rgba(255,255,252,0.25)',
+              background: 'linear-gradient(to bottom, #555555, #fffffc)',
+              boxShadow: '0 0 6px rgba(255,255,252,0.5)',
             }}
           />
         </div>
