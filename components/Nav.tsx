@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Link as ScrollLink } from 'react-scroll'
 
-const linkClass = 'cursor-pointer font-sans text-xs tracking-[0.15em] uppercase text-ink hover:opacity-40 transition-opacity duration-200'
-const linkGlow: React.CSSProperties = { textShadow: '0 0 20px rgba(255,255,255,0.4)' }
+const linkClass = 'cursor-pointer font-sans text-xs tracking-[0.15em] uppercase text-ink link-glow-red'
 const contactGlow: React.CSSProperties = { boxShadow: '0 0 16px rgba(255,255,255,0.35), 0 0 32px rgba(255,255,255,0.15)' }
 
 export default function Nav() {
@@ -23,14 +22,14 @@ export default function Nav() {
       </Link>
 
       <div className="flex items-center gap-7">
-        <Link href="/work" className={linkClass} style={linkGlow}>projects</Link>
+        <Link href="/work" className={linkClass}>projects</Link>
 
         {isHome ? (
-          <ScrollLink to="about" smooth offset={-70} duration={500} className={linkClass} style={linkGlow}>
+          <ScrollLink to="about" smooth offset={-70} duration={500} className={linkClass}>
             about
           </ScrollLink>
         ) : (
-          <Link href="/#about" className={linkClass} style={linkGlow}>about</Link>
+          <Link href="/#about" className={linkClass}>about</Link>
         )}
 
         <Link

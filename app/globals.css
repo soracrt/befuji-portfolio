@@ -44,12 +44,13 @@ body {
   animation: glow-pulse 2s ease-in-out infinite;
 }
 
-/* Underlined text links — glow red on hover */
+/* Links — white glow by default, red glow on hover */
 .link-glow-red {
+  text-shadow: 0 0 20px rgba(255,255,255,0.35);
   transition: color 0.2s ease, text-shadow 0.2s ease, border-color 0.2s ease;
 }
 .link-glow-red:hover {
   color: #a10702;
-  text-shadow: 0 0 14px rgba(161,7,2,0.7);
+  text-shadow: 0 0 16px rgba(161,7,2,0.8), 0 0 32px rgba(161,7,2,0.4);
   border-color: #a10702;
 }
