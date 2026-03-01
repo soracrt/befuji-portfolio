@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Link as ScrollLink } from 'react-scroll'
@@ -11,9 +11,27 @@ const contactGlow: React.CSSProperties = { boxShadow: '0 0 16px rgba(255,255,255
 export default function Nav() {
   const pathname = usePathname()
   const isHome = pathname === '/'
+  const [visible, setVisible] = useState(true)
+  const lastY = useRef(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY
+      setVisible(y < lastY.current || y < 60)
+      lastY.current = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5"
+      style={{
+        transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+      }}
+    >
       <Link
         href="/"
         className="hover:opacity-60 transition-opacity duration-200"
