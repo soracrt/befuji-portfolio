@@ -21,6 +21,7 @@ function fmt(t: number) {
 
 function VideoCard({ project }: { project: Project }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const glowRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(true)
   const [muted, setMuted] = useState(true)
@@ -36,6 +37,10 @@ function VideoCard({ project }: { project: Project }) {
         if (entries[0].isIntersecting) {
           video.src = project.video
           video.load()
+          if (glowRef.current) {
+            glowRef.current.src = project.video
+            glowRef.current.load()
+          }
           observer.disconnect()
         }
       },
@@ -94,7 +99,19 @@ function VideoCard({ project }: { project: Project }) {
 
   return (
     <div>
-      <div ref={containerRef} className="rounded-2xl overflow-hidden bg-[#111]">
+      {/* Glow wrapper — positions the blurred duplicate behind the card */}
+      <div className="relative">
+        <video
+          ref={glowRef}
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-2xl"
+          style={{ filter: 'blur(32px)', opacity: 0.55, transform: 'scale(1.12)' }}
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+
+        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#111] group">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
@@ -110,8 +127,8 @@ function VideoCard({ project }: { project: Project }) {
             onPause={() => setPlaying(false)}
           />
 
-          {/* Controls overlay */}
-          <div className="absolute bottom-0 left-0 right-0 px-3 pt-8 pb-3 bg-gradient-to-t from-black/60 to-transparent">
+          {/* Controls overlay — hidden until hover */}
+          <div className="absolute bottom-0 left-0 right-0 px-3 pt-8 pb-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             {/* Progress bar */}
             <div
               className="w-full h-[4px] bg-white/20 rounded-full mb-3 cursor-pointer"
@@ -184,6 +201,7 @@ function VideoCard({ project }: { project: Project }) {
               </button>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
