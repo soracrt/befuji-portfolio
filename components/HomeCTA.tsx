@@ -22,7 +22,7 @@ export default function HomeCTA() {
         <FadeIn delay={160}>
           <p
             className="font-sans text-xs tracking-widest mt-20"
-            style={{ color: 'rgba(10,10,10,0.2)' }}
+            style={{ color: 'rgba(255,255,255,0.2)' }}
           >
             &copy; {new Date().getFullYear()} befuji
           </p>

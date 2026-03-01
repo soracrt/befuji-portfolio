@@ -7,7 +7,7 @@ import ShinyText from './ShinyText'
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex flex-col justify-center px-8 pt-28 pb-20 text-center">
+    <section className="relative z-[1] min-h-screen flex flex-col justify-center px-8 pt-28 pb-20 text-center">
       <div className="max-w-5xl mx-auto w-full flex flex-col items-center gap-6">
 
         {/* Line 1 — Inter Black, large */}
@@ -66,16 +66,11 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{
-              scale: 1.02,
-              boxShadow: '0 0 28px rgba(0,0,0,0.12), 0 0 56px rgba(0,0,0,0.06)',
-              transition: { duration: 0.3, ease: 'easeOut' },
-            }}
-            style={{ boxShadow: '0 0 20px rgba(0,0,0,0.08), 0 0 40px rgba(0,0,0,0.04)', borderRadius: '9999px' }}
+            style={{ boxShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 40px rgba(255,255,255,0.12)', borderRadius: '9999px' }}
           >
             <Link
               href="/work"
-              className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg border border-ink px-7 py-3 rounded-full inline-block"
+              className="font-sans text-xs tracking-[0.15em] uppercase bg-ink text-bg border border-ink px-7 py-3 rounded-full inline-block transition-all duration-300 ease-out hover:opacity-80"
             >
               view projects
             </Link>
@@ -86,14 +81,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.70, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{
-              scale: 1.02,
-              transition: { duration: 0.3, ease: 'easeOut' },
-            }}
           >
             <Link
               href="/contact"
-              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border border-ink px-7 py-3 rounded-full transition-colors duration-300 inline-block"
+              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border border-ink px-7 py-3 rounded-full inline-block transition-all duration-300 ease-out hover:bg-ink hover:text-bg"
             >
               get in touch
             </Link>

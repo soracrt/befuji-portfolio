@@ -9,10 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#FFFFFF',
-        ink: '#0A0A0A',
-        divider: '#E0E0DB',
-        card: '#F2F2EF',
+        bg: '#000000',
+        ink: '#FFFFFF',
+        divider: '#1a1a1a',
+        card: '#111111',
       },
       fontFamily: {
         display: ['var(--font-inter)', 'Inter', 'sans-serif'],
