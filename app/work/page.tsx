@@ -269,8 +269,11 @@ function VideoCard({ project }: { project: Project }) {
   )
 }
 
+const CATEGORIES = ['ADs', 'SaaS', 'Others']
+
 export default function WorkPage() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   useEffect(() => {
     const cached = sessionStorage.getItem('projects')
@@ -283,6 +286,13 @@ export default function WorkPage() {
       })
       .catch(() => {})
   }, [])
+
+  const filtered = activeCategory
+    ? projects.filter(p => {
+        if (activeCategory === 'Others') return !['ADs', 'SaaS'].includes(p.category ?? '')
+        return p.category === activeCategory
+      })
+    : projects
 
   return (
     <main>
@@ -304,19 +314,39 @@ export default function WorkPage() {
             </Link>
           </FadeIn>
 
-          {/* Heading */}
+          {/* Heading row — title left, categories centered */}
           <FadeIn>
-            <h1
-              className="font-sans font-medium text-ink tracking-[-0.025em] mb-12 text-center"
-              style={{ fontSize: 'clamp(3rem, 7vw, 6rem)' }}
-            >
-              Projects
-            </h1>
+            <div className="relative flex items-center mb-12">
+              <h1
+                className="font-sans font-medium text-ink tracking-[-0.025em]"
+                style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', textShadow: '0 0 48px rgba(255,255,255,0.25)' }}
+              >
+                Projects
+              </h1>
+
+              {/* Category pills — pinned to center of the row */}
+              <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+                    className="font-sans text-xs tracking-[0.12em] uppercase px-4 py-1.5 rounded-full border transition-all duration-200"
+                    style={{
+                      borderColor: activeCategory === cat ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.15)',
+                      color: activeCategory === cat ? '#fff' : 'rgba(255,255,255,0.45)',
+                      background: activeCategory === cat ? 'rgba(255,255,255,0.08)' : 'transparent',
+                    }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
           </FadeIn>
 
           {/* Video grid — 2 columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
-            {projects.map((project, i) => (
+            {filtered.map((project, i) => (
               <FadeIn key={project.id} delay={i * 60}>
                 <VideoCard project={project} />
               </FadeIn>
