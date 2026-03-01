@@ -6,6 +6,7 @@ import FadeIn from './FadeIn'
 
 function LazyVideo({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const glowRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const video = videoRef.current
@@ -15,6 +16,10 @@ function LazyVideo({ src }: { src: string }) {
         if (entries[0].isIntersecting) {
           video.src = src
           video.load()
+          if (glowRef.current) {
+            glowRef.current.src = src
+            glowRef.current.load()
+          }
           observer.disconnect()
         }
       },
@@ -25,14 +30,29 @@ function LazyVideo({ src }: { src: string }) {
   }, [src])
 
   return (
-    <video
-      ref={videoRef}
-      className="absolute inset-0 w-full h-full object-cover"
-      autoPlay
-      muted
-      loop
-      playsInline
-    />
+    <div className="relative">
+      <video
+        ref={glowRef}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-2xl"
+        style={{ filter: 'blur(32px)', opacity: 0.55, transform: 'scale(1.12)' }}
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
+      <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
+        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -85,11 +105,7 @@ export default function Work() {
           <div className="flex flex-col gap-6">
             {featured.map((project, i) => (
               <FadeIn key={project.id} delay={i * 80}>
-                <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
-                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <LazyVideo src={project.video} />
-                  </div>
-                </div>
+                <LazyVideo src={project.video} />
                 <div className="mt-3 px-0.5 flex items-baseline justify-between gap-3">
                   <span className="font-sans text-sm text-ink capitalize">{project.title}</span>
                   {project.category && (
@@ -106,11 +122,7 @@ export default function Work() {
         {/* Fallback while loading / if no featured projects configured */}
         {featured.length === 0 && (
           <FadeIn delay={80}>
-            <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
-              <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                <LazyVideo src="/NSX.mp4" />
-              </div>
-            </div>
+            <LazyVideo src="/NSX.mp4" />
           </FadeIn>
         )}
 
