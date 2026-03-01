@@ -441,10 +441,9 @@ function EditableCell({
 
 // ─── Category Select ──────────────────────────────────────────────────────────
 
-function CategorySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function CategorySelect({ value, onChange, options = ['Ads', 'SaaS', 'Others'] }: { value: string; onChange: (v: string) => void; options?: string[] }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const options = ['Ads', 'SaaS', 'Others']
 
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
@@ -1036,6 +1035,129 @@ function RecentSection({
   )
 }
 
+// ─── Add Review Modal ─────────────────────────────────────────────────────────
+
+const REVIEW_SERVICES = ['Ads', 'SaaS', 'Film', 'Other']
+
+function AddReviewModal({
+  onClose,
+  onSuccess,
+}: {
+  onClose: () => void
+  onSuccess: (review: Review) => void
+}) {
+  const [name, setName] = useState('')
+  const [service, setService] = useState('Ads')
+  const [company, setCompany] = useState('')
+  const [text, setText] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!name.trim() || !text.trim()) return
+    setSubmitting(true)
+    setError('')
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        body: JSON.stringify({ name, service, company, text }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      if (!res.ok) throw new Error('Failed to add review')
+      const review = await res.json()
+      onSuccess(review)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(2px)' }}
+      onClick={onClose}
+    >
+      <div
+        className="relative rounded-2xl w-full max-w-[420px] mx-4"
+        style={{ background: '#2b2b2a', boxShadow: '0 0 0 1px #3a3a39, 0 24px 64px rgba(0,0,0,0.7)' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-5">
+            <span className="font-sans text-white/80 font-medium" style={{ fontSize: '13.5px', letterSpacing: '-0.02em' }}>
+              Add review
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-[#686868] hover:text-[#a0a0a0] transition-colors p-0.5"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Name"
+              required
+              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all"
+              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+            />
+
+            <CategorySelect value={service} onChange={setService} options={REVIEW_SERVICES} />
+
+            <input
+              value={company}
+              onChange={e => setCompany(e.target.value)}
+              placeholder="Company (optional)"
+              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all"
+              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+            />
+
+            <div className="relative">
+              <textarea
+                value={text}
+                onChange={e => setText(e.target.value.slice(0, 120))}
+                placeholder="Review text (max 120 chars)"
+                required
+                rows={3}
+                className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all resize-none"
+                style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+              />
+              <span
+                className="absolute bottom-2.5 right-3.5 font-mono tabular-nums pointer-events-none"
+                style={{ fontSize: '10px', color: text.length >= 120 ? '#a10702' : '#505050' }}
+              >
+                {text.length}/120
+              </span>
+            </div>
+
+            {error && (
+              <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '12px' }}>{error}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={submitting || !name.trim() || !text.trim()}
+              className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-[11px] rounded-xl transition-all disabled:opacity-20"
+              style={{ fontSize: '13.5px', letterSpacing: '-0.01em' }}
+            >
+              {submitting ? '···' : 'Add review'}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Reviews Section ──────────────────────────────────────────────────────────
 
 function ReviewsAdminSection({
@@ -1045,6 +1167,7 @@ function ReviewsAdminSection({
   reviews: Review[]
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>
 }) {
+  const [showAdd, setShowAdd] = useState(false)
   const featuredCount = reviews.filter(r => r.featured).length
 
   function toggleFeatured(id: string) {
@@ -1071,20 +1194,36 @@ function ReviewsAdminSection({
 
   return (
     <div className="p-8 w-full max-w-5xl mx-auto">
+      {showAdd && (
+        <AddReviewModal
+          onClose={() => setShowAdd(false)}
+          onSuccess={review => {
+            setReviews(prev => [...prev, review])
+            setShowAdd(false)
+          }}
+        />
+      )}
+
       <div className="flex items-center gap-3 mb-6">
         <p className="font-sans" style={{ fontSize: '12.5px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
           Select up to 3 reviews to feature on the homepage.
         </p>
-        <span className="font-sans ml-auto" style={{ fontSize: '12px', color: '#686868' }}>
+        <span className="font-sans" style={{ fontSize: '12px', color: '#686868' }}>
           {featuredCount}/3
         </span>
+        <button
+          onClick={() => setShowAdd(true)}
+          className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors ml-4"
+          style={{ fontSize: '12.5px', letterSpacing: '-0.01em' }}
+        >
+          + Add review
+        </button>
       </div>
 
       {reviews.length === 0 ? (
         <p className="font-sans text-[#686868] text-sm">No reviews yet.</p>
       ) : (
         <div className="flex flex-col gap-1.5">
-          {/* Table header */}
           <div
             className="grid gap-4 px-4 pb-2 mb-1"
             style={{ gridTemplateColumns: '1fr 80px 1fr 60px 28px' }}
@@ -1108,7 +1247,6 @@ function ReviewsAdminSection({
                   boxShadow: '0 0 0 1px #323231',
                 }}
               >
-                {/* Name + company */}
                 <div className="min-w-0">
                   <div className="font-sans text-white/80 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
                     {r.name}
@@ -1120,12 +1258,10 @@ function ReviewsAdminSection({
                   )}
                 </div>
 
-                {/* Service */}
                 <span className="font-sans" style={{ fontSize: '10px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
                   {r.service.toUpperCase()}
                 </span>
 
-                {/* Text */}
                 <span
                   className="font-sans truncate"
                   style={{ fontSize: '12px', color: '#686868', letterSpacing: '-0.01em' }}
@@ -1134,7 +1270,6 @@ function ReviewsAdminSection({
                   {r.text}
                 </span>
 
-                {/* Featured toggle */}
                 <div className="flex items-center justify-center">
                   <button
                     onClick={() => !maxed && toggleFeatured(r.id)}
@@ -1150,7 +1285,6 @@ function ReviewsAdminSection({
                   </button>
                 </div>
 
-                {/* Delete */}
                 <button
                   onClick={() => deleteReview(r.id)}
                   title="Delete"
