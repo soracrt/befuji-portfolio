@@ -16,17 +16,17 @@ interface LetterPos {
   r: number
 }
 
-// Generate random scatter positions then resolve overlaps so letters don't stack
 function generateScattered(count: number): LetterPos[] {
+  // Small initial nudge — max ±8px
   const pos: LetterPos[] = Array.from({ length: count }, () => ({
-    x: (Math.random() - 0.5) * 2.8,
-    y: (Math.random() - 0.5) * 1.6,
-    r: (Math.random() - 0.5) * 80,
+    x: (Math.random() - 0.5) * 16,
+    y: (Math.random() - 0.5) * 12,
+    r: (Math.random() - 0.5) * 18,
   }))
 
-  // Model each letter as a circle, push overlapping pairs apart
-  const minDist = 0.72
-  for (let iter = 0; iter < 20; iter++) {
+  // Push overlapping letters apart (letter ~10px wide modelled as circle r=5)
+  const minDist = 11
+  for (let iter = 0; iter < 30; iter++) {
     for (let i = 0; i < pos.length; i++) {
       for (let j = i + 1; j < pos.length; j++) {
         const dx = pos[j].x - pos[i].x
@@ -42,6 +42,16 @@ function generateScattered(count: number): LetterPos[] {
           pos[j].y += ny * push
         }
       }
+    }
+  }
+
+  // Clamp so nothing strays further than 14px from origin
+  const maxDist = 14
+  for (const p of pos) {
+    const d = Math.sqrt(p.x * p.x + p.y * p.y)
+    if (d > maxDist) {
+      p.x = (p.x / d) * maxDist
+      p.y = (p.y / d) * maxDist
     }
   }
 
@@ -73,13 +83,13 @@ export function TextDisperse({ children, onHover, className, ...props }: TextDis
           key={i}
           animate={
             scattered
-              ? { x: `${scattered[i].x}em`, y: `${scattered[i].y}em`, rotateZ: scattered[i].r }
+              ? { x: scattered[i].x, y: scattered[i].y, rotateZ: scattered[i].r }
               : { x: 0, y: 0, rotateZ: 0 }
           }
           transition={
             scattered
-              ? { type: 'spring', stiffness: 160, damping: 11, mass: 0.9 }
-              : { type: 'spring', stiffness: 320, damping: 30, mass: 0.5 }
+              ? { type: 'spring', stiffness: 90, damping: 14, mass: 1 }
+              : { type: 'spring', stiffness: 340, damping: 32, mass: 0.5 }
           }
           style={{ display: 'inline-block' }}
         >
