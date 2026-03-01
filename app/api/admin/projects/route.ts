@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 
+export const dynamic = 'force-dynamic'
+
 const DATA_FILE = path.join(process.cwd(), 'data', 'projects.json')
 
 async function readProjects() {
@@ -19,8 +21,13 @@ async function writeProjects(projects: unknown[]) {
 }
 
 export async function GET() {
-  const projects = await readProjects()
-  return NextResponse.json(projects)
+  try {
+    const projects = await readProjects()
+    return NextResponse.json(projects)
+  } catch (err) {
+    console.error('[api/admin/projects GET]', err)
+    return NextResponse.json([], { status: 200 })
+  }
 }
 
 export async function POST(req: Request) {
