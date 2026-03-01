@@ -72,6 +72,7 @@ function VideoCard({ project }: { project: Project }) {
       // Unmuting — silence whoever was active before
       if (activeUnmute) activeUnmute.mute()
       v.muted = false
+      v.volume = 0.5
       setMuted(false)
       activeUnmute = {
         mute: () => { if (videoRef.current) videoRef.current.muted = true; setMuted(true) },
