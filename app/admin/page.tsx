@@ -871,6 +871,7 @@ function ProjectsSection({
                         body: JSON.stringify({ id: p.id, category: v }),
                         headers: { 'Content-Type': 'application/json' },
                       })
+                      sessionStorage.removeItem('projects')
                     }}
                   />
                   <EditableCell {...cellProps('client')} placeholder="—" />

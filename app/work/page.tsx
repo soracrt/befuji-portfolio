@@ -290,8 +290,9 @@ export default function WorkPage() {
   const filtered = activeCategory === 'All'
     ? projects
     : projects.filter(p => {
-        if (activeCategory === 'Others') return !['ADs', 'SaaS'].includes(p.category ?? '')
-        return p.category === activeCategory
+        const cat = (p.category ?? '').toLowerCase()
+        if (activeCategory === 'Others') return !['ads', 'saas'].includes(cat)
+        return cat === activeCategory.toLowerCase()
       })
 
   return (
