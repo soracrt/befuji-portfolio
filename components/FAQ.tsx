@@ -83,7 +83,7 @@ export default function FAQ() {
             Still have questions?{' '}
             <Link
               href="/contact"
-              className="inline-block"
+              className="inline-block border-b border-ink/60 pb-px"
               style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,252,0.7)) drop-shadow(0 0 14px rgba(255,255,252,0.35))' }}
             >
               <ShinyText
