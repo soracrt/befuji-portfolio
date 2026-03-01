@@ -35,7 +35,7 @@ export default function About() {
         <FadeIn delay={160}>
           <div
             className="w-full aspect-square md:aspect-[4/5] ml-auto max-w-md"
-            style={{ backgroundColor: '#2e2e2d' }}
+            style={{ backgroundColor: '#111111' }}
           />
         </FadeIn>
       </div>

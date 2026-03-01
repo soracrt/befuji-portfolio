@@ -13,7 +13,7 @@ function Highlight({ children }: { children: React.ReactNode }) {
   return (
     <span
       className="font-semibold"
-      style={{ color: 'rgba(255,255,252,0.95)', textShadow: '0 0 18px rgba(161,7,2,0.6)' }}
+      style={{ color: 'rgba(255,255,252,0.95)', textShadow: '0 0 18px rgba(255,255,255,0.45)' }}
     >
       {children}
     </span>

@@ -34,10 +34,10 @@ body {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }
 
-/* "blend in" glow pulse — breathing red text-shadow */
+/* "blend in" glow pulse — breathing white text-shadow */
 @keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 6px rgba(161,7,2,0.5); }
-  50%       { text-shadow: 0 0 20px rgba(161,7,2,1); }
+  0%, 100% { text-shadow: 0 0 6px rgba(255,255,255,0.4); }
+  50%       { text-shadow: 0 0 16px rgba(255,255,255,0.9); }
 }
 
 .blend-in-glow {

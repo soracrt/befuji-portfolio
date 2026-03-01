@@ -66,7 +66,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            style={{ boxShadow: '0 0 20px rgba(161,7,2,0.45), 0 0 40px rgba(161,7,2,0.2)', borderRadius: '9999px' }}
+            style={{ boxShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 40px rgba(255,255,255,0.12)', borderRadius: '9999px' }}
           >
             <Link
               href="/work"

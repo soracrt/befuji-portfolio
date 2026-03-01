@@ -11,8 +11,8 @@ const config: Config = {
       colors: {
         bg: '#000000',
         ink: '#fffffc',
-        divider: '#2e2e2d',
-        card: '#2e2e2d',
+        divider: '#1a1a1a',
+        card: '#111111',
         accent: '#a10702',
       },
       fontFamily: {

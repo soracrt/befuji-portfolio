@@ -158,7 +158,7 @@ function VideoCard({ project }: { project: Project }) {
           playsInline
         />
 
-        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#2e2e2d] group">
+        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#111] group">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
@@ -320,7 +320,7 @@ export default function WorkPage() {
             <div className="relative flex items-center mb-12">
               <h1
                 className="font-sans font-medium text-ink tracking-[-0.025em]"
-                style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', textShadow: '0 0 48px rgba(161,7,2,0.35)' }}
+                style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', textShadow: '0 0 48px rgba(255,255,255,0.25)' }}
               >
                 Projects
               </h1>
