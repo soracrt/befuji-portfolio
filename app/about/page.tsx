@@ -1,86 +1,143 @@
 import type { Metadata } from 'next'
-import React from 'react'
-import Link from 'next/link'
 import Nav from '@/components/Nav'
-import FadeIn from '@/components/FadeIn'
+import { Timeline } from '@/components/ui/timeline'
 
 export const metadata: Metadata = {
   title: 'About — Befuji',
   description: 'Motion designer working with brands, labels, and startups.',
 }
 
-function Highlight({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="font-semibold"
-      style={{ color: 'rgba(255,255,252,0.95)', textShadow: '0 0 18px rgba(255,255,255,0.45)' }}
-    >
-      {children}
-    </span>
-  )
-}
+const timelineData = [
+  {
+    title: '2018',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          The Start
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          began editing on mobile using CapCut, making anime edits.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: '2019',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          First Steps into Motion
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          moved to Light Motion, started learning camera movements.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: '2020',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          First Laptop, First After Effects
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          got a proper setup, jumped into AE, spent the next 5 years deep in AMVs.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: '2025',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          Motion Graphics
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          shifted focus to motion graphics, learned more in one year than the previous seven combined.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: 'September 2025',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          Sora CRT
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          launched Sora CRT, started working with music artists worldwide.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: 'December 2025',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          The Business Side
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          pivoted into motion graphics for SaaS and startups.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: '2026',
+    content: (
+      <div className="pb-2">
+        <p className="font-sans text-sm font-medium mb-2" style={{ color: '#fffffc' }}>
+          Now
+        </p>
+        <p className="font-sans text-sm leading-[1.85]" style={{ color: 'rgba(255,255,252,0.45)' }}>
+          befuji. motion design for brands that refuse to blend in.
+        </p>
+      </div>
+    ),
+  },
+]
 
 export default function AboutPage() {
   return (
     <main>
       <Nav />
 
-      <div className="pt-32 pb-24 px-8">
-        <div className="max-w-4xl mx-auto">
-
-          {/* Back link */}
-          <FadeIn>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.12em] uppercase text-ink/50 hover:text-ink transition-colors duration-200 mb-10"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-              back
-            </Link>
-          </FadeIn>
-
-          {/* Heading */}
-          <FadeIn>
-            <h1
-              className="font-sans font-medium text-ink tracking-[-0.025em] mb-16"
-              style={{ fontSize: 'clamp(3rem, 7vw, 6rem)' }}
-            >
-              About
-            </h1>
-          </FadeIn>
-
-          {/* Bio + headshot */}
-          <div className="grid grid-cols-2 gap-16 items-stretch">
-            <FadeIn>
-              <div className="flex flex-col gap-5">
-                <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,252,0.65)' }}>
-                  Ghazi is a <Highlight>motion designer</Highlight> based in <Highlight>Jakarta</Highlight>. He works under his studio, doing
-                  motion design for <Highlight>music artists, ads, and films</Highlight>.
-                </p>
-                <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,252,0.65)' }}>
-                  <Highlight>Fast turnaround</Highlight> and <Highlight>smooth collabs</Highlight> are kind of his thing. Projects get done without
-                  the back-and-forth headaches, and people tend to actually enjoy the process. Whether
-                  it&apos;s a quick ad or a full creative rollout, the <Highlight>work stays clean</Highlight> and the
-                  <Highlight> communication stays easy</Highlight>.
-                </p>
-                <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,252,0.65)' }}>
-                  Currently taking on <Highlight>commissions for music artists</Highlight> and working on a few personal
-                  projects on the side.
-                </p>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={130}>
-              <div
-                className="w-full h-full rounded-2xl"
-                style={{ backgroundColor: '#E8E8E3', minHeight: '280px' }}
-              />
-            </FadeIn>
-          </div>
-
+      {/* Page heading */}
+      <div className="pt-32 pb-4 px-8">
+        <div className="max-w-3xl mx-auto mb-16">
+          <p
+            className="font-sans text-[10px] tracking-[0.2em] uppercase mb-4"
+            style={{ color: 'rgba(255,255,252,0.3)' }}
+          >
+            origin story
+          </p>
+          <h1
+            className="font-sans font-medium text-ink tracking-[-0.025em]"
+            style={{ fontSize: 'clamp(2.75rem, 6vw, 4.5rem)' }}
+          >
+            the journey.
+          </h1>
+          <p
+            className="font-sans text-sm mt-4"
+            style={{ color: 'rgba(255,255,252,0.3)' }}
+          >
+            seven years in the making.
+          </p>
         </div>
+      </div>
+
+      {/* Timeline */}
+      <div className="px-8">
+        <Timeline data={timelineData} />
+      </div>
+
+      {/* Skills section — placeholder for later */}
+      <div className="px-8 pb-32">
+        <div className="max-w-3xl mx-auto" />
       </div>
     </main>
   )
