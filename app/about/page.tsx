@@ -40,7 +40,7 @@ export default function AboutPage() {
           </FadeIn>
 
           {/* Bio + headshot */}
-          <div className="grid grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-2 gap-16 items-stretch">
             <FadeIn>
               <div className="flex flex-col gap-5">
                 <p className="font-sans text-sm leading-[1.9]" style={{ color: 'rgba(255,255,255,0.65)' }}>
@@ -62,8 +62,8 @@ export default function AboutPage() {
 
             <FadeIn delay={130}>
               <div
-                className="w-full aspect-[4/5] rounded-2xl"
-                style={{ backgroundColor: '#E8E8E3' }}
+                className="w-full h-full rounded-2xl"
+                style={{ backgroundColor: '#E8E8E3', minHeight: '280px' }}
               />
             </FadeIn>
           </div>
