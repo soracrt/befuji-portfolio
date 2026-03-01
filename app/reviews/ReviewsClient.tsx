@@ -29,10 +29,10 @@ function CustomSelect({ value, options, onChange, placeholder = 'Choose one' }: 
           borderColor: open ? 'rgba(255,255,252,0.3)' : 'rgba(255,255,252,0.12)',
         }}
       >
-        <span style={{ color: value ? '#fffffc' : 'rgba(255,255,252,0.25)' }}>{value || placeholder}</span>
+        <span style={{ color: value ? '#fffffc' : 'rgba(255,255,252,0.4)' }}>{value || placeholder}</span>
         <svg
           width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          style={{ color: 'rgba(255,255,252,0.35)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+          style={{ color: 'rgba(255,255,252,0.6)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
         >
           <polyline points="6 9 12 15 18 9" />
         </svg>
@@ -254,7 +254,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
             <form onSubmit={handleSubmit} className="max-w-lg flex flex-col gap-5">
 
               <div className="flex flex-col gap-1.5">
-                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.35)' }}>
+                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.6)' }}>
                   Name
                 </label>
                 <input
@@ -263,40 +263,40 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                   onChange={e => setName(e.target.value)}
                   required
                   placeholder="Your name"
-                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/20 outline-none focus:border-ink/40 transition-colors"
+                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none focus:border-ink/40 transition-colors"
                   style={{ borderColor: 'rgba(255,255,252,0.12)' }}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.35)' }}>
+                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.6)' }}>
                   Service
                 </label>
                 <CustomSelect value={service} options={SERVICES} onChange={setService} />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.35)' }}>
-                  Company <span style={{ color: 'rgba(255,255,252,0.2)' }}>(optional)</span>
+                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.6)' }}>
+                  Company <span style={{ color: 'rgba(255,255,252,0.35)' }}>(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={company}
                   onChange={e => setCompany(e.target.value)}
                   placeholder="Your company or studio"
-                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/20 outline-none focus:border-ink/40 transition-colors"
+                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none focus:border-ink/40 transition-colors"
                   style={{ borderColor: 'rgba(255,255,252,0.12)' }}
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.35)' }}>
+                  <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.6)' }}>
                     Review
                   </label>
                   <span
                     className="font-mono text-xs tabular-nums"
-                    style={{ color: text.length >= 120 ? '#a10702' : 'rgba(255,255,252,0.25)' }}
+                    style={{ color: text.length >= 120 ? '#a10702' : 'rgba(255,255,252,0.4)' }}
                   >
                     {text.length}/120
                   </span>
@@ -307,7 +307,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                   required
                   placeholder="Tell us about your experience..."
                   rows={4}
-                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/20 outline-none focus:border-ink/40 transition-colors resize-none"
+                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none focus:border-ink/40 transition-colors resize-none"
                   style={{ borderColor: 'rgba(255,255,252,0.12)' }}
                 />
               </div>
