@@ -17,45 +17,11 @@ interface LetterPos {
 }
 
 function generateScattered(count: number): LetterPos[] {
-  // Small initial nudge — max ±8px
-  const pos: LetterPos[] = Array.from({ length: count }, () => ({
-    x: (Math.random() - 0.5) * 16,
-    y: (Math.random() - 0.5) * 12,
-    r: (Math.random() - 0.5) * 18,
+  return Array.from({ length: count }, () => ({
+    x: (Math.random() - 0.5) * 6,   // ±3px — keeps left-to-right order
+    y: (Math.random() - 0.5) * 18,  // ±9px — main dispersion axis
+    r: (Math.random() - 0.5) * 36,  // ±18deg — adds character
   }))
-
-  // Push overlapping letters apart (letter ~10px wide modelled as circle r=5)
-  const minDist = 11
-  for (let iter = 0; iter < 30; iter++) {
-    for (let i = 0; i < pos.length; i++) {
-      for (let j = i + 1; j < pos.length; j++) {
-        const dx = pos[j].x - pos[i].x
-        const dy = pos[j].y - pos[i].y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < minDist && dist > 0.001) {
-          const push = (minDist - dist) / 2
-          const nx = dx / dist
-          const ny = dy / dist
-          pos[i].x -= nx * push
-          pos[i].y -= ny * push
-          pos[j].x += nx * push
-          pos[j].y += ny * push
-        }
-      }
-    }
-  }
-
-  // Clamp so nothing strays further than 14px from origin
-  const maxDist = 14
-  for (const p of pos) {
-    const d = Math.sqrt(p.x * p.x + p.y * p.y)
-    if (d > maxDist) {
-      p.x = (p.x / d) * maxDist
-      p.y = (p.y / d) * maxDist
-    }
-  }
-
-  return pos
 }
 
 export function TextDisperse({ children, onHover, className, ...props }: TextDisperseProps) {
@@ -88,8 +54,8 @@ export function TextDisperse({ children, onHover, className, ...props }: TextDis
           }
           transition={
             scattered
-              ? { type: 'spring', stiffness: 90, damping: 14, mass: 1 }
-              : { type: 'spring', stiffness: 340, damping: 32, mass: 0.5 }
+              ? { type: 'spring', stiffness: 100, damping: 15, mass: 0.8 }
+              : { type: 'spring', stiffness: 380, damping: 34, mass: 0.4 }
           }
           style={{ display: 'inline-block' }}
         >
