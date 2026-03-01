@@ -21,6 +21,7 @@ const SERVICES = ['ADs', 'SaaS', 'Film', 'Other']
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [page, setPage] = useState(0)
+  const [cardsVisible, setCardsVisible] = useState(false)
 
   // Form state
   const [name, setName] = useState('')
@@ -33,7 +34,12 @@ export default function ReviewsPage() {
   useEffect(() => {
     fetch('/api/reviews')
       .then(r => r.json())
-      .then((data: Review[]) => { if (Array.isArray(data)) setReviews(data) })
+      .then((data: Review[]) => {
+        if (Array.isArray(data)) {
+          setReviews(data)
+          requestAnimationFrame(() => setCardsVisible(true))
+        }
+      })
       .catch(() => {})
   }, [])
 
@@ -102,9 +108,16 @@ export default function ReviewsPage() {
             {pageReviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5" style={{ alignContent: 'start' }}>
                 {pageReviews.map((review, i) => (
-                  <FadeIn key={review.id} delay={i * 60}>
+                  <div
+                    key={review.id}
+                    style={{
+                      opacity: cardsVisible ? 1 : 0,
+                      transform: cardsVisible ? 'translateY(0)' : 'translateY(24px)',
+                      transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 60}ms, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 60}ms`,
+                    }}
+                  >
                     <ReviewCard review={review} />
-                  </FadeIn>
+                  </div>
                 ))}
               </div>
             ) : reviews.length > 0 ? (
@@ -123,7 +136,7 @@ export default function ReviewsPage() {
 
                 {/* Left arrow */}
                 <button
-                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  onClick={() => { setCardsVisible(false); requestAnimationFrame(() => { setPage(p => Math.max(0, p - 1)); requestAnimationFrame(() => setCardsVisible(true)) }) }}
                   disabled={page === 0}
                   className="transition-colors disabled:opacity-20 hover:opacity-60"
                   style={{ color: 'rgba(255,255,252,0.6)' }}
@@ -139,7 +152,7 @@ export default function ReviewsPage() {
                   {Array.from({ length: totalPages }).map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setPage(i)}
+                      onClick={() => { setCardsVisible(false); requestAnimationFrame(() => { setPage(i); requestAnimationFrame(() => setCardsVisible(true)) }) }}
                       className="h-[3px] rounded-full transition-all duration-300"
                       style={{
                         width: i === page ? '32px' : '16px',
@@ -152,7 +165,7 @@ export default function ReviewsPage() {
 
                 {/* Right arrow */}
                 <button
-                  onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                  onClick={() => { setCardsVisible(false); requestAnimationFrame(() => { setPage(p => Math.min(totalPages - 1, p + 1)); requestAnimationFrame(() => setCardsVisible(true)) }) }}
                   disabled={page === totalPages - 1}
                   className="transition-colors disabled:opacity-20 hover:opacity-60"
                   style={{ color: 'rgba(255,255,252,0.6)' }}
