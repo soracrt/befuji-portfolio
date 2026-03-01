@@ -1168,8 +1168,6 @@ function ReviewsAdminSection({
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>
 }) {
   const [showAdd, setShowAdd] = useState(false)
-  const [dragId, setDragId] = useState<string | null>(null)
-  const [dragOverId, setDragOverId] = useState<string | null>(null)
   const featuredCount = reviews.filter(r => r.featured).length
 
   function toggleFeatured(id: string) {
@@ -1194,41 +1192,17 @@ function ReviewsAdminSection({
     }).catch(console.error)
   }
 
-  function handleDragStart(e: React.DragEvent, id: string) {
-    setDragId(id)
-    e.dataTransfer.effectAllowed = 'move'
-  }
-
-  function handleDragOver(e: React.DragEvent, id: string) {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-    if (id !== dragId) setDragOverId(id)
-  }
-
-  function handleDrop(targetId: string) {
-    if (!dragId || dragId === targetId) {
-      setDragId(null)
-      setDragOverId(null)
-      return
-    }
+  function moveReview(idx: number, dir: -1 | 1) {
     const next = [...reviews]
-    const fromIdx = next.findIndex(r => r.id === dragId)
-    const toIdx = next.findIndex(r => r.id === targetId)
-    const [item] = next.splice(fromIdx, 1)
-    next.splice(toIdx, 0, item)
+    const target = idx + dir
+    if (target < 0 || target >= next.length) return
+    ;[next[idx], next[target]] = [next[target], next[idx]]
     setReviews(next)
-    setDragId(null)
-    setDragOverId(null)
     fetch('/api/reviews', {
       method: 'PATCH',
       body: JSON.stringify({ order: next.map(r => r.id) }),
       headers: { 'Content-Type': 'application/json' },
     }).catch(console.error)
-  }
-
-  function handleDragEnd() {
-    setDragId(null)
-    setDragOverId(null)
   }
 
   return (
@@ -1265,7 +1239,7 @@ function ReviewsAdminSection({
         <div className="flex flex-col gap-1.5">
           <div
             className="grid gap-4 px-5 pb-2 mb-1"
-            style={{ gridTemplateColumns: '16px 1fr 80px 1fr 60px 28px' }}
+            style={{ gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px' }}
           >
             {(['', 'Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
               <div key={i} className="font-sans" style={{ fontSize: '11.5px', letterSpacing: '0.11em', color: '#707070' }}>
@@ -1274,31 +1248,37 @@ function ReviewsAdminSection({
             ))}
           </div>
 
-          {reviews.map(r => {
+          {reviews.map((r, idx) => {
             const maxed = !r.featured && featuredCount >= 3
-            const isDragging = dragId === r.id
-            const isOver = dragOverId === r.id
             return (
               <div
                 key={r.id}
-                draggable
-                onDragStart={e => handleDragStart(e, r.id)}
-                onDragOver={e => handleDragOver(e, r.id)}
-                onDrop={() => handleDrop(r.id)}
-                onDragEnd={handleDragEnd}
                 className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-all"
                 style={{
-                  gridTemplateColumns: '16px 1fr 80px 1fr 60px 28px',
-                  background: isDragging ? '#1e1e1e' : '#282827',
-                  boxShadow: isOver ? '0 0 0 1px #555553' : '0 0 0 1px #323231',
-                  opacity: isDragging ? 0.4 : 1,
+                  gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px',
+                  background: '#282827',
+                  boxShadow: '0 0 0 1px #323231',
                 }}
               >
-                <div
-                  className="flex items-center text-[#484848] group-hover:text-[#686868] transition-colors"
-                  style={{ cursor: 'grab' }}
-                >
-                  <IconDragHandle />
+                <div className="flex flex-col items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => moveReview(idx, -1)}
+                    disabled={idx === 0}
+                    className="text-[#686868] hover:text-[#a0a0a0] disabled:opacity-20 disabled:cursor-default transition-colors"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="18 15 12 9 6 15" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => moveReview(idx, 1)}
+                    disabled={idx === reviews.length - 1}
+                    className="text-[#686868] hover:text-[#a0a0a0] disabled:opacity-20 disabled:cursor-default transition-colors"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
                 </div>
 
                 <div className="min-w-0">
