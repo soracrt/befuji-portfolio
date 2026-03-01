@@ -24,7 +24,7 @@ export default function About() {
             </p>
             <Link
               href="/about"
-              className="inline-block font-sans text-xs tracking-[0.15em] uppercase text-ink mt-8 border-b border-ink pb-0.5 hover:opacity-40 transition-opacity duration-200"
+              className="inline-block font-sans text-xs tracking-[0.15em] uppercase text-ink mt-8 border-b border-ink pb-0.5 link-glow-red"
             >
               Full story →
             </Link>

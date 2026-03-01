@@ -210,7 +210,7 @@ export default function Work() {
           <div className="mt-10 flex justify-center">
             <Link
               href="/work"
-              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 hover:opacity-40 transition-opacity duration-200"
+              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 link-glow-red"
             >
               View More →
             </Link>
