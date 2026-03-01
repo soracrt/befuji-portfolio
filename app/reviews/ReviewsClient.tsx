@@ -321,7 +321,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                   {submitting ? 'Submitting...' : 'Submit review'}
                 </button>
                 {submitted && (
-                  <span className="font-sans text-xs" style={{ color: 'rgba(255,255,252,0.4)' }}>
+                  <span className="font-sans text-xs" style={{ color: '#4ade80' }}>
                     Review submitted.
                   </span>
                 )}
