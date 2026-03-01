@@ -75,7 +75,7 @@ type Review = {
 }
 
 const PER_PAGE = 6
-const SERVICES = ['ADs', 'SaaS', 'Film', 'Other']
+const SERVICES = ['Ads', 'SaaS', 'Film', 'Other']
 
 export default function ReviewsClient({ initialReviews }: { initialReviews: Review[] }) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews)
@@ -84,7 +84,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
   // Form state
   const [name, setName] = useState('')
-  const [service, setService] = useState('ADs')
+  const [service, setService] = useState('Ads')
   const [company, setCompany] = useState('')
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -120,7 +120,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
         const newReview = await res.json()
         setReviews(prev => [...prev, newReview])
         setName('')
-        setService('ADs')
+        setService('Ads')
         setCompany('')
         setText('')
         setSubmitted(true)

@@ -269,7 +269,7 @@ function VideoCard({ project }: { project: Project }) {
   )
 }
 
-const CATEGORIES = ['All', 'ADs', 'SaaS', 'Others']
+const CATEGORIES = ['All', 'Ads', 'SaaS', 'Others']
 
 export default function WorkPage() {
   const [projects, setProjects] = useState<Project[]>([])

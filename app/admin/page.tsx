@@ -410,7 +410,7 @@ function EditableCell({
 function CategorySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const options = ['ADs', 'SaaS', 'Others']
+  const options = ['Ads', 'SaaS', 'Others']
 
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
@@ -481,7 +481,7 @@ function UploadModal({
   const [file, setFile] = useState<File | null>(null)
   const [dragging, setDragging] = useState(false)
   const [title, setTitle] = useState('')
-  const [category, setCategory] = useState('ADs')
+  const [category, setCategory] = useState('Ads')
   const [client, setClient] = useState('')
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)

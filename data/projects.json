@@ -2,7 +2,7 @@
   {
     "id": "NSX",
     "title": "NSX",
-    "category": "ADs",
+    "category": "Ads",
     "client": "",
     "video": "/NSX.mp4",
     "isRecent": true
@@ -10,7 +10,7 @@
   {
     "id": "Romulus.mp4",
     "title": "Romulus",
-    "category": "ADs",
+    "category": "Ads",
     "client": "",
     "video": "/api/videos/Romulus.mp4",
     "isRecent": false

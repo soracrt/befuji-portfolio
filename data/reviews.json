@@ -2,7 +2,7 @@
   {
     "id": "r1",
     "name": "Marcus Chen",
-    "service": "ADs",
+    "service": "Ads",
     "company": "Apex Motors",
     "text": "Insane attention to detail. The ad came out better than we imagined. Will definitely work with befuji again.",
     "featured": true,
@@ -29,7 +29,7 @@
   {
     "id": "r4",
     "name": "Layla Haddad",
-    "service": "ADs",
+    "service": "Ads",
     "company": "Volta Brand",
     "text": "The visual style matched our brand perfectly. Fast revisions and great communication throughout.",
     "featured": false,
@@ -65,7 +65,7 @@
   {
     "id": "r8",
     "name": "Aiko Tanaka",
-    "service": "ADs",
+    "service": "Ads",
     "company": "Kura Studio",
     "text": "Our campaign performance improved massively after the refresh. The motion work elevated everything.",
     "featured": false,
