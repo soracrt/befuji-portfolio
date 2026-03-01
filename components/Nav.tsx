@@ -19,7 +19,13 @@ export default function Nav() {
         href="/"
         className="hover:opacity-60 transition-opacity duration-200"
       >
-        <img src="/icon.png" alt="befuji" className="h-12 w-auto" />
+        <div className="relative overflow-hidden">
+          <img src="/icon.png" alt="befuji" className="h-12 w-auto" />
+          <div
+            className="logo-shine absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)' }}
+          />
+        </div>
       </Link>
 
       <div className="flex items-center gap-7">
