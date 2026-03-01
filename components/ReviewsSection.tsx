@@ -1,6 +1,3 @@
-'use client'
-
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import FadeIn from './FadeIn'
 import ReviewCard from './ReviewCard'
@@ -14,23 +11,8 @@ type Review = {
   featured: boolean
 }
 
-export default function ReviewsSection() {
-  const [featured, setFeatured] = useState<Review[]>([])
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    fetch('/api/reviews')
-      .then(r => r.json())
-      .then((data: Review[]) => {
-        if (Array.isArray(data)) {
-          setFeatured(data.filter(r => r.featured).slice(0, 3))
-        }
-        setLoaded(true)
-      })
-      .catch(() => setLoaded(true))
-  }, [])
-
-  if (!loaded) return null
+export default function ReviewsSection({ reviews }: { reviews: Review[] }) {
+  const top3 = reviews.slice(0, 3)
 
   return (
     <section className="px-8 py-24">
@@ -45,7 +27,7 @@ export default function ReviewsSection() {
           </h2>
         </FadeIn>
 
-        {featured.length === 0 ? (
+        {top3.length === 0 ? (
           <FadeIn>
             <p
               className="font-sans"
@@ -57,7 +39,7 @@ export default function ReviewsSection() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {featured.map((review, i) => (
+              {top3.map((review, i) => (
                 <FadeIn key={review.id} delay={i * 80}>
                   <ReviewCard review={review} />
                 </FadeIn>
