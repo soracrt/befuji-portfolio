@@ -276,14 +276,9 @@ export default function WorkPage() {
   const [activeCategory, setActiveCategory] = useState('All')
 
   useEffect(() => {
-    const cached = sessionStorage.getItem('projects')
-    if (cached) { setProjects(JSON.parse(cached)); return }
     fetch('/api/admin/projects')
       .then(r => r.json())
-      .then((data: Project[]) => {
-        setProjects(data)
-        sessionStorage.setItem('projects', JSON.stringify(data))
-      })
+      .then((data: Project[]) => { setProjects(data) })
       .catch(() => {})
   }, [])
 

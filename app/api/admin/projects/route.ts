@@ -24,7 +24,7 @@ export async function GET() {
   try {
     const projects = await readProjects()
     return NextResponse.json(projects, {
-      headers: { 'Cache-Control': 'public, max-age=60, stale-while-revalidate=300' },
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' },
     })
   } catch (err) {
     console.error('[api/admin/projects GET]', err)
