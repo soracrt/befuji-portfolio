@@ -59,6 +59,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             background: '#2e2e2e',
             maskImage: edgeMask,
             WebkitMaskImage: edgeMask,
+            zIndex: 0,
           }}
         />
 
@@ -70,6 +71,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             height: `${height}px`,
             maskImage: edgeMask,
             WebkitMaskImage: edgeMask,
+            zIndex: 0,
           }}
         >
           <motion.div
@@ -85,7 +87,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
         {data.map((item, index) => (
           <motion.div
             key={index}
-            className="flex justify-start pt-20 md:pt-36 md:gap-8 relative z-[1]"
+            className="flex justify-start pt-20 md:pt-36 md:gap-8 relative z-[10]"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-40px' }}
@@ -96,7 +98,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
               className="self-start flex items-center shrink-0 md:w-40"
               style={{ paddingLeft: '22px' }}
             >
-              {/* Dot — sits above the line via DOM order */}
+              {/* Dot — sits above the line via explicit z-index */}
               <div
                 ref={el => { dotRefs.current[index] = el }}
                 className="h-5 w-5 rounded-full shrink-0"
@@ -104,6 +106,8 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
                   backgroundColor: passedDots[index] ? '#fffffc' : '#777777',
                   boxShadow: '0 0 0 3px #000000',
                   transition: 'background-color 0.5s ease',
+                  position: 'relative',
+                  zIndex: 20,
                 }}
               />
               {/* Year — desktop only */}
