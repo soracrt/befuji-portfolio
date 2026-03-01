@@ -41,13 +41,14 @@ const GlowCard: React.FC<GlowCardProps> = ({
 
   useEffect(() => {
     const syncPointer = (e: PointerEvent) => {
-      const { clientX: x, clientY: y } = e
-      if (cardRef.current) {
-        cardRef.current.style.setProperty('--x', x.toFixed(2))
-        cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2))
-        cardRef.current.style.setProperty('--y', y.toFixed(2))
-        cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2))
-      }
+      if (!cardRef.current) return
+      const rect = cardRef.current.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      cardRef.current.style.setProperty('--x', x.toFixed(2))
+      cardRef.current.style.setProperty('--xp', (x / rect.width).toFixed(2))
+      cardRef.current.style.setProperty('--y', y.toFixed(2))
+      cardRef.current.style.setProperty('--yp', (y / rect.height).toFixed(2))
     }
     document.addEventListener('pointermove', syncPointer)
     return () => document.removeEventListener('pointermove', syncPointer)
@@ -69,14 +70,13 @@ const GlowCard: React.FC<GlowCardProps> = ({
     '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
     backgroundImage: `radial-gradient(
       var(--spotlight-size) var(--spotlight-size) at
-      calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
-      hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.06)),
+      calc(var(--x, -999) * 1px) calc(var(--y, -999) * 1px),
+      hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.08)),
       transparent
     )`,
     backgroundColor: 'var(--backdrop, transparent)',
     backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
     backgroundPosition: '50% 50%',
-    backgroundAttachment: 'fixed',
     border: 'var(--border-size) solid var(--backup-border)',
     position: 'relative',
     touchAction: 'none',
@@ -94,7 +94,6 @@ const GlowCard: React.FC<GlowCardProps> = ({
       inset: calc(var(--border-size) * -1);
       border: var(--border-size) solid transparent;
       border-radius: calc(var(--radius) * 1px);
-      background-attachment: fixed;
       background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
       background-repeat: no-repeat;
       background-position: 50% 50%;
@@ -105,7 +104,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
     [data-glow]::before {
       background-image: radial-gradient(
         calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
-        calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+        calc(var(--x, -999) * 1px) calc(var(--y, -999) * 1px),
         hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 50) * 1%) / var(--border-spot-opacity, 1)),
         transparent 100%
       );
@@ -114,7 +113,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
     [data-glow]::after {
       background-image: radial-gradient(
         calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
-        calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+        calc(var(--x, -999) * 1px) calc(var(--y, -999) * 1px),
         hsl(0 100% 100% / var(--border-light-opacity, 1)),
         transparent 100%
       );
@@ -144,11 +143,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
         ref={cardRef}
         data-glow
         style={inlineStyles}
-        className={`
-          ${customSize ? '' : sizeMap[size]}
-          rounded-2xl relative
-          ${className}
-        `}
+        className={`${customSize ? '' : sizeMap[size]} rounded-2xl relative ${className}`}
       >
         <div ref={innerRef} data-glow />
         {children}
