@@ -23,7 +23,17 @@ export default function Nav() {
           <img src="/icon.png" alt="befuji" className="h-12 w-auto" />
           <div
             className="logo-shine absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)' }}
+            style={{
+              background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)',
+              maskImage: 'url(/icon.png)',
+              maskSize: 'contain',
+              maskRepeat: 'no-repeat',
+              maskPosition: 'center',
+              WebkitMaskImage: 'url(/icon.png)',
+              WebkitMaskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center',
+            }}
           />
         </div>
       </Link>
