@@ -46,15 +46,15 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
 
   return (
     <div className="w-full" ref={containerRef}>
-      <div ref={ref} className="relative max-w-4xl mx-auto pb-40">
+      <div ref={ref} className="relative max-w-[580px] mx-auto pb-40">
         {data.map((item, index) => (
           // Outer div NOT animated — needed for accurate dot position measurement
           <div
             key={index}
-            className="flex justify-start pt-20 md:pt-36 md:gap-12"
+            className="flex justify-start pt-20 md:pt-36 md:gap-8"
           >
             {/* Left sticky: dot + year label */}
-            <div className="sticky top-32 self-start z-40 flex items-start md:w-56 shrink-0">
+            <div className="sticky top-32 self-start z-40 flex items-start md:w-40 shrink-0">
               {/* Dot — referenced for scroll tracking */}
               <div
                 ref={el => { dotRefs.current[index] = el }}
@@ -107,14 +107,19 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
           style={{
             left: '30px',
             height: `${height}px`,
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.08) 8%, rgba(255,255,252,0.08) 92%, transparent 100%)',
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.08) 8%, rgba(255,255,252,0.08) 80%, transparent 100%)',
           }}
         />
 
-        {/* Scroll-driven white fill */}
+        {/* Scroll-driven white fill — fades at bottom via mask */}
         <div
           className="absolute top-0 overflow-hidden w-[3px] pointer-events-none"
-          style={{ left: '30px', height: `${height}px` }}
+          style={{
+            left: '30px',
+            height: `${height}px`,
+            maskImage: 'linear-gradient(to bottom, black 0%, black 78%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 78%, transparent 100%)',
+          }}
         >
           <motion.div
             className="absolute inset-x-0 top-0 w-[3px]"

@@ -108,7 +108,7 @@ export default function AboutPage() {
 
       {/* Page heading */}
       <div className="pt-36 pb-4 px-8">
-        <div className="max-w-4xl mx-auto mb-4">
+        <div className="max-w-[580px] mx-auto mb-4">
           <p
             className="font-sans text-[10px] tracking-[0.2em] uppercase mb-5"
             style={{ color: 'rgba(255,255,252,0.25)' }}
