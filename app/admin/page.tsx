@@ -29,7 +29,7 @@ type EditKey = 'title' | 'category' | 'client'
 
 function IconGrid() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="7" />
       <rect x="14" y="3" width="7" height="7" />
       <rect x="14" y="14" width="7" height="7" />
@@ -40,7 +40,7 @@ function IconGrid() {
 
 function IconFilm() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="2" />
       <line x1="7" y1="2" x2="7" y2="22" />
       <line x1="17" y1="2" x2="17" y2="22" />
@@ -55,7 +55,7 @@ function IconFilm() {
 
 function IconStar() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   )
@@ -64,7 +64,7 @@ function IconStar() {
 
 function IconDragHandle() {
   return (
-    <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor">
+    <svg width="12" height="16" viewBox="0 0 10 14" fill="currentColor">
       <circle cx="2.5" cy="2"  r="1.2" />
       <circle cx="2.5" cy="7"  r="1.2" />
       <circle cx="2.5" cy="12" r="1.2" />
@@ -77,7 +77,7 @@ function IconDragHandle() {
 
 function IconMessage() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   )
@@ -141,13 +141,13 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
 
           <h1
             className="font-sans text-white font-medium text-center mb-1.5"
-            style={{ fontSize: '21px', letterSpacing: '-0.03em', lineHeight: '1.25' }}
+            style={{ fontSize: '24px', letterSpacing: '-0.03em', lineHeight: '1.25' }}
           >
             Welcome back, Ghazi.
           </h1>
           <p
             className="font-sans text-center mb-8"
-            style={{ fontSize: '13px', color: '#707070', letterSpacing: '-0.01em' }}
+            style={{ fontSize: '14.5px', color: '#707070', letterSpacing: '-0.01em' }}
           >
             Enter your password to continue.
           </p>
@@ -172,8 +172,8 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
             <button
               type="submit"
               disabled={loading || !value}
-              className="w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-[11px] rounded-xl transition-all disabled:opacity-20 mt-0.5"
-              style={{ fontSize: '13.5px', letterSpacing: '-0.01em' }}
+              className="w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-3.5 rounded-xl transition-all disabled:opacity-20 mt-0.5"
+              style={{ fontSize: '15px', letterSpacing: '-0.01em' }}
             >
               {loading ? '···' : 'Sign in'}
             </button>
@@ -201,10 +201,10 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
 
   return (
     <aside
-      className="w-[220px] shrink-0 h-screen sticky top-0 flex flex-col"
+      className="w-[260px] shrink-0 h-screen sticky top-0 flex flex-col"
       style={{ background: '#1e1e1e', borderRight: '1px solid #303030' }}
     >
-      <div className="px-5 pt-[22px] pb-[18px]" style={{ borderBottom: '1px solid #2f2f2e' }}>
+      <div className="px-6 pt-6 pb-5" style={{ borderBottom: '1px solid #2f2f2e' }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-[22px] h-[22px] rounded-md flex items-center justify-center shrink-0"
@@ -224,14 +224,14 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
         </div>
       </div>
 
-      <nav className="flex-1 px-2.5 pt-2.5 flex flex-col gap-0.5">
+      <nav className="flex-1 px-3 pt-3 flex flex-col gap-0.5">
         {NAV.map(({ id, label, icon }) => (
           <button
             key={id}
             onClick={() => setActive(id)}
-            className="w-full text-left px-3 py-[7px] rounded-lg flex items-center gap-2.5 font-sans transition-colors"
+            className="w-full text-left px-3.5 py-2.5 rounded-lg flex items-center gap-2.5 font-sans transition-colors"
             style={{
-              fontSize: '13px',
+              fontSize: '14.5px',
               letterSpacing: '-0.01em',
               background: active === id ? '#ffffff07' : 'transparent',
               color: active === id ? 'rgba(255,255,255,0.92)' : '#909090',
@@ -245,12 +245,12 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
         ))}
       </nav>
 
-      <div className="px-5 pb-6 flex flex-col gap-3">
+      <div className="px-5 pb-7 flex flex-col gap-3">
         <Link
           href="/"
           target="_blank"
           className="font-sans text-[#585858] hover:text-[#909090] transition-colors inline-flex items-center gap-1.5"
-          style={{ fontSize: '12px', letterSpacing: '-0.005em' }}
+          style={{ fontSize: '13px', letterSpacing: '-0.005em' }}
         >
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -262,7 +262,7 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
         <button
           onClick={signOut}
           className="font-sans text-[#585858] hover:text-[#909090] transition-colors text-left"
-          style={{ fontSize: '12px', letterSpacing: '-0.005em' }}
+          style={{ fontSize: '13px', letterSpacing: '-0.005em' }}
         >
           Sign out
         </button>
@@ -284,16 +284,16 @@ function TopBar({ section, updatedAt }: { section: Section; updatedAt: string })
   return (
     <div
       className="flex items-center justify-between px-8 shrink-0"
-      style={{ height: '50px', borderBottom: '1px solid #2f2f2e', background: '#000000' }}
+      style={{ height: '64px', borderBottom: '1px solid #2f2f2e', background: '#000000' }}
     >
       <h1
         className="font-sans text-white/80 font-medium"
-        style={{ fontSize: '13.5px', letterSpacing: '-0.02em' }}
+        style={{ fontSize: '15px', letterSpacing: '-0.02em' }}
       >
         {SECTION_LABELS[section]}
       </h1>
       {updatedAt && (
-        <span className="font-sans text-[#686868]" style={{ fontSize: '12px' }}>
+        <span className="font-sans text-[#686868]" style={{ fontSize: '13px' }}>
           Updated {updatedAt}
         </span>
       )}
@@ -310,46 +310,46 @@ function OverviewSection({ projects, reviews }: { projects: Project[]; reviews: 
   return (
     <div className="p-8 max-w-xl mx-auto w-full">
       <div className="grid grid-cols-2 gap-2.5 mb-8">
-        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
-          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+        <div className="rounded-xl p-6" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '12px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             TOTAL PROJECTS
           </div>
-          <div className="font-sans text-white font-medium tabular-nums" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
+          <div className="font-sans text-white font-medium tabular-nums" style={{ fontSize: '44px', letterSpacing: '-0.035em', lineHeight: 1 }}>
             {projects.length}
           </div>
         </div>
 
-        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
-          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+        <div className="rounded-xl p-6" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '12px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             RECENT
           </div>
-          <div className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
+          <div className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1" style={{ fontSize: '44px', letterSpacing: '-0.035em', lineHeight: 1 }}>
             {recent.length}
-            <span style={{ fontSize: '22px', color: '#686868' }}>/3</span>
+            <span style={{ fontSize: '26px', color: '#686868' }}>/3</span>
           </div>
         </div>
 
-        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
-          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+        <div className="rounded-xl p-6" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '12px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             TOTAL REVIEWS
           </div>
-          <div className="font-sans text-white font-medium tabular-nums" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
+          <div className="font-sans text-white font-medium tabular-nums" style={{ fontSize: '44px', letterSpacing: '-0.035em', lineHeight: 1 }}>
             {reviews.length}
           </div>
         </div>
 
-        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
-          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+        <div className="rounded-xl p-6" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '12px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             FEATURED REVIEWS
           </div>
-          <div className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
+          <div className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1" style={{ fontSize: '44px', letterSpacing: '-0.035em', lineHeight: 1 }}>
             {featuredReviews.length}
-            <span style={{ fontSize: '22px', color: '#686868' }}>/3</span>
+            <span style={{ fontSize: '26px', color: '#686868' }}>/3</span>
           </div>
         </div>
       </div>
 
-      <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+      <div className="font-sans mb-3" style={{ fontSize: '12px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
         RECENT ON HOMEPAGE
       </div>
 
@@ -360,17 +360,17 @@ function OverviewSection({ projects, reviews }: { projects: Project[]; reviews: 
           {recent.map((p, i) => (
             <div
               key={p.id}
-              className="flex items-center gap-4 rounded-xl px-4 py-3"
+              className="flex items-center gap-4 rounded-xl px-5 py-3.5"
               style={{ background: '#282827', boxShadow: '0 0 0 1px #323231' }}
             >
-              <span className="font-sans tabular-nums shrink-0" style={{ fontSize: '11px', color: '#686868', width: '14px' }}>
+              <span className="font-sans tabular-nums shrink-0" style={{ fontSize: '12px', color: '#686868', width: '14px' }}>
                 {i + 1}
               </span>
-              <span className="font-sans text-white/85 flex-1 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
+              <span className="font-sans text-white/85 flex-1 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>
                 {p.title || 'Untitled'}
               </span>
               {p.category && (
-                <span className="font-sans shrink-0" style={{ fontSize: '10px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+                <span className="font-sans shrink-0" style={{ fontSize: '11.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
                   {p.category.toUpperCase()}
                 </span>
               )}
@@ -422,7 +422,7 @@ function EditableCell({
         }}
         placeholder={placeholder}
         className="bg-[#343433] rounded-md px-2 py-1 text-white/80 outline-none w-full font-sans ring-1 ring-[#464646]"
-        style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+        style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
       />
     )
   }
@@ -432,7 +432,7 @@ function EditableCell({
       onClick={onStart}
       title="Click to edit"
       className="cursor-pointer font-sans text-white/75 hover:text-white/95 transition-colors truncate block"
-      style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+      style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
     >
       {value || <span className="text-[#505050]">{placeholder}</span>}
     </span>
@@ -458,8 +458,8 @@ function CategorySelect({ value, onChange, options = ['Ads', 'SaaS', 'Others'] }
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 outline-none ring-1 ring-[#3a3a3a] hover:ring-[#414141] transition-all text-left flex items-center justify-between"
-        style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+        className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 font-sans text-white/80 outline-none ring-1 ring-[#3a3a3a] hover:ring-[#414141] transition-all text-left flex items-center justify-between"
+        style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
       >
         {value || <span style={{ color: '#505050' }}>—</span>}
         <svg
@@ -486,12 +486,12 @@ function CategorySelect({ value, onChange, options = ['Ads', 'SaaS', 'Others'] }
               key={opt}
               type="button"
               onClick={() => { onChange(opt); setOpen(false) }}
-              className={`w-full text-left px-3.5 py-2.5 font-sans transition-colors ${
+              className={`w-full text-left px-4 py-3 font-sans transition-colors ${
                 opt === value
                   ? 'bg-[#414140] text-white/90'
                   : 'text-white/55 hover:bg-[#3d3d3c] hover:text-white/80'
               }`}
-              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
             >
               {opt}
             </button>
@@ -588,7 +588,7 @@ function UploadModal({
       onClick={uploading ? undefined : onClose}
     >
       <div
-        className="relative rounded-2xl w-full max-w-[420px] mx-4"
+        className="relative rounded-2xl w-full max-w-[480px] mx-4"
         style={{ background: '#2b2b2a', boxShadow: '0 0 0 1px #3a3a39, 0 24px 64px rgba(0,0,0,0.7)' }}
         onClick={e => e.stopPropagation()}
       >
@@ -597,7 +597,7 @@ function UploadModal({
           <div className="flex items-center justify-between mb-5">
             <span
               className="font-sans text-white/80 font-medium"
-              style={{ fontSize: '13.5px', letterSpacing: '-0.02em' }}
+              style={{ fontSize: '15px', letterSpacing: '-0.02em' }}
             >
               Upload video
             </span>
@@ -676,7 +676,7 @@ function UploadModal({
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
-                <span className="font-sans text-center" style={{ fontSize: '12px', color: '#505050', letterSpacing: '-0.01em' }}>
+                <span className="font-sans text-center" style={{ fontSize: '13.5px', color: '#505050', letterSpacing: '-0.01em' }}>
                   Drop mp4 or mov, or <span style={{ color: '#787878' }}>browse</span>
                 </span>
               </div>
@@ -689,8 +689,8 @@ function UploadModal({
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="Title"
-              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
-              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
             />
 
             <CategorySelect value={category} onChange={setCategory} />
@@ -699,8 +699,8 @@ function UploadModal({
               value={client}
               onChange={e => setClient(e.target.value)}
               placeholder="Client"
-              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
-              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
             />
 
             {uploading ? (
@@ -712,8 +712,8 @@ function UploadModal({
                   />
                 </div>
                 <div className="flex justify-between mt-1.5">
-                  <span className="font-sans text-[#686868]" style={{ fontSize: '11px' }}>Uploading to R2</span>
-                  <span className="font-sans text-[#686868] tabular-nums" style={{ fontSize: '11px' }}>{progress}%</span>
+                  <span className="font-sans text-[#686868]" style={{ fontSize: '12.5px' }}>Uploading to R2</span>
+                  <span className="font-sans text-[#686868] tabular-nums" style={{ fontSize: '12.5px' }}>{progress}%</span>
                 </div>
               </div>
             ) : (
@@ -724,8 +724,8 @@ function UploadModal({
                 <button
                   type="submit"
                   disabled={!file}
-                  className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-[11px] rounded-xl transition-all disabled:opacity-20"
-                  style={{ fontSize: '13.5px', letterSpacing: '-0.01em' }}
+                  className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-3.5 rounded-xl transition-all disabled:opacity-20"
+                  style={{ fontSize: '15px', letterSpacing: '-0.01em' }}
                 >
                   Upload
                 </button>
@@ -802,7 +802,7 @@ function ProjectsSection({
         <button
           onClick={() => setShowUpload(true)}
           className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors"
-          style={{ fontSize: '12.5px', letterSpacing: '-0.01em' }}
+          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
         >
           + Upload video
         </button>
@@ -824,14 +824,14 @@ function ProjectsSection({
         <div>
           {/* Table header */}
           <div
-            className="grid gap-4 px-4 pb-2 mb-1"
-            style={{ gridTemplateColumns: '16px 82px 1fr 1fr 1fr 28px' }}
+            className="grid gap-4 px-5 pb-2 mb-1"
+            style={{ gridTemplateColumns: '20px 96px 1fr 1fr 1fr 32px' }}
           >
             {(['', '', 'Title', 'Category', 'Client', ''] as const).map((col, i) => (
               <div
                 key={i}
                 className="font-sans"
-                style={{ fontSize: '10px', letterSpacing: '0.11em', color: '#707070' }}
+                style={{ fontSize: '11.5px', letterSpacing: '0.11em', color: '#707070' }}
               >
                 {col}
               </div>
@@ -869,9 +869,9 @@ function ProjectsSection({
                     }
                     dragIndex.current = null
                   }}
-                  className="grid gap-4 items-center px-4 py-3 rounded-xl group transition-colors"
+                  className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-colors"
                   style={{
-                    gridTemplateColumns: '16px 82px 1fr 1fr 1fr 28px',
+                    gridTemplateColumns: '20px 96px 1fr 1fr 1fr 32px',
                     background: dragOverIdx === idx ? '#2e2e2d' : '#282827',
                     boxShadow: dragOverIdx === idx ? '0 0 0 1px #3f3f3e' : '0 0 0 1px #323231',
                   }}
@@ -882,7 +882,7 @@ function ProjectsSection({
                   </div>
 
                   {/* Thumbnail */}
-                  <div className="w-[82px] h-[46px] rounded-lg overflow-hidden bg-[#303030] shrink-0">
+                  <div className="w-[96px] h-[54px] rounded-lg overflow-hidden bg-[#303030] shrink-0">
                     <video
                       src={p.video}
                       className="w-full h-full object-cover"
@@ -958,10 +958,10 @@ function RecentSection({
   return (
     <div className="p-8 w-full max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <p className="font-sans" style={{ fontSize: '12.5px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
+        <p className="font-sans" style={{ fontSize: '14px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
           Select up to 3 projects to feature on the homepage.
         </p>
-        <span className="font-sans ml-auto" style={{ fontSize: '12px', color: '#686868' }}>
+        <span className="font-sans ml-auto" style={{ fontSize: '13.5px', color: '#686868' }}>
           {featuredCount}/3
         </span>
       </div>
@@ -995,11 +995,11 @@ function RecentSection({
 
                 <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#282827' }}>
                   <div className="min-w-0">
-                    <div className="font-sans text-white/85 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
+                    <div className="font-sans text-white/85 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>
                       {p.title || 'Untitled'}
                     </div>
                     {p.category && (
-                      <div className="font-sans mt-0.5 truncate" style={{ fontSize: '10px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
+                      <div className="font-sans mt-0.5 truncate" style={{ fontSize: '11.5px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
                         {p.category.toUpperCase()}
                       </div>
                     )}
@@ -1080,14 +1080,14 @@ function AddReviewModal({
       onClick={onClose}
     >
       <div
-        className="relative rounded-2xl w-full max-w-[420px] mx-4"
+        className="relative rounded-2xl w-full max-w-[480px] mx-4"
         style={{ background: '#2b2b2a', boxShadow: '0 0 0 1px #3a3a39, 0 24px 64px rgba(0,0,0,0.7)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
-            <span className="font-sans text-white/80 font-medium" style={{ fontSize: '13.5px', letterSpacing: '-0.02em' }}>
+            <span className="font-sans text-white/80 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
               Add review
             </span>
             <button
@@ -1107,8 +1107,8 @@ function AddReviewModal({
               onChange={e => setName(e.target.value)}
               placeholder="Name"
               required
-              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all"
-              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all"
+              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
             />
 
             <CategorySelect value={service} onChange={setService} options={REVIEW_SERVICES} />
@@ -1117,8 +1117,8 @@ function AddReviewModal({
               value={company}
               onChange={e => setCompany(e.target.value)}
               placeholder="Company (optional)"
-              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all"
-              style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all"
+              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
             />
 
             <div className="relative">
@@ -1128,12 +1128,12 @@ function AddReviewModal({
                 placeholder="Review text (max 120 chars)"
                 required
                 rows={3}
-                className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all resize-none"
-                style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+                className="w-full bg-[#1e1e1e] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#484848] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2e2e2d] transition-all resize-none"
+                style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
               />
               <span
                 className="absolute bottom-2.5 right-3.5 font-mono tabular-nums pointer-events-none"
-                style={{ fontSize: '10px', color: text.length >= 120 ? '#a10702' : '#505050' }}
+                style={{ fontSize: '11.5px', color: text.length >= 120 ? '#a10702' : '#505050' }}
               >
                 {text.length}/120
               </span>
@@ -1146,8 +1146,8 @@ function AddReviewModal({
             <button
               type="submit"
               disabled={submitting || !name.trim() || !text.trim()}
-              className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-[11px] rounded-xl transition-all disabled:opacity-20"
-              style={{ fontSize: '13.5px', letterSpacing: '-0.01em' }}
+              className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-3.5 rounded-xl transition-all disabled:opacity-20"
+              style={{ fontSize: '15px', letterSpacing: '-0.01em' }}
             >
               {submitting ? '···' : 'Add review'}
             </button>
@@ -1205,16 +1205,16 @@ function ReviewsAdminSection({
       )}
 
       <div className="flex items-center gap-3 mb-6">
-        <p className="font-sans" style={{ fontSize: '12.5px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
+        <p className="font-sans" style={{ fontSize: '14px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
           Select up to 3 reviews to feature on the homepage.
         </p>
-        <span className="font-sans" style={{ fontSize: '12px', color: '#686868' }}>
+        <span className="font-sans" style={{ fontSize: '13.5px', color: '#686868' }}>
           {featuredCount}/3
         </span>
         <button
           onClick={() => setShowAdd(true)}
           className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors ml-4"
-          style={{ fontSize: '12.5px', letterSpacing: '-0.01em' }}
+          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
         >
           + Add review
         </button>
@@ -1225,11 +1225,11 @@ function ReviewsAdminSection({
       ) : (
         <div className="flex flex-col gap-1.5">
           <div
-            className="grid gap-4 px-4 pb-2 mb-1"
+            className="grid gap-4 px-5 pb-2 mb-1"
             style={{ gridTemplateColumns: '1fr 80px 1fr 60px 28px' }}
           >
             {(['Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
-              <div key={i} className="font-sans" style={{ fontSize: '10px', letterSpacing: '0.11em', color: '#707070' }}>
+              <div key={i} className="font-sans" style={{ fontSize: '11.5px', letterSpacing: '0.11em', color: '#707070' }}>
                 {col}
               </div>
             ))}
@@ -1240,7 +1240,7 @@ function ReviewsAdminSection({
             return (
               <div
                 key={r.id}
-                className="grid gap-4 items-center px-4 py-3 rounded-xl group transition-colors"
+                className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-colors"
                 style={{
                   gridTemplateColumns: '1fr 80px 1fr 60px 28px',
                   background: '#282827',
@@ -1248,23 +1248,23 @@ function ReviewsAdminSection({
                 }}
               >
                 <div className="min-w-0">
-                  <div className="font-sans text-white/80 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
+                  <div className="font-sans text-white/80 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>
                     {r.name}
                   </div>
                   {r.company && (
-                    <div className="font-sans truncate mt-0.5" style={{ fontSize: '10px', color: '#686868' }}>
+                    <div className="font-sans truncate mt-0.5" style={{ fontSize: '11.5px', color: '#686868' }}>
                       {r.company}
                     </div>
                   )}
                 </div>
 
-                <span className="font-sans" style={{ fontSize: '10px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
+                <span className="font-sans" style={{ fontSize: '11.5px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
                   {r.service.toUpperCase()}
                 </span>
 
                 <span
                   className="font-sans truncate"
-                  style={{ fontSize: '12px', color: '#686868', letterSpacing: '-0.01em' }}
+                  style={{ fontSize: '13.5px', color: '#686868', letterSpacing: '-0.01em' }}
                   title={r.text}
                 >
                   {r.text}
@@ -1338,7 +1338,7 @@ function Dashboard() {
         <main className="flex-1 overflow-auto">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <span className="font-sans text-[#686868] text-sm">Loading···</span>
+              <span className="font-sans text-[#686868] text-base">Loading···</span>
             </div>
           ) : section === 'overview' ? (
             <OverviewSection projects={projects} reviews={reviews} />
