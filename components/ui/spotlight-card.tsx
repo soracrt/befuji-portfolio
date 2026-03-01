@@ -13,12 +13,12 @@ interface GlowCardProps {
 }
 
 const glowColorMap = {
-  blue:   { base: 220, spread: 200 },
-  purple: { base: 280, spread: 300 },
-  green:  { base: 120, spread: 200 },
-  red:    { base: 0,   spread: 0   },
-  orange: { base: 30,  spread: 200 },
-  white:  { base: 0,   spread: 0   },
+  blue:   { base: 220, spread: 200, saturation: 100, lightness: 70 },
+  purple: { base: 280, spread: 300, saturation: 100, lightness: 70 },
+  green:  { base: 120, spread: 200, saturation: 100, lightness: 70 },
+  red:    { base: 2,   spread: 0,   saturation: 99,  lightness: 45 },
+  orange: { base: 30,  spread: 200, saturation: 100, lightness: 70 },
+  white:  { base: 0,   spread: 0,   saturation: 0,   lightness: 70 },
 }
 
 const sizeMap = {
@@ -54,11 +54,13 @@ const GlowCard: React.FC<GlowCardProps> = ({
     return () => document.removeEventListener('pointermove', syncPointer)
   }, [])
 
-  const { base, spread } = glowColorMap[glowColor]
+  const { base, spread, saturation, lightness } = glowColorMap[glowColor]
 
   const inlineStyles: React.CSSProperties & Record<string, string | number> = {
     '--base': base,
     '--spread': spread,
+    '--saturation': saturation,
+    '--lightness': lightness,
     '--radius': '14',
     '--border': '2',
     '--backdrop': 'hsl(0 0% 6% / 1)',
