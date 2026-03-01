@@ -39,26 +39,31 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  const body = await req.json()
+  try {
+    const body = await req.json()
 
-  // Reorder: { order: string[] }
-  if (Array.isArray(body.order)) {
+    // Reorder: { order: string[] }
+    if (Array.isArray(body.order)) {
+      const projects = await readProjects()
+      const ordered = (body.order as string[])
+        .map((id: string) => projects.find((p: { id: string }) => p.id === id))
+        .filter(Boolean)
+      await writeProjects(ordered)
+      return NextResponse.json(ordered)
+    }
+
+    // Field update: { id, ...fields }
+    const { id, ...updates } = body
     const projects = await readProjects()
-    const ordered = (body.order as string[])
-      .map((id: string) => projects.find((p: { id: string }) => p.id === id))
-      .filter(Boolean)
-    await writeProjects(ordered)
-    return NextResponse.json(ordered)
+    const idx = projects.findIndex((p: { id: string }) => p.id === id)
+    if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    projects[idx] = { ...projects[idx], ...updates }
+    await writeProjects(projects)
+    return NextResponse.json(projects[idx])
+  } catch (err) {
+    console.error('[api/admin/projects PUT]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
-
-  // Field update: { id, ...fields }
-  const { id, ...updates } = body
-  const projects = await readProjects()
-  const idx = projects.findIndex((p: { id: string }) => p.id === id)
-  if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  projects[idx] = { ...projects[idx], ...updates }
-  await writeProjects(projects)
-  return NextResponse.json(projects[idx])
 }
 
 export async function DELETE(req: Request) {

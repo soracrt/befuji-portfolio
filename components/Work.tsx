@@ -18,7 +18,7 @@ export default function Work() {
   const [featured, setFeatured] = useState<Project[]>([])
 
   useEffect(() => {
-    fetch('/api/admin/projects')
+    fetch('/api/admin/projects', { cache: 'no-store' })
       .then(r => r.json())
       .then((data: Project[]) => {
         if (Array.isArray(data)) {

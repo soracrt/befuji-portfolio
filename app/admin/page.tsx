@@ -1019,11 +1019,17 @@ function FeaturedSection({
     if (!project) return
     const newValue = !project.isFeatured
     setProjects(prev => prev.map(p => (p.id === id ? { ...p, isFeatured: newValue } : p)))
-    await fetch('/api/admin/projects', {
-      method: 'PUT',
-      body: JSON.stringify({ id, isFeatured: newValue }),
-      headers: { 'Content-Type': 'application/json' },
-    })
+    try {
+      const res = await fetch('/api/admin/projects', {
+        method: 'PUT',
+        body: JSON.stringify({ id, isFeatured: newValue }),
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+      })
+      if (!res.ok) throw new Error('save failed')
+    } catch {
+      setProjects(prev => prev.map(p => (p.id === id ? { ...p, isFeatured: !newValue } : p)))
+    }
   }
 
   return (
@@ -1110,7 +1116,7 @@ function Dashboard() {
   const [updatedAt, setUpdatedAt] = useState('')
 
   useEffect(() => {
-    fetch('/api/admin/projects')
+    fetch('/api/admin/projects', { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         setProjects(Array.isArray(data) ? data : [])
