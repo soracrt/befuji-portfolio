@@ -120,3 +120,19 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const { order } = await req.json()
+    if (!Array.isArray(order)) return NextResponse.json({ error: 'Invalid order' }, { status: 400 })
+    const reviews = await readReviews() as { id: string }[]
+    const map = new Map(reviews.map(r => [r.id, r]))
+    const next = (order as string[]).map(id => map.get(id)).filter(Boolean) as { id: string }[]
+    reviews.forEach(r => { if (!(order as string[]).includes(r.id)) next.push(r) })
+    await writeReviews(next)
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[api/reviews PATCH]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

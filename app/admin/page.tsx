@@ -1168,6 +1168,8 @@ function ReviewsAdminSection({
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>
 }) {
   const [showAdd, setShowAdd] = useState(false)
+  const [dragId, setDragId] = useState<string | null>(null)
+  const [dragOverId, setDragOverId] = useState<string | null>(null)
   const featuredCount = reviews.filter(r => r.featured).length
 
   function toggleFeatured(id: string) {
@@ -1190,6 +1192,43 @@ function ReviewsAdminSection({
       body: JSON.stringify({ id }),
       headers: { 'Content-Type': 'application/json' },
     }).catch(console.error)
+  }
+
+  function handleDragStart(e: React.DragEvent, id: string) {
+    setDragId(id)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  function handleDragOver(e: React.DragEvent, id: string) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (id !== dragId) setDragOverId(id)
+  }
+
+  function handleDrop(targetId: string) {
+    if (!dragId || dragId === targetId) {
+      setDragId(null)
+      setDragOverId(null)
+      return
+    }
+    const next = [...reviews]
+    const fromIdx = next.findIndex(r => r.id === dragId)
+    const toIdx = next.findIndex(r => r.id === targetId)
+    const [item] = next.splice(fromIdx, 1)
+    next.splice(toIdx, 0, item)
+    setReviews(next)
+    setDragId(null)
+    setDragOverId(null)
+    fetch('/api/reviews', {
+      method: 'PATCH',
+      body: JSON.stringify({ order: next.map(r => r.id) }),
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(console.error)
+  }
+
+  function handleDragEnd() {
+    setDragId(null)
+    setDragOverId(null)
   }
 
   return (
@@ -1226,9 +1265,9 @@ function ReviewsAdminSection({
         <div className="flex flex-col gap-1.5">
           <div
             className="grid gap-4 px-5 pb-2 mb-1"
-            style={{ gridTemplateColumns: '1fr 80px 1fr 60px 28px' }}
+            style={{ gridTemplateColumns: '16px 1fr 80px 1fr 60px 28px' }}
           >
-            {(['Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
+            {(['', 'Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
               <div key={i} className="font-sans" style={{ fontSize: '11.5px', letterSpacing: '0.11em', color: '#707070' }}>
                 {col}
               </div>
@@ -1237,16 +1276,31 @@ function ReviewsAdminSection({
 
           {reviews.map(r => {
             const maxed = !r.featured && featuredCount >= 3
+            const isDragging = dragId === r.id
+            const isOver = dragOverId === r.id
             return (
               <div
                 key={r.id}
-                className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-colors"
+                draggable
+                onDragStart={e => handleDragStart(e, r.id)}
+                onDragOver={e => handleDragOver(e, r.id)}
+                onDrop={() => handleDrop(r.id)}
+                onDragEnd={handleDragEnd}
+                className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-all"
                 style={{
-                  gridTemplateColumns: '1fr 80px 1fr 60px 28px',
-                  background: '#282827',
-                  boxShadow: '0 0 0 1px #323231',
+                  gridTemplateColumns: '16px 1fr 80px 1fr 60px 28px',
+                  background: isDragging ? '#1e1e1e' : '#282827',
+                  boxShadow: isOver ? '0 0 0 1px #555553' : '0 0 0 1px #323231',
+                  opacity: isDragging ? 0.4 : 1,
                 }}
               >
+                <div
+                  className="flex items-center text-[#484848] group-hover:text-[#686868] transition-colors"
+                  style={{ cursor: 'grab' }}
+                >
+                  <IconDragHandle />
+                </div>
+
                 <div className="min-w-0">
                   <div className="font-sans text-white/80 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>
                     {r.name}
