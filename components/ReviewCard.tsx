@@ -1,3 +1,5 @@
+import { GlowCard } from './ui/spotlight-card'
+
 type Review = {
   id: string
   name: string
@@ -8,14 +10,7 @@ type Review = {
 
 export default function ReviewCard({ review }: { review: Review }) {
   return (
-    <div
-      className="flex flex-col p-5 rounded-2xl"
-      style={{
-        background: '#111111',
-        border: '1px solid rgba(255,255,252,0.07)',
-        height: '200px',
-      }}
-    >
+    <GlowCard customSize glowColor="red" className="w-full h-[200px] flex flex-col p-5">
       {/* Top row: name left, service right */}
       <div className="flex items-start justify-between gap-3 mb-4">
         <span className="font-sans text-sm font-medium text-ink leading-tight">{review.name}</span>
@@ -44,6 +39,6 @@ export default function ReviewCard({ review }: { review: Review }) {
           {review.company}
         </p>
       )}
-    </div>
+    </GlowCard>
   )
 }
