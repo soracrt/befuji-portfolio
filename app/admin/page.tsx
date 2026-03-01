@@ -294,7 +294,7 @@ function TopBar({ section, updatedAt }: { section: Section; updatedAt: string })
 // ─── Overview ─────────────────────────────────────────────────────────────────
 
 function OverviewSection({ projects }: { projects: Project[] }) {
-  const featured = projects.filter(p => p.isRecent)
+  const featured = projects.filter(p => p.isFeatured)
 
   return (
     <div className="p-8 max-w-xl mx-auto w-full">
