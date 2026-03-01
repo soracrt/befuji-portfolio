@@ -1,10 +1,69 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 import ReviewCard from '@/components/ReviewCard'
+
+function CustomSelect({ value, options, onChange }: { value: string; options: string[]; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between border rounded-lg px-4 py-3 font-sans text-sm text-ink outline-none transition-colors text-left"
+        style={{
+          background: '#111',
+          borderColor: open ? 'rgba(255,255,252,0.3)' : 'rgba(255,255,252,0.12)',
+        }}
+      >
+        <span>{value}</span>
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ color: 'rgba(255,255,252,0.35)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 left-0 right-0 top-full mt-1 rounded-lg overflow-hidden"
+          style={{ background: '#111', border: '1px solid rgba(255,255,252,0.12)' }}
+        >
+          {options.map(opt => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => { onChange(opt); setOpen(false) }}
+              className="w-full text-left px-4 py-2.5 font-sans text-sm transition-colors"
+              style={{
+                color: opt === value ? '#fffffc' : 'rgba(255,255,252,0.5)',
+                background: opt === value ? 'rgba(255,255,252,0.06)' : 'transparent',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,252,0.06)')}
+              onMouseLeave={e => (e.currentTarget.style.background = opt === value ? 'rgba(255,255,252,0.06)' : 'transparent')}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 type Review = {
   id: string
@@ -213,16 +272,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                 <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.35)' }}>
                   Service
                 </label>
-                <select
-                  value={service}
-                  onChange={e => setService(e.target.value)}
-                  className="bg-[#111] border rounded-lg px-4 py-3 font-sans text-sm text-ink outline-none focus:border-ink/40 transition-colors appearance-none cursor-pointer"
-                  style={{ borderColor: 'rgba(255,255,252,0.12)' }}
-                >
-                  {SERVICES.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
+                <CustomSelect value={service} options={SERVICES} onChange={setService} />
               </div>
 
               <div className="flex flex-col gap-1.5">
