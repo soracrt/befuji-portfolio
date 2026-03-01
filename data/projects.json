@@ -5,7 +5,8 @@
     "category": "Ads",
     "client": "",
     "video": "/NSX.mp4",
-    "isRecent": true
+    "isRecent": true,
+    "isFeatured": false
   },
   {
     "id": "Romulus.mp4",
@@ -13,6 +14,7 @@
     "category": "Ads",
     "client": "",
     "video": "/api/videos/Romulus.mp4",
-    "isRecent": true
+    "isRecent": true,
+    "isFeatured": false
   }
 ]

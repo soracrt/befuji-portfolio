@@ -10,9 +10,10 @@ type Project = {
   client: string
   video: string
   isRecent: boolean
+  isFeatured: boolean
 }
 
-type Section = 'overview' | 'projects' | 'recent'
+type Section = 'overview' | 'projects' | 'recent' | 'featured'
 type EditKey = 'title' | 'category' | 'client'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -47,6 +48,14 @@ function IconStar() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
+}
+
+function IconBookmark() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </svg>
   )
 }
@@ -171,6 +180,7 @@ const NAV: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'overview',  label: 'Overview',        icon: <IconGrid /> },
   { id: 'projects',  label: 'Projects',         icon: <IconFilm /> },
   { id: 'recent',    label: 'Recent Projects',  icon: <IconStar /> },
+  { id: 'featured',  label: 'Featured',         icon: <IconBookmark /> },
 ]
 
 function Sidebar({ active, setActive }: { active: Section; setActive: (s: Section) => void }) {
@@ -254,9 +264,10 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
 // ─── Top Bar ──────────────────────────────────────────────────────────────────
 
 const SECTION_LABELS: Record<Section, string> = {
-  overview: 'Overview',
-  projects: 'Projects',
-  recent:   'Recent Projects',
+  overview:  'Overview',
+  projects:  'Projects',
+  recent:    'Recent Projects',
+  featured:  'Featured',
 }
 
 function TopBar({ section, updatedAt }: { section: Section; updatedAt: string }) {
@@ -533,6 +544,7 @@ function UploadModal({
         client,
         video: publicUrl,
         isRecent: false,
+        isFeatured: false,
       }
       await fetch('/api/admin/projects', {
         method: 'POST',
@@ -991,6 +1003,104 @@ function RecentSection({
   )
 }
 
+// ─── Featured Section ─────────────────────────────────────────────────────────
+
+function FeaturedSection({
+  projects,
+  setProjects,
+}: {
+  projects: Project[]
+  setProjects: React.Dispatch<React.SetStateAction<Project[]>>
+}) {
+  const featuredCount = projects.filter(p => p.isFeatured).length
+
+  async function toggle(id: string) {
+    const project = projects.find(p => p.id === id)
+    if (!project) return
+    const newValue = !project.isFeatured
+    setProjects(prev => prev.map(p => (p.id === id ? { ...p, isFeatured: newValue } : p)))
+    await fetch('/api/admin/projects', {
+      method: 'PUT',
+      body: JSON.stringify({ id, isFeatured: newValue }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
+  return (
+    <div className="p-8 w-full max-w-5xl mx-auto">
+      <div className="flex items-center gap-3 mb-6">
+        <p className="font-sans" style={{ fontSize: '12.5px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
+          Select projects to mark as featured.
+        </p>
+        <span className="font-sans ml-auto" style={{ fontSize: '12px', color: '#686868' }}>
+          {featuredCount} selected
+        </span>
+      </div>
+
+      {projects.length === 0 ? (
+        <p className="font-sans text-[#686868] text-sm">No projects yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {projects.map(p => (
+            <div
+              key={p.id}
+              onClick={() => toggle(p.id)}
+              className="relative rounded-xl overflow-hidden select-none cursor-pointer transition-all"
+              style={{ boxShadow: p.isFeatured ? '0 0 0 1px rgba(255,255,255,0.14)' : '0 0 0 1px #161616' }}
+            >
+              <div className="aspect-video bg-[#0f0f0f]">
+                <video
+                  src={p.video}
+                  className="w-full h-full object-cover"
+                  muted
+                  preload="metadata"
+                  onLoadedMetadata={e => {
+                    ;(e.target as HTMLVideoElement).currentTime = 0.5
+                  }}
+                />
+              </div>
+
+              <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#0d0d0d' }}>
+                <div className="min-w-0">
+                  <div className="font-sans text-white/85 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
+                    {p.title || 'Untitled'}
+                  </div>
+                  {p.category && (
+                    <div className="font-sans mt-0.5 truncate" style={{ fontSize: '10px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
+                      {p.category.toUpperCase()}
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  className="shrink-0 relative rounded-full transition-colors duration-200"
+                  style={{ width: '30px', height: '17px', background: p.isFeatured ? 'rgba(255,255,255,0.72)' : '#1c1c1c' }}
+                >
+                  <div
+                    className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#080808] transition-all duration-200"
+                    style={{ left: p.isFeatured ? '16px' : '3px' }}
+                  />
+                </div>
+              </div>
+
+              {p.isFeatured && (
+                <div
+                  className="absolute top-2 left-2 rounded-md px-1.5 py-[3px]"
+                  style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
+                >
+                  <span className="font-sans text-white/75" style={{ fontSize: '9.5px', letterSpacing: '0.12em' }}>
+                    FEATURED
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 function Dashboard() {
@@ -1026,8 +1136,10 @@ function Dashboard() {
             <OverviewSection projects={projects} />
           ) : section === 'projects' ? (
             <ProjectsSection projects={projects} setProjects={setProjects} />
-          ) : (
+          ) : section === 'recent' ? (
             <RecentSection projects={projects} setProjects={setProjects} />
+          ) : (
+            <FeaturedSection projects={projects} setProjects={setProjects} />
           )}
         </main>
       </div>
