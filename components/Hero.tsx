@@ -5,6 +5,7 @@ import { motion } from 'motion/react'
 import FadeIn from './FadeIn'
 import ShinyText from './ShinyText'
 import { ShimmerButton } from './ui/shimmer-button'
+import { TextDisperse } from './ui/text-disperse'
 
 export default function Hero() {
   return (
@@ -27,7 +28,7 @@ export default function Hero() {
             className="hero-subheading font-sans font-normal leading-snug"
             style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
           >
-            for brands that refuse to <span className="blend-in-glow">blend in</span> with the rest.
+            for brands that refuse to <TextDisperse className="blend-in-glow">blend in</TextDisperse> with the rest.
           </p>
         </FadeIn>
 
