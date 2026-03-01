@@ -11,7 +11,6 @@ type Project = {
   client: string
   video: string
   isRecent: boolean
-  isFeatured: boolean
 }
 
 export default function Work() {
@@ -22,7 +21,7 @@ export default function Work() {
       .then(r => r.json())
       .then((data: Project[]) => {
         if (Array.isArray(data)) {
-          setFeatured(data.filter(p => p.isFeatured))
+          setFeatured(data.filter(p => p.isRecent))
         }
       })
       .catch(() => {})
