@@ -470,6 +470,8 @@ function UploadModal({
   const [category, setCategory] = useState('SaaS')
   const [client, setClient] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   function acceptFile(f: File) {
@@ -485,13 +487,40 @@ function UploadModal({
     e.preventDefault()
     if (!file) return
     setUploading(true)
+    setProgress(0)
+    setError('')
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error('upload failed')
-      const uploaded: Project = await res.json()
-      const project: Project = { ...uploaded, title: title || uploaded.title, category, client }
+      // 1. Get presigned URL from server
+      const urlRes = await fetch(`/api/admin/upload-url?filename=${encodeURIComponent(file.name)}`)
+      if (!urlRes.ok) throw new Error('Failed to get upload URL')
+      const { url, key, publicUrl, contentType } = await urlRes.json()
+
+      // 2. Upload directly to R2 via XHR for progress tracking
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('PUT', url)
+        xhr.setRequestHeader('Content-Type', contentType)
+        xhr.upload.onprogress = (ev) => {
+          if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100))
+        }
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve()
+          else reject(new Error(`Upload failed (${xhr.status})`))
+        }
+        xhr.onerror = () => reject(new Error('Network error during upload'))
+        xhr.send(file)
+      })
+
+      // 3. Save project metadata
+      const baseName = key.replace(/\.[^/.]+$/, '')
+      const project: Project = {
+        id: key,
+        title: title || baseName.replace(/[-_]/g, ' '),
+        category,
+        client,
+        video: publicUrl,
+        isRecent: false,
+      }
       await fetch('/api/admin/projects', {
         method: 'POST',
         body: JSON.stringify(project),
@@ -500,7 +529,7 @@ function UploadModal({
       onSuccess(project)
     } catch (err) {
       console.error('[upload]', err)
-    } finally {
+      setError(err instanceof Error ? err.message : 'Upload failed')
       setUploading(false)
     }
   }
@@ -509,7 +538,7 @@ function UploadModal({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(2px)' }}
-      onClick={onClose}
+      onClick={uploading ? undefined : onClose}
     >
       <div
         className="relative rounded-2xl w-full max-w-[420px] mx-4"
@@ -527,8 +556,9 @@ function UploadModal({
             </span>
             <button
               type="button"
-              onClick={onClose}
-              className="text-[#686868] hover:text-[#a0a0a0] transition-colors p-0.5"
+              onClick={uploading ? undefined : onClose}
+              disabled={uploading}
+              className="text-[#686868] hover:text-[#a0a0a0] transition-colors p-0.5 disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -626,14 +656,34 @@ function UploadModal({
               style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
             />
 
-            <button
-              type="submit"
-              disabled={!file || uploading}
-              className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-[11px] rounded-xl transition-all disabled:opacity-20"
-              style={{ fontSize: '13.5px', letterSpacing: '-0.01em' }}
-            >
-              {uploading ? 'Uploading···' : 'Upload'}
-            </button>
+            {uploading ? (
+              <div className="mt-1">
+                <div className="w-full rounded-full overflow-hidden" style={{ height: '3px', background: '#1a1a1a' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-200"
+                    style={{ width: `${progress}%`, background: 'rgba(255,255,255,0.7)' }}
+                  />
+                </div>
+                <div className="flex justify-between mt-1.5">
+                  <span className="font-sans text-[#686868]" style={{ fontSize: '11px' }}>Uploading to R2</span>
+                  <span className="font-sans text-[#686868] tabular-nums" style={{ fontSize: '11px' }}>{progress}%</span>
+                </div>
+              </div>
+            ) : (
+              <>
+                {error && (
+                  <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '12px' }}>{error}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={!file}
+                  className="mt-1 w-full bg-white hover:bg-white/90 text-[#0a0a0a] font-sans font-medium py-[11px] rounded-xl transition-all disabled:opacity-20"
+                  style={{ fontSize: '13.5px', letterSpacing: '-0.01em' }}
+                >
+                  Upload
+                </button>
+              </>
+            )}
           </form>
         </div>
       </div>
