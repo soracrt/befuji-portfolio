@@ -6,7 +6,7 @@ import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 import ReviewCard from '@/components/ReviewCard'
 
-function CustomSelect({ value, options, onChange }: { value: string; options: string[]; onChange: (v: string) => void }) {
+function CustomSelect({ value, options, onChange, placeholder = 'Choose one' }: { value: string; options: string[]; onChange: (v: string) => void; placeholder?: string }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -29,7 +29,7 @@ function CustomSelect({ value, options, onChange }: { value: string; options: st
           borderColor: open ? 'rgba(255,255,252,0.3)' : 'rgba(255,255,252,0.12)',
         }}
       >
-        <span>{value}</span>
+        <span style={{ color: value ? '#fffffc' : 'rgba(255,255,252,0.25)' }}>{value || placeholder}</span>
         <svg
           width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           style={{ color: 'rgba(255,255,252,0.35)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
@@ -84,7 +84,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
   // Form state
   const [name, setName] = useState('')
-  const [service, setService] = useState('Ads')
+  const [service, setService] = useState('')
   const [company, setCompany] = useState('')
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -108,7 +108,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name.trim() || !text.trim()) return
+    if (!name.trim() || !text.trim() || !service) return
     setSubmitting(true)
     try {
       const res = await fetch('/api/reviews', {
@@ -120,7 +120,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
         const newReview = await res.json()
         setReviews(prev => [...prev, newReview])
         setName('')
-        setService('Ads')
+        setService('')
         setCompany('')
         setText('')
         setSubmitted(true)
