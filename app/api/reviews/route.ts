@@ -91,3 +91,32 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const { id, ...updates } = await req.json()
+    const reviews = await readReviews() as { id: string }[]
+    const idx = reviews.findIndex(r => r.id === id)
+    if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    const next = [...reviews]
+    next[idx] = { ...next[idx], ...updates }
+    await writeReviews(next)
+    return NextResponse.json(next[idx])
+  } catch (err) {
+    console.error('[api/reviews PUT]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json()
+    const reviews = await readReviews() as { id: string }[]
+    const next = reviews.filter(r => r.id !== id)
+    await writeReviews(next)
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[api/reviews DELETE]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

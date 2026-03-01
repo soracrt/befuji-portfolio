@@ -12,7 +12,17 @@ type Project = {
   isRecent: boolean
 }
 
-type Section = 'overview' | 'projects' | 'recent'
+type Review = {
+  id: string
+  name: string
+  service: string
+  company?: string
+  text: string
+  featured: boolean
+  createdAt: string
+}
+
+type Section = 'overview' | 'projects' | 'recent' | 'reviews'
 type EditKey = 'title' | 'category' | 'client'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -61,6 +71,14 @@ function IconDragHandle() {
       <circle cx="7.5" cy="2"  r="1.2" />
       <circle cx="7.5" cy="7"  r="1.2" />
       <circle cx="7.5" cy="12" r="1.2" />
+    </svg>
+  )
+}
+
+function IconMessage() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   )
 }
@@ -172,6 +190,7 @@ const NAV: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'overview',  label: 'Overview',        icon: <IconGrid /> },
   { id: 'projects',  label: 'Projects',         icon: <IconFilm /> },
   { id: 'recent',    label: 'Recent Projects',  icon: <IconStar /> },
+  { id: 'reviews',   label: 'Reviews',          icon: <IconMessage /> },
 ]
 
 function Sidebar({ active, setActive }: { active: Section; setActive: (s: Section) => void }) {
@@ -258,6 +277,7 @@ const SECTION_LABELS: Record<Section, string> = {
   overview:  'Overview',
   projects:  'Projects',
   recent:    'Recent Projects',
+  reviews:   'Reviews',
 }
 
 function TopBar({ section, updatedAt }: { section: Section; updatedAt: string }) {
@@ -283,8 +303,9 @@ function TopBar({ section, updatedAt }: { section: Section; updatedAt: string })
 
 // ─── Overview ─────────────────────────────────────────────────────────────────
 
-function OverviewSection({ projects }: { projects: Project[] }) {
+function OverviewSection({ projects, reviews }: { projects: Project[]; reviews: Review[] }) {
   const recent = projects.filter(p => p.isRecent)
+  const featuredReviews = reviews.filter(r => r.featured)
 
   return (
     <div className="p-8 max-w-xl mx-auto w-full">
@@ -293,10 +314,7 @@ function OverviewSection({ projects }: { projects: Project[] }) {
           <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             TOTAL PROJECTS
           </div>
-          <div
-            className="font-sans text-white font-medium tabular-nums"
-            style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}
-          >
+          <div className="font-sans text-white font-medium tabular-nums" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
             {projects.length}
           </div>
         </div>
@@ -305,11 +323,27 @@ function OverviewSection({ projects }: { projects: Project[] }) {
           <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             RECENT
           </div>
-          <div
-            className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1"
-            style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}
-          >
+          <div className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
             {recent.length}
+            <span style={{ fontSize: '22px', color: '#686868' }}>/3</span>
+          </div>
+        </div>
+
+        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+            TOTAL REVIEWS
+          </div>
+          <div className="font-sans text-white font-medium tabular-nums" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
+            {reviews.length}
+          </div>
+        </div>
+
+        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
+            FEATURED REVIEWS
+          </div>
+          <div className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1" style={{ fontSize: '38px', letterSpacing: '-0.035em', lineHeight: 1 }}>
+            {featuredReviews.length}
             <span style={{ fontSize: '22px', color: '#686868' }}>/3</span>
           </div>
         </div>
@@ -1002,25 +1036,164 @@ function RecentSection({
   )
 }
 
+// ─── Reviews Section ──────────────────────────────────────────────────────────
+
+function ReviewsAdminSection({
+  reviews,
+  setReviews,
+}: {
+  reviews: Review[]
+  setReviews: React.Dispatch<React.SetStateAction<Review[]>>
+}) {
+  const featuredCount = reviews.filter(r => r.featured).length
+
+  function toggleFeatured(id: string) {
+    const review = reviews.find(r => r.id === id)
+    if (!review) return
+    const newValue = !review.featured
+    if (newValue && featuredCount >= 3) return
+    setReviews(prev => prev.map(r => r.id === id ? { ...r, featured: newValue } : r))
+    fetch('/api/reviews', {
+      method: 'PUT',
+      body: JSON.stringify({ id, featured: newValue }),
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(console.error)
+  }
+
+  function deleteReview(id: string) {
+    setReviews(prev => prev.filter(r => r.id !== id))
+    fetch('/api/reviews', {
+      method: 'DELETE',
+      body: JSON.stringify({ id }),
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(console.error)
+  }
+
+  return (
+    <div className="p-8 w-full max-w-5xl mx-auto">
+      <div className="flex items-center gap-3 mb-6">
+        <p className="font-sans" style={{ fontSize: '12.5px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
+          Select up to 3 reviews to feature on the homepage.
+        </p>
+        <span className="font-sans ml-auto" style={{ fontSize: '12px', color: '#686868' }}>
+          {featuredCount}/3
+        </span>
+      </div>
+
+      {reviews.length === 0 ? (
+        <p className="font-sans text-[#686868] text-sm">No reviews yet.</p>
+      ) : (
+        <div className="flex flex-col gap-1.5">
+          {/* Table header */}
+          <div
+            className="grid gap-4 px-4 pb-2 mb-1"
+            style={{ gridTemplateColumns: '1fr 80px 1fr 60px 28px' }}
+          >
+            {(['Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
+              <div key={i} className="font-sans" style={{ fontSize: '10px', letterSpacing: '0.11em', color: '#707070' }}>
+                {col}
+              </div>
+            ))}
+          </div>
+
+          {reviews.map(r => {
+            const maxed = !r.featured && featuredCount >= 3
+            return (
+              <div
+                key={r.id}
+                className="grid gap-4 items-center px-4 py-3 rounded-xl group transition-colors"
+                style={{
+                  gridTemplateColumns: '1fr 80px 1fr 60px 28px',
+                  background: '#282827',
+                  boxShadow: '0 0 0 1px #323231',
+                }}
+              >
+                {/* Name + company */}
+                <div className="min-w-0">
+                  <div className="font-sans text-white/80 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
+                    {r.name}
+                  </div>
+                  {r.company && (
+                    <div className="font-sans truncate mt-0.5" style={{ fontSize: '10px', color: '#686868' }}>
+                      {r.company}
+                    </div>
+                  )}
+                </div>
+
+                {/* Service */}
+                <span className="font-sans" style={{ fontSize: '10px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
+                  {r.service.toUpperCase()}
+                </span>
+
+                {/* Text */}
+                <span
+                  className="font-sans truncate"
+                  style={{ fontSize: '12px', color: '#686868', letterSpacing: '-0.01em' }}
+                  title={r.text}
+                >
+                  {r.text}
+                </span>
+
+                {/* Featured toggle */}
+                <div className="flex items-center justify-center">
+                  <button
+                    onClick={() => !maxed && toggleFeatured(r.id)}
+                    disabled={maxed}
+                    title={r.featured ? 'Unfeature' : maxed ? 'Max 3 featured' : 'Feature on homepage'}
+                    className="shrink-0 relative rounded-full transition-colors duration-200 disabled:opacity-30"
+                    style={{ width: '30px', height: '17px', background: r.featured ? '#a10702' : '#383837' }}
+                  >
+                    <div
+                      className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#000000] transition-all duration-200"
+                      style={{ left: r.featured ? '16px' : '3px' }}
+                    />
+                  </button>
+                </div>
+
+                {/* Delete */}
+                <button
+                  onClick={() => deleteReview(r.id)}
+                  title="Delete"
+                  className="flex items-center justify-center text-[#505050] hover:text-red-400/70 transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                    <path d="M9 6V4h6v2" />
+                  </svg>
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 function Dashboard() {
   const [section, setSection] = useState<Section>('overview')
   const [projects, setProjects] = useState<Project[]>([])
+  const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [updatedAt, setUpdatedAt] = useState('')
 
   useEffect(() => {
-    fetch('/api/admin/projects', { cache: 'no-store' })
-      .then(r => r.json())
-      .then(data => {
-        setProjects(Array.isArray(data) ? data : [])
-        setUpdatedAt(
-          new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-        )
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+    Promise.all([
+      fetch('/api/admin/projects', { cache: 'no-store' }).then(r => r.json()),
+      fetch('/api/reviews', { cache: 'no-store' }).then(r => r.json()),
+    ]).then(([projectData, reviewData]) => {
+      setProjects(Array.isArray(projectData) ? projectData : [])
+      setReviews(Array.isArray(reviewData) ? reviewData : [])
+      setUpdatedAt(
+        new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      )
+      setLoading(false)
+    }).catch(() => setLoading(false))
   }, [])
 
   return (
@@ -1034,11 +1207,13 @@ function Dashboard() {
               <span className="font-sans text-[#686868] text-sm">Loading···</span>
             </div>
           ) : section === 'overview' ? (
-            <OverviewSection projects={projects} />
+            <OverviewSection projects={projects} reviews={reviews} />
           ) : section === 'projects' ? (
             <ProjectsSection projects={projects} setProjects={setProjects} />
-          ) : (
+          ) : section === 'recent' ? (
             <RecentSection projects={projects} setProjects={setProjects} />
+          ) : (
+            <ReviewsAdminSection reviews={reviews} setReviews={setReviews} />
           )}
         </main>
       </div>
