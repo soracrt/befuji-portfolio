@@ -4,6 +4,16 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import FadeIn from './FadeIn'
 
+// Shared across all LazyVideo instances — only one plays at a time
+let activeGain: GainNode | null = null
+let activeCtx: AudioContext | null = null
+
+function fadeOut(gain: GainNode, ctx: AudioContext) {
+  gain.gain.cancelScheduledValues(ctx.currentTime)
+  gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime)
+  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1)
+}
+
 function LazyVideo({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const glowRef = useRef<HTMLVideoElement>(null)
@@ -68,9 +78,24 @@ function LazyVideo({ src }: { src: string }) {
         if (!ctx || !gain) return
 
         ctx.resume()
-        gain.gain.cancelScheduledValues(ctx.currentTime)
-        gain.gain.setValueAtTime(visible ? 0 : 1, ctx.currentTime)
-        gain.gain.linearRampToValueAtTime(visible ? 1 : 0, ctx.currentTime + 1)
+
+        if (visible) {
+          // Fade out whichever other card is currently active
+          if (activeGain && activeGain !== gain && activeCtx) {
+            fadeOut(activeGain, activeCtx)
+          }
+          activeGain = gain
+          activeCtx = ctx
+          gain.gain.cancelScheduledValues(ctx.currentTime)
+          gain.gain.setValueAtTime(0, ctx.currentTime)
+          gain.gain.linearRampToValueAtTime(1, ctx.currentTime + 1)
+        } else {
+          if (activeGain === gain) {
+            activeGain = null
+            activeCtx = null
+          }
+          fadeOut(gain, ctx)
+        }
       },
       { threshold: 0.4 }
     )
