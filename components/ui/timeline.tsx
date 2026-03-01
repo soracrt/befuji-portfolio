@@ -43,9 +43,47 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
     })
   })
 
+  const edgeMask = 'linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%)'
+
   return (
     <div className="w-full" ref={containerRef}>
       <div ref={ref} className="relative max-w-[580px] mx-auto pb-40">
+
+        {/* Lines rendered FIRST so dots paint on top */}
+
+        {/* Static grey rail */}
+        <div
+          className="absolute top-0 w-[3px] pointer-events-none"
+          style={{
+            left: '30px',
+            height: `${height}px`,
+            background: '#2e2e2e',
+            maskImage: edgeMask,
+            WebkitMaskImage: edgeMask,
+          }}
+        />
+
+        {/* Scroll-driven white fill */}
+        <div
+          className="absolute top-0 overflow-hidden w-[3px] pointer-events-none"
+          style={{
+            left: '30px',
+            height: `${height}px`,
+            maskImage: edgeMask,
+            WebkitMaskImage: edgeMask,
+          }}
+        >
+          <motion.div
+            className="absolute inset-x-0 top-0 w-[3px]"
+            style={{
+              height: heightTransform,
+              opacity: opacityTransform,
+              background: '#fffffc',
+            }}
+          />
+        </div>
+
+        {/* Rows rendered AFTER lines — dots sit on top */}
         {data.map((item, index) => (
           <motion.div
             key={index}
@@ -60,30 +98,13 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
               className="self-start flex items-center shrink-0 md:w-40"
               style={{ paddingLeft: '22px' }}
             >
-              {/* Dot */}
-              <motion.div
-                ref={el => { dotRefs.current[index] = el as HTMLDivElement | null }}
+              {/* Dot — sits above the line via DOM order */}
+              <div
+                ref={el => { dotRefs.current[index] = el }}
                 className="h-5 w-5 rounded-full shrink-0"
-                animate={passedDots[index] ? {
-                  backgroundColor: '#fffffc',
-                  scale: [1, 1.22, 1],
-                  boxShadow: [
-                    '0 0 0px rgba(255,255,252,0)',
-                    '0 0 14px rgba(255,255,252,0.55)',
-                    '0 0 0px rgba(255,255,252,0)',
-                  ],
-                } : {
-                  backgroundColor: 'rgba(255,255,252,0.28)',
-                  scale: 1,
-                  boxShadow: '0 0 0px rgba(255,255,252,0)',
-                }}
-                transition={passedDots[index] ? {
-                  backgroundColor: { duration: 0.5, ease: 'easeInOut' },
-                  scale: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
-                  boxShadow: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
-                } : {
-                  duration: 0.4,
-                  ease: 'easeInOut',
+                style={{
+                  backgroundColor: passedDots[index] ? '#fffffc' : '#777777',
+                  transition: 'background-color 0.5s ease',
                 }}
               />
               {/* Year — desktop only */}
@@ -109,36 +130,6 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
           </motion.div>
         ))}
 
-        {/* Static grey background line */}
-        <div
-          className="absolute top-0 w-[3px] pointer-events-none"
-          style={{
-            left: '30px',
-            height: `${height}px`,
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,252,0.2) 8%, rgba(255,255,252,0.2) 80%, transparent 100%)',
-          }}
-        />
-
-        {/* Scroll-driven grey-to-white fill */}
-        <div
-          className="absolute top-0 overflow-hidden w-[3px] pointer-events-none"
-          style={{
-            left: '30px',
-            height: `${height}px`,
-            maskImage: 'linear-gradient(to bottom, black 0%, black 78%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 78%, transparent 100%)',
-          }}
-        >
-          <motion.div
-            className="absolute inset-x-0 top-0 w-[3px]"
-            style={{
-              height: heightTransform,
-              opacity: opacityTransform,
-              background: 'linear-gradient(to bottom, #555555, #fffffc)',
-              boxShadow: '0 0 6px rgba(255,255,252,0.5)',
-            }}
-          />
-        </div>
       </div>
     </div>
   )
