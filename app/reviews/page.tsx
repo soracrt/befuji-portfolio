@@ -99,7 +99,7 @@ export default function ReviewsPage() {
 
           {/* Reviews grid */}
           {pageReviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12" style={{ minHeight: '420px', alignContent: 'start' }}>
               {pageReviews.map((review, i) => (
                 <FadeIn key={review.id} delay={i * 60}>
                   <ReviewCard review={review} />
