@@ -13,6 +13,7 @@ export default function ReviewCard({ review }: { review: Review }) {
       style={{
         background: '#111111',
         border: '1px solid rgba(255,255,252,0.07)',
+        height: '200px',
       }}
     >
       {/* Top row: name left, service right */}
@@ -37,7 +38,7 @@ export default function ReviewCard({ review }: { review: Review }) {
       {/* Company footer */}
       {review.company && (
         <p
-          className="font-sans text-xs mt-4"
+          className="font-sans text-xs mt-auto pt-3"
           style={{ color: 'rgba(255,255,252,0.25)' }}
         >
           {review.company}
