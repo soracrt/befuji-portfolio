@@ -35,9 +35,9 @@ const faqItems = [
 function BlurredStagger({ text }: { text: string }) {
   const container = {
     hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.012 } },
+    show: { opacity: 1, transition: { staggerChildren: 0.04 } },
   }
-  const letter = {
+  const word = {
     hidden: { opacity: 0, filter: 'blur(8px)' },
     show:   { opacity: 1, filter: 'blur(0px)' },
   }
@@ -47,17 +47,17 @@ function BlurredStagger({ text }: { text: string }) {
       variants={container}
       initial="hidden"
       animate="show"
-      className="font-sans leading-[1.85] break-words whitespace-normal"
+      className="font-sans leading-[1.85]"
       style={{ fontSize: '13.5px', color: 'rgba(255,255,252,0.5)' }}
     >
-      {text.split('').map((char, i) => (
+      {text.split(' ').map((w, i) => (
         <motion.span
           key={i}
-          variants={letter}
-          transition={{ duration: 0.25 }}
-          className="inline-block"
+          variants={word}
+          transition={{ duration: 0.3 }}
+          className="inline-block whitespace-nowrap"
         >
-          {char === ' ' ? '\u00A0' : char}
+          {w}{'\u00A0'}
         </motion.span>
       ))}
     </motion.p>
