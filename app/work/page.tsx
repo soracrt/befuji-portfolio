@@ -158,7 +158,7 @@ function VideoCard({ project }: { project: Project }) {
           playsInline
         />
 
-        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#111] group">
+        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#2e2e2d] group">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
@@ -320,7 +320,7 @@ export default function WorkPage() {
             <div className="relative flex items-center mb-12">
               <h1
                 className="font-sans font-medium text-ink tracking-[-0.025em]"
-                style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', textShadow: '0 0 48px rgba(255,255,255,0.25)' }}
+                style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', textShadow: '0 0 48px rgba(161,7,2,0.35)' }}
               >
                 Projects
               </h1>
@@ -335,9 +335,9 @@ export default function WorkPage() {
                       onClick={() => setActiveCategory(cat)}
                       className="font-sans text-xs tracking-[0.12em] uppercase px-4 py-1.5 rounded-full border transition-all duration-500 ease-in-out"
                       style={{
-                        borderColor: active ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)',
-                        color: active ? '#000' : 'rgba(255,255,255,0.45)',
-                        background: active ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0)',
+                        borderColor: active ? '#a10702' : 'rgba(255,255,252,0.15)',
+                        color: active ? '#fffffc' : 'rgba(255,255,252,0.45)',
+                        background: active ? '#a10702' : 'rgba(255,255,252,0)',
                       }}
                     >
                       {cat}

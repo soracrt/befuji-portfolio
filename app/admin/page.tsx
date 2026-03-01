@@ -95,7 +95,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
   return (
     <div
       className="min-h-screen flex flex-col relative"
-      style={{ background: 'radial-gradient(ellipse at 50% 36%, #191919 0%, #080808 64%)' }}
+      style={{ background: 'radial-gradient(ellipse at 50% 36%, #353534 0%, #242423 64%)' }}
     >
       <div className="absolute top-6 left-7">
         <Link
@@ -115,7 +115,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
           <div className="flex justify-center mb-8">
             <div
               className="w-9 h-9 rounded-[10px] flex items-center justify-center"
-              style={{ background: 'linear-gradient(160deg, #1e1e1e 0%, #131313 100%)', boxShadow: '0 0 0 1px #242424' }}
+              style={{ background: 'linear-gradient(160deg, #3a3a39 0%, #2f2f2e 100%)', boxShadow: '0 0 0 1px #404040' }}
             >
               <span className="font-sans text-white/50 font-medium" style={{ fontSize: '13px', letterSpacing: '-0.02em' }}>B</span>
             </div>
@@ -141,8 +141,8 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
               onChange={e => { setValue(e.target.value); setError(false) }}
               placeholder="Password"
               autoFocus
-              className={`w-full bg-[#101010] rounded-xl px-4 py-3 font-sans text-sm text-white/80 placeholder-[#272727] outline-none transition-all ring-1 ${
-                error ? 'ring-red-500/20' : 'ring-[#1e1e1e] focus:ring-[#2c2c2c]'
+              className={`w-full bg-[#2c2c2b] rounded-xl px-4 py-3 font-sans text-sm text-white/80 placeholder-[#272727] outline-none transition-all ring-1 ${
+                error ? 'ring-red-500/20' : 'ring-[#3a3a3a] focus:ring-[#484848]'
               }`}
               style={{ letterSpacing: '-0.01em' }}
             />
@@ -183,13 +183,13 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
   return (
     <aside
       className="w-[220px] shrink-0 h-screen sticky top-0 flex flex-col"
-      style={{ background: '#0a0a0a', borderRight: '1px solid #141414' }}
+      style={{ background: '#1e1e1e', borderRight: '1px solid #303030' }}
     >
-      <div className="px-5 pt-[22px] pb-[18px]" style={{ borderBottom: '1px solid #131313' }}>
+      <div className="px-5 pt-[22px] pb-[18px]" style={{ borderBottom: '1px solid #2f2f2e' }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-[22px] h-[22px] rounded-md flex items-center justify-center shrink-0"
-            style={{ background: '#181818', boxShadow: '0 0 0 1px #222' }}
+            style={{ background: '#343433', boxShadow: '0 0 0 1px #3e3e3d' }}
           >
             <span className="font-sans text-white/40 font-medium" style={{ fontSize: '9.5px' }}>B</span>
           </div>
@@ -264,7 +264,7 @@ function TopBar({ section, updatedAt }: { section: Section; updatedAt: string })
   return (
     <div
       className="flex items-center justify-between px-8 shrink-0"
-      style={{ height: '50px', borderBottom: '1px solid #131313', background: '#080808' }}
+      style={{ height: '50px', borderBottom: '1px solid #2f2f2e', background: '#242423' }}
     >
       <h1
         className="font-sans text-white/80 font-medium"
@@ -289,7 +289,7 @@ function OverviewSection({ projects }: { projects: Project[] }) {
   return (
     <div className="p-8 max-w-xl mx-auto w-full">
       <div className="grid grid-cols-2 gap-2.5 mb-8">
-        <div className="rounded-xl p-5" style={{ background: '#0d0d0d', boxShadow: '0 0 0 1px #171717' }}>
+        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
           <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             TOTAL PROJECTS
           </div>
@@ -301,7 +301,7 @@ function OverviewSection({ projects }: { projects: Project[] }) {
           </div>
         </div>
 
-        <div className="rounded-xl p-5" style={{ background: '#0d0d0d', boxShadow: '0 0 0 1px #171717' }}>
+        <div className="rounded-xl p-5" style={{ background: '#282827', boxShadow: '0 0 0 1px #333332' }}>
           <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.12em', color: '#a0a0a0' }}>
             RECENT
           </div>
@@ -327,7 +327,7 @@ function OverviewSection({ projects }: { projects: Project[] }) {
             <div
               key={p.id}
               className="flex items-center gap-4 rounded-xl px-4 py-3"
-              style={{ background: '#0d0d0d', boxShadow: '0 0 0 1px #161616' }}
+              style={{ background: '#282827', boxShadow: '0 0 0 1px #323231' }}
             >
               <span className="font-sans tabular-nums shrink-0" style={{ fontSize: '11px', color: '#686868', width: '14px' }}>
                 {i + 1}
@@ -387,7 +387,7 @@ function EditableCell({
           if (e.key === 'Escape') onCancel()
         }}
         placeholder={placeholder}
-        className="bg-[#181818] rounded-md px-2 py-1 text-white/80 outline-none w-full font-sans ring-1 ring-[#2a2a2a]"
+        className="bg-[#343433] rounded-md px-2 py-1 text-white/80 outline-none w-full font-sans ring-1 ring-[#464646]"
         style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
       />
     )
@@ -425,7 +425,7 @@ function CategorySelect({ value, onChange }: { value: string; onChange: (v: stri
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full bg-[#0a0a0a] rounded-xl px-3.5 py-2.5 font-sans text-white/80 outline-none ring-1 ring-[#1e1e1e] hover:ring-[#252525] transition-all text-left flex items-center justify-between"
+        className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 outline-none ring-1 ring-[#3a3a3a] hover:ring-[#414141] transition-all text-left flex items-center justify-between"
         style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
       >
         {value || <span style={{ color: '#505050' }}>—</span>}
@@ -444,8 +444,8 @@ function CategorySelect({ value, onChange }: { value: string; onChange: (v: stri
           className="absolute left-0 right-0 z-10 rounded-xl overflow-hidden"
           style={{
             top: 'calc(100% + 4px)',
-            background: '#1a1a1a',
-            boxShadow: '0 0 0 1px #282828, 0 8px 24px rgba(0,0,0,0.5)',
+            background: '#363635',
+            boxShadow: '0 0 0 1px #444443, 0 8px 24px rgba(0,0,0,0.5)',
           }}
         >
           {options.map(opt => (
@@ -455,8 +455,8 @@ function CategorySelect({ value, onChange }: { value: string; onChange: (v: stri
               onClick={() => { onChange(opt); setOpen(false) }}
               className={`w-full text-left px-3.5 py-2.5 font-sans transition-colors ${
                 opt === value
-                  ? 'bg-[#252525] text-white/90'
-                  : 'text-white/55 hover:bg-[#212121] hover:text-white/80'
+                  ? 'bg-[#414140] text-white/90'
+                  : 'text-white/55 hover:bg-[#3d3d3c] hover:text-white/80'
               }`}
               style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
             >
@@ -556,7 +556,7 @@ function UploadModal({
     >
       <div
         className="relative rounded-2xl w-full max-w-[420px] mx-4"
-        style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1e1e1e, 0 24px 64px rgba(0,0,0,0.7)' }}
+        style={{ background: '#2b2b2a', boxShadow: '0 0 0 1px #3a3a39, 0 24px 64px rgba(0,0,0,0.7)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6">
@@ -594,8 +594,8 @@ function UploadModal({
             onClick={() => { if (!file) fileInputRef.current?.click() }}
             className="rounded-xl mb-4 transition-all"
             style={{
-              border: `1.5px dashed ${dragging ? '#383838' : '#1e1e1e'}`,
-              background: dragging ? '#131313' : '#0a0a0a',
+              border: `1.5px dashed ${dragging ? '#545453' : '#3a3a39'}`,
+              background: dragging ? '#2f2f2e' : '#1e1e1e',
               cursor: file ? 'default' : 'pointer',
             }}
           >
@@ -656,7 +656,7 @@ function UploadModal({
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="Title"
-              className="w-full bg-[#0a0a0a] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
               style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
             />
 
@@ -666,13 +666,13 @@ function UploadModal({
               value={client}
               onChange={e => setClient(e.target.value)}
               placeholder="Client"
-              className="w-full bg-[#0a0a0a] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+              className="w-full bg-[#1e1e1e] rounded-xl px-3.5 py-2.5 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
               style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
             />
 
             {uploading ? (
               <div className="mt-1">
-                <div className="w-full rounded-full overflow-hidden" style={{ height: '3px', background: '#1a1a1a' }}>
+                <div className="w-full rounded-full overflow-hidden" style={{ height: '3px', background: '#363635' }}>
                   <div
                     className="h-full rounded-full transition-all duration-200"
                     style={{ width: `${progress}%`, background: 'rgba(255,255,255,0.7)' }}
@@ -839,8 +839,8 @@ function ProjectsSection({
                   className="grid gap-4 items-center px-4 py-3 rounded-xl group transition-colors"
                   style={{
                     gridTemplateColumns: '16px 82px 1fr 1fr 1fr 28px',
-                    background: dragOverIdx === idx ? '#111111' : '#0d0d0d',
-                    boxShadow: dragOverIdx === idx ? '0 0 0 1px #232323' : '0 0 0 1px #161616',
+                    background: dragOverIdx === idx ? '#2e2e2d' : '#282827',
+                    boxShadow: dragOverIdx === idx ? '0 0 0 1px #3f3f3e' : '0 0 0 1px #323231',
                   }}
                 >
                   {/* Drag handle */}
@@ -849,7 +849,7 @@ function ProjectsSection({
                   </div>
 
                   {/* Thumbnail */}
-                  <div className="w-[82px] h-[46px] rounded-lg overflow-hidden bg-[#141414] shrink-0">
+                  <div className="w-[82px] h-[46px] rounded-lg overflow-hidden bg-[#303030] shrink-0">
                     <video
                       src={p.video}
                       className="w-full h-full object-cover"
@@ -952,7 +952,7 @@ function RecentSection({
                 }`}
                 style={{ boxShadow: p.isRecent ? '0 0 0 1px rgba(255,255,255,0.14)' : '0 0 0 1px #161616' }}
               >
-                <div className="aspect-video bg-[#0f0f0f]">
+                <div className="aspect-video bg-[#2b2b2a]">
                   <video
                     src={p.video}
                     className="w-full h-full object-cover"
@@ -964,7 +964,7 @@ function RecentSection({
                   />
                 </div>
 
-                <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#0d0d0d' }}>
+                <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#282827' }}>
                   <div className="min-w-0">
                     <div className="font-sans text-white/85 truncate" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
                       {p.title || 'Untitled'}
@@ -978,10 +978,10 @@ function RecentSection({
 
                   <div
                     className="shrink-0 relative rounded-full transition-colors duration-200"
-                    style={{ width: '30px', height: '17px', background: p.isRecent ? 'rgba(255,255,255,0.72)' : '#1c1c1c' }}
+                    style={{ width: '30px', height: '17px', background: p.isRecent ? '#a10702' : '#383837' }}
                   >
                     <div
-                      className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#080808] transition-all duration-200"
+                      className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#242423] transition-all duration-200"
                       style={{ left: p.isRecent ? '16px' : '3px' }}
                     />
                   </div>
@@ -1028,7 +1028,7 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#080808' }}>
+    <div className="flex min-h-screen" style={{ background: '#242423' }}>
       <Sidebar active={section} setActive={setSection} />
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         <TopBar section={section} updatedAt={updatedAt} />
@@ -1060,7 +1060,7 @@ export default function AdminPage() {
   }, [])
 
   if (authed === null) {
-    return <div className="min-h-screen" style={{ background: '#080808' }} />
+    return <div className="min-h-screen" style={{ background: '#242423' }} />
   }
 
   if (!authed) {

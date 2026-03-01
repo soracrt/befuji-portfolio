@@ -119,7 +119,7 @@ function LazyVideo({ src }: { src: string }) {
         loop
         playsInline
       />
-      <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
+      <div className="w-full rounded-2xl overflow-hidden bg-[#2e2e2d]">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}

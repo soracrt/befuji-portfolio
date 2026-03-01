@@ -12,16 +12,16 @@ html::-webkit-scrollbar {
 }
 
 body {
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #242423;
+  color: #fffffc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Selection */
 ::selection {
-  background-color: #FFFFFF;
-  color: #0A0A0A;
+  background-color: #a10702;
+  color: #fffffc;
 }
 
 /* Open for work pulse dot */
@@ -34,10 +34,10 @@ body {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }
 
-/* "blend in" glow pulse — breathing white text-shadow */
+/* "blend in" glow pulse — breathing red text-shadow */
 @keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 6px rgba(255,255,255,0.4); }
-  50%       { text-shadow: 0 0 16px rgba(255,255,255,0.9); }
+  0%, 100% { text-shadow: 0 0 6px rgba(161,7,2,0.5); }
+  50%       { text-shadow: 0 0 20px rgba(161,7,2,1); }
 }
 
 .blend-in-glow {

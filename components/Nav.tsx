@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation'
 import { Link as ScrollLink } from 'react-scroll'
 
 const linkClass = 'cursor-pointer font-sans text-xs tracking-[0.15em] uppercase text-ink hover:opacity-40 transition-opacity duration-200'
-const linkGlow: React.CSSProperties = { textShadow: '0 0 20px rgba(255,255,255,0.4)' }
-const contactGlow: React.CSSProperties = { boxShadow: '0 0 16px rgba(255,255,255,0.35), 0 0 32px rgba(255,255,255,0.15)' }
+const linkGlow: React.CSSProperties = { textShadow: '0 0 20px rgba(161,7,2,0.5)' }
+const contactGlow: React.CSSProperties = { boxShadow: '0 0 16px rgba(161,7,2,0.4), 0 0 32px rgba(161,7,2,0.2)' }
 
 export default function Nav() {
   const pathname = usePathname()

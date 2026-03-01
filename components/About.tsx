@@ -16,7 +16,7 @@ export default function About() {
             </h2>
             <p
               className="font-sans text-sm leading-[1.85] max-w-sm"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
+              style={{ color: 'rgba(255,255,252,0.5)' }}
             >
               Ghazi is a motion designer based in Jakarta working under his studio. He does
               motion design for music artists, ads, and films. Fast turnaround, smooth collabs,
@@ -35,7 +35,7 @@ export default function About() {
         <FadeIn delay={160}>
           <div
             className="w-full aspect-square md:aspect-[4/5] ml-auto max-w-md"
-            style={{ backgroundColor: '#111111' }}
+            style={{ backgroundColor: '#2e2e2d' }}
           />
         </FadeIn>
       </div>
