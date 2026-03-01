@@ -2,6 +2,7 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
+import { Resend } from 'resend'
 
 export const dynamic = 'force-dynamic'
 
@@ -66,6 +67,32 @@ export async function GET() {
   }
 }
 
+async function sendReviewNotification(review: {
+  name: string; service: string; company: string; text: string; createdAt: string
+}) {
+  const apiKey = process.env.RESEND_API_KEY
+  const to = process.env.NOTIFY_EMAIL
+  if (!apiKey || !to) return
+  try {
+    const resend = new Resend(apiKey)
+    await resend.emails.send({
+      from: 'befuji <onboarding@resend.dev>',
+      to,
+      subject: `New review from ${review.name}`,
+      html: `
+        <p><strong>${review.name}</strong>${review.company ? ` · ${review.company}` : ''}</p>
+        <p style="color:#666">${review.service} · ${review.createdAt}</p>
+        <blockquote style="border-left:3px solid #ccc;margin:12px 0;padding:0 12px;color:#333">
+          ${review.text}
+        </blockquote>
+        <p><a href="https://befuji.com/admin">View in admin →</a></p>
+      `,
+    })
+  } catch (err) {
+    console.error('[review notify]', err)
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -85,6 +112,7 @@ export async function POST(req: Request) {
     const reviews = await readReviews()
     const next = [...reviews, review]
     await writeReviews(next)
+    sendReviewNotification(review)
     return NextResponse.json(review)
   } catch (err) {
     console.error('[api/reviews POST]', err)
