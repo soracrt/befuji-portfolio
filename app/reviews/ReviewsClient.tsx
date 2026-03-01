@@ -25,7 +25,7 @@ function CustomSelect({ value, options, onChange }: { value: string; options: st
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between border rounded-lg px-4 py-3 font-sans text-sm text-ink outline-none transition-colors text-left"
         style={{
-          background: '#111',
+          background: 'transparent',
           borderColor: open ? 'rgba(255,255,252,0.3)' : 'rgba(255,255,252,0.12)',
         }}
       >
