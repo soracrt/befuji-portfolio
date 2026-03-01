@@ -725,42 +725,42 @@ function ProjectsSection({
     setEditValue(project[field])
   }
 
-  async function commitEdit() {
+  function commitEdit() {
     if (!editingCell) return
     const { id, field } = editingCell
     const value = editValue
     setEditingCell(null)
-    await fetch('/api/admin/projects', {
+    setProjects(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
+    fetch('/api/admin/projects', {
       method: 'PUT',
       body: JSON.stringify({ id, [field]: value }),
       headers: { 'Content-Type': 'application/json' },
-    })
-    setProjects(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
+    }).catch(console.error)
   }
 
   function cancelEdit() {
     setEditingCell(null)
   }
 
-  async function deleteProject(id: string) {
-    await fetch('/api/admin/projects', {
+  function deleteProject(id: string) {
+    setProjects(prev => prev.filter(p => p.id !== id))
+    fetch('/api/admin/projects', {
       method: 'DELETE',
       body: JSON.stringify({ id }),
       headers: { 'Content-Type': 'application/json' },
-    })
-    setProjects(prev => prev.filter(p => p.id !== id))
+    }).catch(console.error)
   }
 
-  async function reorderProjects(fromIdx: number, toIdx: number) {
+  function reorderProjects(fromIdx: number, toIdx: number) {
     const next = [...projects]
     const [item] = next.splice(fromIdx, 1)
     next.splice(toIdx, 0, item)
     setProjects(next)
-    await fetch('/api/admin/projects', {
+    fetch('/api/admin/projects', {
       method: 'PUT',
       body: JSON.stringify({ order: next.map(p => p.id) }),
       headers: { 'Content-Type': 'application/json' },
-    })
+    }).catch(console.error)
   }
 
   return (
@@ -864,14 +864,13 @@ function ProjectsSection({
                   <EditableCell {...cellProps('title')}  placeholder="Untitled" />
                   <CategorySelect
                     value={p.category}
-                    onChange={async (v) => {
+                    onChange={(v) => {
                       setProjects(prev => prev.map(proj => proj.id === p.id ? { ...proj, category: v } : proj))
-                      await fetch('/api/admin/projects', {
+                      fetch('/api/admin/projects', {
                         method: 'PUT',
                         body: JSON.stringify({ id: p.id, category: v }),
                         headers: { 'Content-Type': 'application/json' },
-                      })
-                      sessionStorage.removeItem('projects')
+                      }).catch(console.error)
                     }}
                   />
                   <EditableCell {...cellProps('client')} placeholder="—" />
@@ -910,20 +909,17 @@ function RecentSection({
 }) {
   const featuredCount = projects.filter(p => p.isRecent).length
 
-  async function toggle(id: string) {
+  function toggle(id: string) {
     const project = projects.find(p => p.id === id)
     if (!project) return
     const newValue = !project.isRecent
     if (newValue && featuredCount >= 3) return
     setProjects(prev => prev.map(p => (p.id === id ? { ...p, isRecent: newValue } : p)))
-    const res = await fetch('/api/admin/projects', {
+    fetch('/api/admin/projects', {
       method: 'PUT',
       body: JSON.stringify({ id, isRecent: newValue }),
       headers: { 'Content-Type': 'application/json' },
-    })
-    if (!res.ok) {
-      setProjects(prev => prev.map(p => (p.id === id ? { ...p, isRecent: !newValue } : p)))
-    }
+    }).catch(console.error)
   }
 
   return (

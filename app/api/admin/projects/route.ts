@@ -17,27 +17,39 @@ const s3 = new S3Client({
 const BUCKET = process.env.R2_BUCKET_NAME ?? ''
 const DATA_KEY = '_projects.json'
 
-async function readProjects() {
+// In-memory cache — avoids a redundant R2 read before every write.
+// Valid for the lifetime of this serverless instance (typically minutes).
+let cache: unknown[] | null = null
+
+async function readProjects(): Promise<unknown[]> {
+  if (cache !== null) return cache
+
   // Try R2 first
   try {
     const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: DATA_KEY }))
     const text = await res.Body?.transformToString()
-    if (text) return JSON.parse(text)
+    if (text) {
+      cache = JSON.parse(text)
+      return cache!
+    }
   } catch {
-    // Key doesn't exist yet or R2 error — fall through to local seed
+    // Key doesn't exist yet — fall through to local seed
   }
 
-  // Fall back to the committed local file (used on first deploy)
+  // Fall back to the committed local file (first deploy seed)
   try {
     const localFile = path.join(process.cwd(), 'data', 'projects.json')
     const text = await fs.readFile(localFile, 'utf-8')
-    return JSON.parse(text)
+    cache = JSON.parse(text)
+    return cache!
   } catch {
+    cache = []
     return []
   }
 }
 
 async function writeProjects(projects: unknown[]) {
+  cache = projects // update cache synchronously so next read is instant
   await s3.send(new PutObjectCommand({
     Bucket: BUCKET,
     Key: DATA_KEY,
@@ -62,8 +74,8 @@ export async function POST(req: Request) {
   try {
     const project = await req.json()
     const projects = await readProjects()
-    projects.push(project)
-    await writeProjects(projects)
+    const next = [...projects, project]
+    await writeProjects(next)
     return NextResponse.json(project)
   } catch (err) {
     console.error('[api/admin/projects POST]', err)
@@ -78,19 +90,20 @@ export async function PUT(req: Request) {
     if (Array.isArray(body.order)) {
       const projects = await readProjects()
       const ordered = (body.order as string[])
-        .map((id: string) => projects.find((p: { id: string }) => p.id === id))
+        .map((id: string) => (projects as { id: string }[]).find((p) => p.id === id))
         .filter(Boolean)
       await writeProjects(ordered)
       return NextResponse.json(ordered)
     }
 
     const { id, ...updates } = body
-    const projects = await readProjects()
-    const idx = projects.findIndex((p: { id: string }) => p.id === id)
+    const projects = await readProjects() as { id: string }[]
+    const idx = projects.findIndex((p) => p.id === id)
     if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    projects[idx] = { ...projects[idx], ...updates }
-    await writeProjects(projects)
-    return NextResponse.json(projects[idx])
+    const next = [...projects]
+    next[idx] = { ...next[idx], ...updates }
+    await writeProjects(next)
+    return NextResponse.json(next[idx])
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     console.error('[api/admin/projects PUT]', err)
@@ -101,9 +114,9 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json()
-    const projects = await readProjects()
-    const filtered = projects.filter((p: { id: string }) => p.id !== id)
-    await writeProjects(filtered)
+    const projects = await readProjects() as { id: string }[]
+    const next = projects.filter((p) => p.id !== id)
+    await writeProjects(next)
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[api/admin/projects DELETE]', err)
