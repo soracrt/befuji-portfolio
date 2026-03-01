@@ -7,11 +7,18 @@ import FadeIn from './FadeIn'
 function LazyVideo({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const glowRef = useRef<HTMLVideoElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const gainRef = useRef<GainNode | null>(null)
+  const audioReady = useRef(false)
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video) return
-    const observer = new IntersectionObserver(
+    const wrapper = wrapperRef.current
+    if (!video || !wrapper) return
+
+    // Lazy-load video src when near viewport
+    const loadObserver = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           video.src = src
@@ -20,17 +27,64 @@ function LazyVideo({ src }: { src: string }) {
             glowRef.current.src = src
             glowRef.current.load()
           }
-          observer.disconnect()
+          loadObserver.disconnect()
         }
       },
       { rootMargin: '300px' }
     )
-    observer.observe(video)
-    return () => observer.disconnect()
+    loadObserver.observe(video)
+
+    // Audio fade in/out on scroll
+    const audioObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries[0].isIntersecting
+
+        // Set up Web Audio pipeline once on first visibility
+        if (visible && !audioReady.current) {
+          audioReady.current = true
+          const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+          const ctx = new AudioCtx()
+          audioCtxRef.current = ctx
+
+          const source = ctx.createMediaElementSource(video)
+
+          // Bass & Treble -100 treble → lowpass filter at 300 Hz
+          const filter = ctx.createBiquadFilter()
+          filter.type = 'lowpass'
+          filter.frequency.value = 300
+          filter.Q.value = 0.8
+
+          const gain = ctx.createGain()
+          gain.gain.value = 0
+          gainRef.current = gain
+
+          source.connect(filter)
+          filter.connect(gain)
+          gain.connect(ctx.destination)
+        }
+
+        const ctx = audioCtxRef.current
+        const gain = gainRef.current
+        if (!ctx || !gain) return
+
+        ctx.resume()
+        gain.gain.cancelScheduledValues(ctx.currentTime)
+        gain.gain.setValueAtTime(visible ? 0 : 1, ctx.currentTime)
+        gain.gain.linearRampToValueAtTime(visible ? 1 : 0, ctx.currentTime + 1)
+      },
+      { threshold: 0.4 }
+    )
+    audioObserver.observe(wrapper)
+
+    return () => {
+      loadObserver.disconnect()
+      audioObserver.disconnect()
+      audioCtxRef.current?.close()
+    }
   }, [src])
 
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <video
         ref={glowRef}
         className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-2xl"
