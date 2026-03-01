@@ -1,10 +1,22 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useState, useEffect } from 'react'
 
 const DarkVeil = dynamic(() => import('./DarkVeil'), { ssr: false })
 
 export default function HeroBackground() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    // Double rAF ensures the browser paints translateY(-100%) before the transition begins
+    const r1 = requestAnimationFrame(() => {
+      const r2 = requestAnimationFrame(() => setVisible(true))
+      return () => cancelAnimationFrame(r2)
+    })
+    return () => cancelAnimationFrame(r1)
+  }, [])
+
   return (
     <div
       style={{
@@ -14,6 +26,8 @@ export default function HeroBackground() {
         zIndex: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
+        transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 1.5s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
       <DarkVeil

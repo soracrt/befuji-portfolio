@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="max-w-5xl mx-auto w-full flex flex-col items-center gap-6">
 
         {/* Line 1 — Inter Black, large */}
-        <FadeIn>
+        <FadeIn delay={400}>
           <h1
             className="font-display font-black text-ink leading-[1.05] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2rem, 4.2vw, 4rem)' }}
@@ -21,17 +21,17 @@ export default function Hero() {
         </FadeIn>
 
         {/* Line 2 — Inter Regular */}
-        <FadeIn delay={120}>
+        <FadeIn delay={520}>
           <p
-            className="font-sans font-normal text-ink leading-snug"
+            className="hero-subheading font-sans font-normal leading-snug"
             style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
           >
-            for brands that refuse to blend in with the rest.
+            for brands that refuse to <span className="blend-in-glow">blend in</span> with the rest.
           </p>
         </FadeIn>
 
         {/* Line 3 — open for work */}
-        <FadeIn delay={230}>
+        <FadeIn delay={630}>
           <div className="open-for-work flex items-center justify-center gap-2.5">
             <span
               className="animate-pulse-dot block w-2.5 h-2.5 rounded-full shrink-0"
@@ -49,7 +49,7 @@ export default function Hero() {
         </FadeIn>
 
         {/* Line 4 — faded subtext */}
-        <FadeIn delay={340}>
+        <FadeIn delay={730}>
           <p
             className="font-sans font-normal text-sm text-ink"
             style={{ opacity: 0.5 }}
@@ -65,7 +65,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
             style={{ boxShadow: '0 0 20px rgba(255,255,255,0.3), 0 0 40px rgba(255,255,255,0.12)', borderRadius: '9999px' }}
           >
             <Link
@@ -80,7 +80,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.70, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 1.05, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link
               href="/contact"
