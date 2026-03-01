@@ -23,7 +23,9 @@ async function writeProjects(projects: unknown[]) {
 export async function GET() {
   try {
     const projects = await readProjects()
-    return NextResponse.json(projects)
+    return NextResponse.json(projects, {
+      headers: { 'Cache-Control': 'public, max-age=60, stale-while-revalidate=300' },
+    })
   } catch (err) {
     console.error('[api/admin/projects GET]', err)
     return NextResponse.json([], { status: 200 })

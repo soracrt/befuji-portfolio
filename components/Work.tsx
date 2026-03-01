@@ -49,10 +49,17 @@ export default function Work() {
   const [featured, setFeatured] = useState<Project[]>([])
 
   useEffect(() => {
-    fetch('/api/admin/projects', { cache: 'no-store' })
+    const cached = sessionStorage.getItem('projects')
+    if (cached) {
+      const data = JSON.parse(cached)
+      if (Array.isArray(data)) setFeatured(data.filter(p => p.isRecent))
+      return
+    }
+    fetch('/api/admin/projects')
       .then(r => r.json())
       .then((data: Project[]) => {
         if (Array.isArray(data)) {
+          sessionStorage.setItem('projects', JSON.stringify(data))
           setFeatured(data.filter(p => p.isRecent))
         }
       })

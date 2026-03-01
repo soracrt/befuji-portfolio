@@ -23,11 +23,13 @@ function VideoCard({ project }: { project: Project }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const glowRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const progressBarRef = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(true)
   const [muted, setMuted] = useState(true)
   const [progress, setProgress] = useState(0)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration] = useState('0:00')
+  const [dragging, setDragging] = useState(false)
 
   useEffect(() => {
     const video = videoRef.current
@@ -89,13 +91,25 @@ function VideoCard({ project }: { project: Project }) {
     setDuration(fmt(v.duration))
   }
 
-  const handleScrub = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation()
+  const seekToX = (clientX: number) => {
     const v = videoRef.current
-    if (!v) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    v.currentTime = ((e.clientX - rect.left) / rect.width) * v.duration
+    const bar = progressBarRef.current
+    if (!v || !bar || !v.duration) return
+    const rect = bar.getBoundingClientRect()
+    v.currentTime = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * v.duration
   }
+
+  useEffect(() => {
+    if (!dragging) return
+    const onMove = (e: MouseEvent) => seekToX(e.clientX)
+    const onUp = () => setDragging(false)
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+    return () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+  }, [dragging])
 
   return (
     <div>
@@ -131,13 +145,16 @@ function VideoCard({ project }: { project: Project }) {
           <div className="absolute bottom-0 left-0 right-0 px-3 pt-8 pb-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             {/* Progress bar */}
             <div
-              className="w-full h-[4px] bg-white/20 rounded-full mb-3 cursor-pointer"
-              onClick={handleScrub}
+              ref={progressBarRef}
+              className="w-full h-[4px] bg-white/20 rounded-full mb-3 cursor-pointer relative"
+              onMouseDown={(e) => { e.stopPropagation(); setDragging(true); seekToX(e.clientX) }}
             >
               <div
-                className="h-full bg-white/80 rounded-full"
+                className="h-full bg-white/80 rounded-full relative"
                 style={{ width: `${progress}%` }}
-              />
+              >
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-md" />
+              </div>
             </div>
 
             {/* Button row */}
@@ -222,9 +239,14 @@ export default function WorkPage() {
   const [projects, setProjects] = useState<Project[]>([])
 
   useEffect(() => {
+    const cached = sessionStorage.getItem('projects')
+    if (cached) { setProjects(JSON.parse(cached)); return }
     fetch('/api/admin/projects')
       .then(r => r.json())
-      .then((data: Project[]) => setProjects(data))
+      .then((data: Project[]) => {
+        setProjects(data)
+        sessionStorage.setItem('projects', JSON.stringify(data))
+      })
       .catch(() => {})
   }, [])
 

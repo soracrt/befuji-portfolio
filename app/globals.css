@@ -43,14 +43,3 @@ body {
 .blend-in-glow {
   animation: glow-pulse 2s ease-in-out infinite;
 }
-
-/* Logo shine sweep — left to right */
-@keyframes logo-shine {
-  0%   { transform: translateX(-150%); }
-  100% { transform: translateX(150%); }
-}
-
-.logo-shine {
-  animation: logo-shine 3.5s ease-in-out infinite;
-  animation-delay: 0.8s;
-}
