@@ -1260,11 +1260,11 @@ function ReviewsAdminSection({
                   boxShadow: '0 0 0 1px #323231',
                 }}
               >
-                <div className="flex flex-col items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex flex-col items-center gap-0.5">
                   <button
                     onClick={() => moveReview(idx, -1)}
                     disabled={idx === 0}
-                    className="text-[#686868] hover:text-[#a0a0a0] disabled:opacity-20 disabled:cursor-default transition-colors"
+                    className="text-[#505050] hover:text-[#c0c0c0] disabled:text-[#2a2a2a] disabled:cursor-default transition-colors"
                   >
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="18 15 12 9 6 15" />
@@ -1273,7 +1273,7 @@ function ReviewsAdminSection({
                   <button
                     onClick={() => moveReview(idx, 1)}
                     disabled={idx === reviews.length - 1}
-                    className="text-[#686868] hover:text-[#a0a0a0] disabled:opacity-20 disabled:cursor-default transition-colors"
+                    className="text-[#505050] hover:text-[#c0c0c0] disabled:text-[#2a2a2a] disabled:cursor-default transition-colors"
                   >
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="6 9 12 15 18 9" />
@@ -1322,7 +1322,7 @@ function ReviewsAdminSection({
                 <button
                   onClick={() => deleteReview(r.id)}
                   title="Delete"
-                  className="flex items-center justify-center text-[#505050] hover:text-red-400/70 transition-colors opacity-0 group-hover:opacity-100"
+                  className="flex items-center justify-center text-[#505050] hover:text-red-400/70 transition-colors"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="3 6 5 6 21 6" />
