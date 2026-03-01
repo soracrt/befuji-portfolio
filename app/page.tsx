@@ -6,6 +6,7 @@ import Hero from '@/components/Hero'
 import Work from '@/components/Work'
 import ReviewsSection from '@/components/ReviewsSection'
 import About from '@/components/About'
+import FAQ from '@/components/FAQ'
 import HomeCTA from '@/components/HomeCTA'
 import HeroBackground from '@/components/HeroBackground'
 
@@ -49,6 +50,7 @@ export default async function Home() {
       <Work />
       <ReviewsSection reviews={reviews} />
       <About />
+      <FAQ />
       <HomeCTA />
     </main>
   )
