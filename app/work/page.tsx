@@ -282,14 +282,6 @@ export default function WorkPage() {
       .catch(() => {})
   }, [])
 
-  const filtered = activeCategory === 'All'
-    ? projects
-    : projects.filter(p => {
-        const cat = (p.category ?? '').toLowerCase()
-        if (activeCategory === 'Others') return !['ads', 'saas'].includes(cat)
-        return cat === activeCategory.toLowerCase()
-      })
-
   return (
     <main>
       <Nav />
@@ -343,13 +335,22 @@ export default function WorkPage() {
             </div>
           </FadeIn>
 
-          {/* Video grid — 2 columns */}
+          {/* Video grid — 2 columns. All cards stay mounted; category switch is a CSS toggle. */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
-            {filtered.map((project, i) => (
-              <FadeIn key={project.id} delay={i * 60}>
-                <VideoCard project={project} />
-              </FadeIn>
-            ))}
+            {projects.map((project, i) => {
+              const visible =
+                activeCategory === 'All' ||
+                (activeCategory === 'Others'
+                  ? !['ads', 'saas'].includes((project.category ?? '').toLowerCase())
+                  : (project.category ?? '').toLowerCase() === activeCategory.toLowerCase())
+              return (
+                <div key={project.id} style={{ display: visible ? '' : 'none' }}>
+                  <FadeIn delay={i * 60}>
+                    <VideoCard project={project} />
+                  </FadeIn>
+                </div>
+              )
+            })}
           </div>
 
         </div>
