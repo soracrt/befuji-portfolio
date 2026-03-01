@@ -410,7 +410,7 @@ function EditableCell({
 function CategorySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const options = ['SaaS', 'Ads']
+  const options = ['ADs', 'SaaS', 'Others']
 
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
@@ -428,7 +428,7 @@ function CategorySelect({ value, onChange }: { value: string; onChange: (v: stri
         className="w-full bg-[#0a0a0a] rounded-xl px-3.5 py-2.5 font-sans text-white/80 outline-none ring-1 ring-[#1e1e1e] hover:ring-[#252525] transition-all text-left flex items-center justify-between"
         style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
       >
-        {value}
+        {value || <span style={{ color: '#505050' }}>—</span>}
         <svg
           width="10" height="10" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
@@ -481,7 +481,7 @@ function UploadModal({
   const [file, setFile] = useState<File | null>(null)
   const [dragging, setDragging] = useState(false)
   const [title, setTitle] = useState('')
-  const [category, setCategory] = useState('SaaS')
+  const [category, setCategory] = useState('ADs')
   const [client, setClient] = useState('')
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -861,9 +861,19 @@ function ProjectsSection({
                     />
                   </div>
 
-                  <EditableCell {...cellProps('title')}    placeholder="Untitled" />
-                  <EditableCell {...cellProps('category')} placeholder="—" />
-                  <EditableCell {...cellProps('client')}   placeholder="—" />
+                  <EditableCell {...cellProps('title')}  placeholder="Untitled" />
+                  <CategorySelect
+                    value={p.category}
+                    onChange={async (v) => {
+                      setProjects(prev => prev.map(proj => proj.id === p.id ? { ...proj, category: v } : proj))
+                      await fetch('/api/admin/projects', {
+                        method: 'PUT',
+                        body: JSON.stringify({ id: p.id, category: v }),
+                        headers: { 'Content-Type': 'application/json' },
+                      })
+                    }}
+                  />
+                  <EditableCell {...cellProps('client')} placeholder="—" />
 
                   <button
                     onClick={() => deleteProject(p.id)}
