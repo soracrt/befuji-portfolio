@@ -54,7 +54,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             className="flex justify-start pt-20 md:pt-36 md:gap-8"
           >
             {/* Left sticky: dot + year label */}
-            <div className="sticky top-32 self-start z-40 flex items-start md:w-40 shrink-0">
+            <div className="self-start flex items-start md:w-40 shrink-0">
               {/* Dot — referenced for scroll tracking */}
               <div
                 ref={el => { dotRefs.current[index] = el }}
