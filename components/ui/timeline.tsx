@@ -48,47 +48,42 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
     <div className="w-full" ref={containerRef}>
       <div ref={ref} className="relative max-w-[580px] mx-auto pb-40">
         {data.map((item, index) => (
-          // Outer div NOT animated — needed for accurate dot position measurement
-          <div
+          <motion.div
             key={index}
             className="flex justify-start pt-20 md:pt-36 md:gap-8"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Left sticky: dot + year label */}
-            <div className="self-start flex items-start md:w-40 shrink-0">
-              {/* Dot — referenced for scroll tracking */}
+            {/* Left: dot + year label, in-flow so dot aligns with year */}
+            <div
+              className="self-start flex items-center shrink-0 md:w-40"
+              style={{ paddingLeft: '22px' }}
+            >
+              {/* Dot — measured for scroll tracking */}
               <div
                 ref={el => { dotRefs.current[index] = el }}
-                className="h-10 w-10 absolute left-3 top-2 flex items-center justify-center"
-                style={{ backgroundColor: '#000000' }}
-              >
-                <div
-                  className="h-5 w-5 rounded-full"
-                  style={{
-                    backgroundColor: passedDots[index] ? '#fffffc' : 'rgba(255,255,252,0.2)',
-                    boxShadow: passedDots[index]
-                      ? '0 0 10px rgba(255,255,252,0.45), 0 0 24px rgba(255,255,252,0.15)'
-                      : 'none',
-                    transition: 'background-color 0.5s ease, box-shadow 0.5s ease',
-                  }}
-                />
-              </div>
-              {/* Year — desktop */}
+                className="h-5 w-5 rounded-full shrink-0"
+                style={{
+                  backgroundColor: passedDots[index] ? '#fffffc' : 'rgba(255,255,252,0.2)',
+                  boxShadow: passedDots[index]
+                    ? '0 0 10px rgba(255,255,252,0.45), 0 0 24px rgba(255,255,252,0.15)'
+                    : 'none',
+                  transition: 'background-color 0.5s ease, box-shadow 0.5s ease',
+                }}
+              />
+              {/* Year — desktop only */}
               <h3
                 className="hidden md:block font-display text-xs tracking-[0.12em] uppercase font-bold leading-tight"
-                style={{ color: '#fffffc', paddingLeft: '58px', paddingTop: '16px' }}
+                style={{ color: '#fffffc', marginLeft: '16px' }}
               >
                 {item.title}
               </h3>
             </div>
 
-            {/* Content — animated */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 pl-20 md:pl-0 pr-4"
-            >
+            {/* Content */}
+            <div className="flex-1 pl-4 md:pl-0 pr-4">
               {/* Year — mobile */}
               <h3
                 className="md:hidden font-display text-xs tracking-[0.1em] uppercase font-bold mb-4"
@@ -97,8 +92,8 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
                 {item.title}
               </h3>
               {item.content}
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         ))}
 
         {/* Static faint background line */}
