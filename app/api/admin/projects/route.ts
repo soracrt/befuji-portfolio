@@ -1,14 +1,36 @@
+import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 
 export const dynamic = 'force-dynamic'
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'projects.json')
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID ?? '',
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY ?? '',
+  },
+})
+
+const BUCKET = process.env.R2_BUCKET_NAME ?? ''
+const DATA_KEY = '_projects.json'
 
 async function readProjects() {
+  // Try R2 first
   try {
-    const text = await fs.readFile(DATA_FILE, 'utf-8')
+    const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: DATA_KEY }))
+    const text = await res.Body?.transformToString()
+    if (text) return JSON.parse(text)
+  } catch {
+    // Key doesn't exist yet or R2 error — fall through to local seed
+  }
+
+  // Fall back to the committed local file (used on first deploy)
+  try {
+    const localFile = path.join(process.cwd(), 'data', 'projects.json')
+    const text = await fs.readFile(localFile, 'utf-8')
     return JSON.parse(text)
   } catch {
     return []
@@ -16,8 +38,12 @@ async function readProjects() {
 }
 
 async function writeProjects(projects: unknown[]) {
-  await fs.mkdir(path.dirname(DATA_FILE), { recursive: true })
-  await fs.writeFile(DATA_FILE, JSON.stringify(projects, null, 2))
+  await s3.send(new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: DATA_KEY,
+    Body: JSON.stringify(projects, null, 2),
+    ContentType: 'application/json',
+  }))
 }
 
 export async function GET() {
@@ -49,7 +75,6 @@ export async function PUT(req: Request) {
   try {
     const body = await req.json()
 
-    // Reorder: { order: string[] }
     if (Array.isArray(body.order)) {
       const projects = await readProjects()
       const ordered = (body.order as string[])
@@ -59,7 +84,6 @@ export async function PUT(req: Request) {
       return NextResponse.json(ordered)
     }
 
-    // Field update: { id, ...fields }
     const { id, ...updates } = body
     const projects = await readProjects()
     const idx = projects.findIndex((p: { id: string }) => p.id === id)
