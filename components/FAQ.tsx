@@ -81,13 +81,18 @@ export default function FAQ() {
           </h2>
           <p className="font-sans text-sm mt-4 leading-[1.85] text-ink">
             Still have questions?{' '}
-            <Link href="/contact" className="inline-block">
+            <Link
+              href="/contact"
+              className="inline-block"
+              style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,252,0.7)) drop-shadow(0 0 14px rgba(255,255,252,0.35))' }}
+            >
               <ShinyText
                 text="reach out."
                 speed={3}
                 color="#fffffc"
                 shineColor="#ffffff"
                 spread={120}
+                className="font-bold"
               />
             </Link>
           </p>
