@@ -33,7 +33,6 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
   })
 
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height])
-  const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1])
 
   useMotionValueEvent(heightTransform, 'change', (latest) => {
     setPassedDots(prev => {
@@ -77,7 +76,6 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
             className="absolute inset-x-0 top-0 w-[3px]"
             style={{
               height: heightTransform,
-              opacity: opacityTransform,
               background: '#fffffc',
             }}
           />
@@ -87,7 +85,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
         {data.map((item, index) => (
           <motion.div
             key={index}
-            className="flex justify-start pt-20 md:pt-36 md:gap-8"
+            className="flex justify-start pt-20 md:pt-36 md:gap-8 relative z-[1]"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-40px' }}
@@ -104,6 +102,7 @@ export function Timeline({ data }: { data: TimelineEntry[] }) {
                 className="h-5 w-5 rounded-full shrink-0"
                 style={{
                   backgroundColor: passedDots[index] ? '#fffffc' : '#777777',
+                  boxShadow: '0 0 0 3px #000000',
                   transition: 'background-color 0.5s ease',
                 }}
               />
