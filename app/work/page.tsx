@@ -269,11 +269,11 @@ function VideoCard({ project }: { project: Project }) {
   )
 }
 
-const CATEGORIES = ['ADs', 'SaaS', 'Others']
+const CATEGORIES = ['All', 'ADs', 'SaaS', 'Others']
 
 export default function WorkPage() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [activeCategory, setActiveCategory] = useState('All')
 
   useEffect(() => {
     const cached = sessionStorage.getItem('projects')
@@ -287,12 +287,12 @@ export default function WorkPage() {
       .catch(() => {})
   }, [])
 
-  const filtered = activeCategory
-    ? projects.filter(p => {
+  const filtered = activeCategory === 'All'
+    ? projects
+    : projects.filter(p => {
         if (activeCategory === 'Others') return !['ADs', 'SaaS'].includes(p.category ?? '')
         return p.category === activeCategory
       })
-    : projects
 
   return (
     <main>
@@ -326,20 +326,23 @@ export default function WorkPage() {
 
               {/* Category pills — pinned to center of the row */}
               <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
-                {CATEGORIES.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                    className="font-sans text-xs tracking-[0.12em] uppercase px-4 py-1.5 rounded-full border transition-all duration-200"
-                    style={{
-                      borderColor: activeCategory === cat ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.15)',
-                      color: activeCategory === cat ? '#fff' : 'rgba(255,255,255,0.45)',
-                      background: activeCategory === cat ? 'rgba(255,255,255,0.08)' : 'transparent',
-                    }}
-                  >
-                    {cat}
-                  </button>
-                ))}
+                {CATEGORIES.map(cat => {
+                  const active = activeCategory === cat
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className="font-sans text-xs tracking-[0.12em] uppercase px-4 py-1.5 rounded-full border transition-all duration-500 ease-in-out"
+                      style={{
+                        borderColor: active ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)',
+                        color: active ? '#000' : 'rgba(255,255,255,0.45)',
+                        background: active ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0)',
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  )
+                })}
               </div>
             </div>
           </FadeIn>
