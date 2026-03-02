@@ -54,7 +54,7 @@ function VideoCard({ project }: { project: Project }) {
           observer.disconnect()
         }
       },
-      { rootMargin: '50px' }
+      { rootMargin: '800px' }
     )
     observer.observe(video)
     return () => observer.disconnect()
