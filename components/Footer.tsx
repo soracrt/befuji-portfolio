@@ -17,11 +17,11 @@ export default function Footer() {
     <footer className="relative border-t mt-16" style={{ borderColor: '#1a1a1a' }}>
       <div className="mx-auto max-w-6xl px-8">
 
-        {/* Main grid */}
-        <div className="grid grid-cols-6 gap-6 py-16">
+        {/* Main row */}
+        <div className="flex flex-col md:flex-row md:justify-between gap-10 py-16">
 
           {/* Left — brand block */}
-          <div className="col-span-6 flex flex-col gap-5 md:col-span-4">
+          <div className="flex flex-col gap-5">
             <Link href="/" className="w-max opacity-80 hover:opacity-100 transition-opacity duration-200">
               <Image src="/logo.png" alt="Befuji" height={28} width={120} className="h-7 w-auto" />
             </Link>
@@ -56,8 +56,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col — Pages */}
-          <div className="col-span-3 md:col-span-1">
+          {/* Right — Pages */}
+          <div>
             <span
               className="font-sans text-xs mb-3 block"
               style={{ color: 'rgba(255,255,252,0.3)' }}
