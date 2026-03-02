@@ -24,6 +24,7 @@ function fmt(t: number) {
 
 function VideoCard({ project }: { project: Project }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const glowRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -43,6 +44,13 @@ function VideoCard({ project }: { project: Project }) {
         if (entries[0].isIntersecting) {
           video.src = project.video
           video.load()
+          // Load glow only after main video can play — reuses browser cache
+          const onCanPlay = () => {
+            const glow = glowRef.current
+            if (glow && !glow.src) { glow.src = project.video; glow.load() }
+            video.removeEventListener('canplay', onCanPlay)
+          }
+          video.addEventListener('canplay', onCanPlay)
           observer.disconnect()
         }
       },
@@ -118,6 +126,7 @@ function VideoCard({ project }: { project: Project }) {
     rafRef.current = requestAnimationFrame(() => {
       if (!videoRef.current) return
       videoRef.current.currentTime = pct * videoRef.current.duration
+      if (glowRef.current) glowRef.current.currentTime = videoRef.current.currentTime
     })
   }, [])
 
@@ -141,7 +150,19 @@ function VideoCard({ project }: { project: Project }) {
   return (
     <div>
       <div className="relative">
-        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#111] group" style={{ boxShadow: '0 8px 48px rgba(0,0,0,0.7)' }}>
+        {/* Glow — blurred duplicate, loads after main video */}
+        <video
+          ref={glowRef}
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-2xl"
+          style={{ filter: 'blur(32px)', opacity: 0.55, transform: 'scale(1.12)' }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+        />
+
+        <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#111] group">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
@@ -154,8 +175,8 @@ function VideoCard({ project }: { project: Project }) {
             onClick={togglePlay}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
+            onPlay={() => { setPlaying(true); glowRef.current?.play() }}
+            onPause={() => { setPlaying(false); glowRef.current?.pause() }}
           />
 
           {/* Controls overlay — hidden until hover */}

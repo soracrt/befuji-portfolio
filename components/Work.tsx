@@ -16,6 +16,7 @@ function fadeOut(gain: GainNode, ctx: AudioContext) {
 
 function LazyVideo({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const glowRef = useRef<HTMLVideoElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const gainRef = useRef<GainNode | null>(null)
@@ -26,12 +27,18 @@ function LazyVideo({ src }: { src: string }) {
     const wrapper = wrapperRef.current
     if (!video || !wrapper) return
 
-    // Lazy-load video src when near viewport
+    // Lazy-load video src when near viewport; glow loads after main via cache
     const loadObserver = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           video.src = src
           video.load()
+          const onCanPlay = () => {
+            const glow = glowRef.current
+            if (glow && !glow.src) { glow.src = src; glow.load() }
+            video.removeEventListener('canplay', onCanPlay)
+          }
+          video.addEventListener('canplay', onCanPlay)
           loadObserver.disconnect()
         }
       },
@@ -105,7 +112,18 @@ function LazyVideo({ src }: { src: string }) {
 
   return (
     <div ref={wrapperRef} className="relative">
-      <div className="w-full rounded-2xl overflow-hidden bg-[#111]" style={{ boxShadow: '0 8px 48px rgba(0,0,0,0.7)' }}>
+      {/* Glow — blurred duplicate, loads after main video */}
+      <video
+        ref={glowRef}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-2xl"
+        style={{ filter: 'blur(32px)', opacity: 0.55, transform: 'scale(1.12)' }}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="none"
+      />
+      <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
@@ -115,6 +133,8 @@ function LazyVideo({ src }: { src: string }) {
             loop
             playsInline
             preload="none"
+            onPlay={() => glowRef.current?.play()}
+            onPause={() => glowRef.current?.pause()}
           />
         </div>
       </div>
