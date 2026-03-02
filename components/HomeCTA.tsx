@@ -19,14 +19,6 @@ export default function HomeCTA() {
           </a>
         </FadeIn>
 
-        <FadeIn delay={160}>
-          <p
-            className="font-sans text-xs tracking-widest mt-20"
-            style={{ color: 'rgba(255,255,252,0.2)' }}
-          >
-            &copy; {new Date().getFullYear()} befuji
-          </p>
-        </FadeIn>
       </div>
     </section>
   )

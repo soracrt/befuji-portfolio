@@ -8,6 +8,7 @@ import ReviewsSection from '@/components/ReviewsSection'
 import About from '@/components/About'
 import FAQ from '@/components/FAQ'
 import HomeCTA from '@/components/HomeCTA'
+import Footer from '@/components/Footer'
 import HeroBackground from '@/components/HeroBackground'
 
 async function getReviews() {
@@ -52,6 +53,7 @@ export default async function Home() {
       <About />
       <FAQ />
       <HomeCTA />
+      <Footer />
     </main>
   )
 }
