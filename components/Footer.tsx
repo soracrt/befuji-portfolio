@@ -1,60 +1,110 @@
 import Link from 'next/link'
-import FadeIn from './FadeIn'
+import { LinkedinIcon } from 'lucide-react'
+
+const pages = [
+  { title: 'Work',     href: '/work' },
+  { title: 'About',   href: '/about' },
+  { title: 'Reviews', href: '/reviews' },
+  { title: 'Contact', href: '/contact' },
+]
+
+const info = [
+  { title: 'hello@befuji.com', href: 'mailto:hello@befuji.com' },
+  { title: '@ataullis',        href: 'https://linkedin.com/in/ataullis' },
+]
 
 export default function Footer() {
+  const year = new Date().getFullYear()
+
   return (
-    <footer className="px-8 pb-16">
-      <div className="max-w-6xl mx-auto">
+    <footer className="relative border-t" style={{ borderColor: '#1a1a1a' }}>
+      <div className="mx-auto max-w-6xl px-8">
 
-        {/* Divider */}
-        <div className="border-t mb-12" style={{ borderColor: '#1a1a1a' }} />
+        {/* Main grid */}
+        <div className="grid grid-cols-6 gap-6 py-12">
 
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-10">
-
-          {/* Left — identity */}
-          <FadeIn>
-            <div className="flex flex-col gap-2.5">
-              <span className="font-sans font-medium text-ink text-sm">Ghazi</span>
-              <a
-                href="mailto:hello@befuji.com"
-                className="font-sans text-xs transition-opacity duration-200 hover:opacity-100"
-                style={{ color: 'rgba(255,255,252,0.4)' }}
-              >
-                hello@befuji.com
-              </a>
+          {/* Left — brand block */}
+          <div className="col-span-6 flex flex-col gap-5 md:col-span-4">
+            <span className="font-sans font-medium text-ink text-sm">Ghazi</span>
+            <p
+              className="font-sans text-sm max-w-xs leading-relaxed"
+              style={{ color: 'rgba(255,255,252,0.4)' }}
+            >
+              Motion design for brands that refuse to conform.
+            </p>
+            {/* Social icons */}
+            <div className="flex gap-2">
               <a
                 href="https://linkedin.com/in/ataullis"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-sans text-xs transition-opacity duration-200 hover:opacity-100"
-                style={{ color: 'rgba(255,255,252,0.4)' }}
+                className="rounded-md border p-1.5 transition-colors duration-200 hover:bg-white/5"
+                style={{ borderColor: '#1a1a1a' }}
+                aria-label="LinkedIn"
               >
-                LinkedIn: @ataullis
+                <LinkedinIcon className="size-4" />
               </a>
             </div>
-          </FadeIn>
+          </div>
 
-          {/* Right — CTA */}
-          <FadeIn delay={120}>
-            <Link
-              href="/contact"
-              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 link-glow-red inline-block"
+          {/* Col — Pages */}
+          <div className="col-span-3 md:col-span-1">
+            <span
+              className="font-sans text-xs mb-3 block"
+              style={{ color: 'rgba(255,255,252,0.3)' }}
             >
-              Let's work together →
-            </Link>
-          </FadeIn>
+              Pages
+            </span>
+            <div className="flex flex-col gap-1">
+              {pages.map(({ href, title }) => (
+                <Link
+                  key={title}
+                  href={href}
+                  className="font-sans text-sm py-1 w-max transition-opacity duration-200 hover:opacity-60"
+                >
+                  {title}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Col — Info */}
+          <div className="col-span-3 md:col-span-1">
+            <span
+              className="font-sans text-xs mb-3 block"
+              style={{ color: 'rgba(255,255,252,0.3)' }}
+            >
+              Info
+            </span>
+            <div className="flex flex-col gap-1">
+              {info.map(({ href, title }) => (
+                <a
+                  key={title}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="font-sans text-sm py-1 w-max transition-opacity duration-200 hover:opacity-60"
+                >
+                  {title}
+                </a>
+              ))}
+            </div>
+          </div>
 
         </div>
 
-        {/* Copyright */}
-        <FadeIn delay={200}>
+        {/* Bottom bar */}
+        <div
+          className="border-t py-5"
+          style={{ borderColor: '#1a1a1a' }}
+        >
           <p
-            className="font-sans text-xs mt-16"
+            className="font-sans text-xs text-center"
             style={{ color: 'rgba(255,255,252,0.2)' }}
           >
-            &copy; 2026 Befuji
+            &copy; {year} Befuji. All rights reserved.
           </p>
-        </FadeIn>
+        </div>
 
       </div>
     </footer>
