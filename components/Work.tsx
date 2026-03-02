@@ -16,7 +16,6 @@ function fadeOut(gain: GainNode, ctx: AudioContext) {
 
 function LazyVideo({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const glowRef = useRef<HTMLVideoElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const gainRef = useRef<GainNode | null>(null)
@@ -33,14 +32,10 @@ function LazyVideo({ src }: { src: string }) {
         if (entries[0].isIntersecting) {
           video.src = src
           video.load()
-          if (glowRef.current) {
-            glowRef.current.src = src
-            glowRef.current.load()
-          }
           loadObserver.disconnect()
         }
       },
-      { rootMargin: '300px' }
+      { rootMargin: '50px' }
     )
     loadObserver.observe(video)
 
@@ -110,16 +105,7 @@ function LazyVideo({ src }: { src: string }) {
 
   return (
     <div ref={wrapperRef} className="relative">
-      <video
-        ref={glowRef}
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-2xl"
-        style={{ filter: 'blur(32px)', opacity: 0.55, transform: 'scale(1.12)' }}
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
-      <div className="w-full rounded-2xl overflow-hidden bg-[#111]">
+      <div className="w-full rounded-2xl overflow-hidden bg-[#111]" style={{ boxShadow: '0 8px 48px rgba(0,0,0,0.7)' }}>
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
@@ -128,6 +114,7 @@ function LazyVideo({ src }: { src: string }) {
             muted
             loop
             playsInline
+            preload="none"
           />
         </div>
       </div>
