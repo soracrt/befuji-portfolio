@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LinkedinIcon } from 'lucide-react'
+import { LinkedinIcon, InstagramIcon } from 'lucide-react'
 
 const pages = [
   { title: 'Work',     href: '/work' },
@@ -17,11 +17,11 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative border-t" style={{ borderColor: '#1a1a1a' }}>
+    <footer className="relative border-t mt-16" style={{ borderColor: '#1a1a1a' }}>
       <div className="mx-auto max-w-6xl px-8">
 
         {/* Main grid */}
-        <div className="grid grid-cols-6 gap-6 py-12">
+        <div className="grid grid-cols-6 gap-6 py-16">
 
           {/* Left — brand block */}
           <div className="col-span-6 flex flex-col gap-5 md:col-span-4">
@@ -43,6 +43,16 @@ export default function Footer() {
                 aria-label="LinkedIn"
               >
                 <LinkedinIcon className="size-4" />
+              </a>
+              <a
+                href="https://instagram.com/fws0ra"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md border p-1.5 transition-colors duration-200 hover:bg-white/5"
+                style={{ borderColor: '#1a1a1a' }}
+                aria-label="Instagram"
+              >
+                <InstagramIcon className="size-4" />
               </a>
             </div>
           </div>
