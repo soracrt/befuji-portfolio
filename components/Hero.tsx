@@ -40,14 +40,18 @@ export default function Hero() {
             style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
           >
             for brands that refuse to{' '}
-            <span
+            <motion.span
+              layout
               className="relative inline-flex overflow-hidden"
               style={{ height: '1.25em', verticalAlign: 'bottom' }}
+              transition={{ layout: { type: 'spring', stiffness: 50, damping: 18 } }}
             >
+              {/* drives width — always matches current phrase */}
+              <span className="invisible whitespace-nowrap" aria-hidden>{PHRASES[current]}</span>
               {PHRASES.map((phrase, i) => (
                 <motion.span
                   key={phrase}
-                  className="absolute whitespace-nowrap"
+                  className="absolute left-0 whitespace-nowrap"
                   initial={{ y: '100%', opacity: 0 }}
                   animate={
                     current === i
@@ -59,9 +63,7 @@ export default function Hero() {
                   {phrase}
                 </motion.span>
               ))}
-              {/* invisible spacer — holds width of longest phrase */}
-              <span className="invisible" aria-hidden>disappear into</span>
-            </span>
+            </motion.span>
             {' '}the rest.
           </p>
         </FadeIn>
