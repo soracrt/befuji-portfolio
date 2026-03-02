@@ -118,7 +118,6 @@ function VideoCard({ project }: { project: Project }) {
     rafRef.current = requestAnimationFrame(() => {
       if (!videoRef.current) return
       videoRef.current.currentTime = pct * videoRef.current.duration
-      if (glowRef.current) glowRef.current.currentTime = videoRef.current.currentTime
     })
   }, [])
 
