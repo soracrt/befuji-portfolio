@@ -38,7 +38,7 @@ function LazyVideo({ src }: { src: string }) {
           loadObserver.disconnect()
         }
       },
-      { rootMargin: '50px' }
+      { rootMargin: '800px' }
     )
     loadObserver.observe(video)
 
