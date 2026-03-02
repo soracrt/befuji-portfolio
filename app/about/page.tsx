@@ -96,6 +96,16 @@ export default function AboutPage() {
       {/* Page heading */}
       <div className="pt-36 pb-4 px-8">
         <div className="max-w-[580px] mx-auto mb-4">
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 font-sans text-[11px] tracking-[0.15em] uppercase mb-8"
+            style={{ color: 'rgba(255,255,252,0.3)' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 7H3M3 7L7 3M3 7L7 11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            back
+          </a>
           <p
             className="font-sans text-[10px] tracking-[0.2em] uppercase mb-5"
             style={{ color: 'rgba(255,255,252,0.25)' }}
