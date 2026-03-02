@@ -1,13 +1,24 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import FadeIn from './FadeIn'
 import ShinyText from './ShinyText'
 import { ShimmerButton } from './ui/shimmer-button'
-import { TextDisperse } from './ui/text-disperse'
+
+const PHRASES = ['fade into', 'disappear into', 'conform to']
 
 export default function Hero() {
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setCurrent(i => (i + 1) % PHRASES.length)
+    }, 2200)
+    return () => clearTimeout(id)
+  }, [current])
+
   return (
     <section className="relative z-[1] min-h-screen flex flex-col justify-center px-8 pt-28 pb-20 text-center">
       <div className="max-w-5xl mx-auto w-full flex flex-col items-center gap-6">
@@ -22,13 +33,36 @@ export default function Hero() {
           </h1>
         </FadeIn>
 
-        {/* Line 2 — Inter Regular */}
+        {/* Line 2 — animated phrase */}
         <FadeIn delay={520}>
           <p
             className="hero-subheading font-sans font-normal leading-snug"
             style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
           >
-            for brands that refuse to <TextDisperse className="blend-in-glow">blend in</TextDisperse> with the rest.
+            for brands that refuse to{' '}
+            <span
+              className="relative inline-flex overflow-hidden"
+              style={{ height: '1.25em', verticalAlign: 'bottom' }}
+            >
+              {PHRASES.map((phrase, i) => (
+                <motion.span
+                  key={phrase}
+                  className="absolute whitespace-nowrap"
+                  initial={{ y: '100%', opacity: 0 }}
+                  animate={
+                    current === i
+                      ? { y: 0, opacity: 1 }
+                      : { y: current > i ? '-100%' : '100%', opacity: 0 }
+                  }
+                  transition={{ type: 'spring', stiffness: 50, damping: 18 }}
+                >
+                  {phrase}
+                </motion.span>
+              ))}
+              {/* invisible spacer — holds width of longest phrase */}
+              <span className="invisible" aria-hidden>disappear into</span>
+            </span>
+            {' '}the rest.
           </p>
         </FadeIn>
 
