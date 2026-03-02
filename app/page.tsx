@@ -4,6 +4,7 @@ import path from 'path'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import Work from '@/components/Work'
+import WhatIDo from '@/components/WhatIDo'
 import ReviewsSection from '@/components/ReviewsSection'
 import About from '@/components/About'
 import FAQ from '@/components/FAQ'
@@ -48,6 +49,7 @@ export default async function Home() {
         <Nav />
         <Hero />
       </div>
+      <WhatIDo />
       <Work />
       <ReviewsSection reviews={reviews} />
       <About />
