@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import FadeIn from './FadeIn'
 
 export default function About() {
@@ -31,12 +32,17 @@ export default function About() {
           </div>
         </FadeIn>
 
-        {/* Placeholder headshot */}
+        {/* Headshot */}
         <FadeIn delay={160}>
-          <div
-            className="w-full aspect-square md:aspect-[4/5] ml-auto max-w-md"
-            style={{ backgroundColor: '#111111' }}
-          />
+          <div className="w-full aspect-square md:aspect-[4/5] ml-auto max-w-md relative overflow-hidden">
+            <Image
+              src="/about.jpeg"
+              alt="Ghazi"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
         </FadeIn>
       </div>
     </section>
