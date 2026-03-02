@@ -24,6 +24,12 @@ body {
   color: #fffffc;
 }
 
+/* Typewriter cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 /* Open for work pulse dot */
 @keyframes pulse-dot {
   0%, 100% { transform: scale(1);   opacity: 1;   }

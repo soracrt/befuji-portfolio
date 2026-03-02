@@ -7,17 +7,57 @@ import FadeIn from './FadeIn'
 import ShinyText from './ShinyText'
 import { ShimmerButton } from './ui/shimmer-button'
 
-const PHRASES = ['fade into', 'disappear into', 'conform to']
+const ENDINGS = [
+  'fade into the rest.',
+  'disappear into the rest.',
+  'conform to the rest.',
+]
+
+const TYPE_SPEED = 55   // ms per char typed
+const DELETE_SPEED = 28 // ms per char deleted
+const HOLD_MS = 2000    // pause after fully typed
+
+type Phase = 'typing' | 'holding' | 'deleting'
 
 export default function Hero() {
-  const [current, setCurrent] = useState(0)
+  const [index, setIndex] = useState(0)
+  const [displayed, setDisplayed] = useState('')
+  const [phase, setPhase] = useState<Phase>('typing')
 
   useEffect(() => {
-    const id = setTimeout(() => {
-      setCurrent(i => (i + 1) % PHRASES.length)
-    }, 2200)
-    return () => clearTimeout(id)
-  }, [current])
+    const target = ENDINGS[index]
+
+    if (phase === 'typing') {
+      if (displayed.length < target.length) {
+        const id = setTimeout(
+          () => setDisplayed(target.slice(0, displayed.length + 1)),
+          TYPE_SPEED
+        )
+        return () => clearTimeout(id)
+      } else {
+        const id = setTimeout(() => setPhase('holding'), HOLD_MS)
+        return () => clearTimeout(id)
+      }
+    }
+
+    if (phase === 'holding') {
+      const id = setTimeout(() => setPhase('deleting'), 400)
+      return () => clearTimeout(id)
+    }
+
+    if (phase === 'deleting') {
+      if (displayed.length > 0) {
+        const id = setTimeout(
+          () => setDisplayed(d => d.slice(0, -1)),
+          DELETE_SPEED
+        )
+        return () => clearTimeout(id)
+      } else {
+        setIndex(i => (i + 1) % ENDINGS.length)
+        setPhase('typing')
+      }
+    }
+  }, [displayed, phase, index])
 
   return (
     <section className="relative z-[1] min-h-screen flex flex-col justify-center px-8 pt-28 pb-20 text-center">
@@ -33,38 +73,23 @@ export default function Hero() {
           </h1>
         </FadeIn>
 
-        {/* Line 2 — animated phrase */}
+        {/* Line 2 — typewriter */}
         <FadeIn delay={520}>
           <p
             className="hero-subheading font-sans font-normal leading-snug"
             style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
           >
             for brands that refuse to{' '}
-            <motion.span
-              layout
-              className="relative inline-flex overflow-hidden"
-              style={{ height: '1.25em', verticalAlign: 'bottom' }}
-              transition={{ layout: { type: 'spring', stiffness: 50, damping: 18 } }}
-            >
-              {/* drives width — always matches current phrase */}
-              <span className="invisible whitespace-nowrap" aria-hidden>{PHRASES[current]}</span>
-              {PHRASES.map((phrase, i) => (
-                <motion.span
-                  key={phrase}
-                  className="absolute left-0 whitespace-nowrap"
-                  initial={{ y: '100%', opacity: 0 }}
-                  animate={
-                    current === i
-                      ? { y: 0, opacity: 1 }
-                      : { y: current > i ? '-100%' : '100%', opacity: 0 }
-                  }
-                  transition={{ type: 'spring', stiffness: 50, damping: 18 }}
-                >
-                  {phrase}
-                </motion.span>
-              ))}
-            </motion.span>
-            {' '}the rest.
+            <span className="whitespace-nowrap">
+              {displayed}
+              <span
+                className="inline-block w-[2px] h-[1em] bg-ink align-middle ml-[1px]"
+                style={{
+                  opacity: phase === 'typing' ? 1 : undefined,
+                  animation: phase !== 'typing' ? 'cursor-blink 0.8s step-end infinite' : 'none',
+                }}
+              />
+            </span>
           </p>
         </FadeIn>
 
