@@ -189,7 +189,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
 const NAV: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'overview',  label: 'Overview',        icon: <IconGrid /> },
   { id: 'projects',  label: 'Projects',         icon: <IconFilm /> },
-  { id: 'recent',    label: 'Recent Projects',  icon: <IconStar /> },
+  { id: 'recent',    label: 'Featured',          icon: <IconStar /> },
   { id: 'reviews',   label: 'Reviews',          icon: <IconMessage /> },
 ]
 
@@ -276,7 +276,7 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
 const SECTION_LABELS: Record<Section, string> = {
   overview:  'Overview',
   projects:  'Projects',
-  recent:    'Recent Projects',
+  recent:    'Featured',
   reviews:   'Reviews',
 }
 

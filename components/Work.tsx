@@ -176,16 +176,6 @@ export default function Work() {
     <section id="work" className="px-8 py-24" style={{ scrollMarginTop: '250px' }}>
       <div className="max-w-4xl mx-auto">
 
-        {/* Heading */}
-        <FadeIn>
-          <h2
-            className="font-sans font-medium text-ink tracking-[-0.02em] mb-14"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
-          >
-            Recent Projects
-          </h2>
-        </FadeIn>
-
         {/* Featured videos */}
         {featured.length > 0 && (
           <div className="flex flex-col gap-6">

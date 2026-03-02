@@ -113,7 +113,7 @@ export default function WhatIDo() {
             className="font-sans font-medium text-ink tracking-[-0.02em] mb-12"
             style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
           >
-            What I do.
+            What I do?
           </h2>
         </FadeIn>
 
