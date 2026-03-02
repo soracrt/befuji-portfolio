@@ -9,10 +9,6 @@ const pages = [
   { title: 'Contact', href: '/contact' },
 ]
 
-const info = [
-  { title: 'hello@befuji.com', href: 'mailto:hello@befuji.com' },
-  { title: '@ataullis',        href: 'https://linkedin.com/in/ataullis' },
-]
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -81,30 +77,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col — Info */}
-          <div className="col-span-3 md:col-span-1">
-            <span
-              className="font-sans text-xs mb-3 block"
-              style={{ color: 'rgba(255,255,252,0.3)' }}
-            >
-              Info
-            </span>
-            <div className="flex flex-col gap-1">
-              {info.map(({ href, title }) => (
-                <a
-                  key={title}
-                  href={href}
-                  target={href.startsWith('http') ? '_blank' : undefined}
-                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="font-sans text-sm py-1 w-max transition-opacity duration-200 hover:opacity-60"
-                >
-                  {title}
-                </a>
-              ))}
-            </div>
-          </div>
 
-        </div>
+</div>
 
         {/* Bottom bar */}
         <div
