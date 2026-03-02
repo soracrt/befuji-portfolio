@@ -80,19 +80,26 @@ export default function Hero() {
 
         {/* Line 2 — typewriter */}
         <FadeIn delay={520}>
-          <p
-            className="hero-subheading font-sans font-normal leading-snug"
-            style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
-          >
-            for brands that refuse to{' '}
-            <span className="whitespace-nowrap">
-              {displayed}
+          {/* Ghost sets a fixed width = full sentence, so centering never shifts */}
+          <div className="relative inline-block">
+            <span
+              className="invisible whitespace-nowrap font-sans font-normal leading-snug"
+              style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
+              aria-hidden
+            >
+              for brands that refuse to blend in.&thinsp;
+            </span>
+            <p
+              className="hero-subheading font-sans font-normal leading-snug absolute inset-0 text-left whitespace-nowrap"
+              style={{ fontSize: 'clamp(0.95rem, 2.05vw, 1.95rem)' }}
+            >
+              for brands that refuse to {displayed}
               <span
                 className="inline-block w-[2px] h-[1em] bg-ink align-middle ml-[1px]"
                 style={{ animation: 'cursor-blink 0.8s step-end infinite' }}
               />
-            </span>
-          </p>
+            </p>
+          </div>
         </FadeIn>
 
         {/* Line 3 — open for work */}
