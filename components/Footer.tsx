@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { LinkedinIcon, InstagramIcon } from 'lucide-react'
 
 const pages = [
@@ -25,9 +26,11 @@ export default function Footer() {
 
           {/* Left — brand block */}
           <div className="col-span-6 flex flex-col gap-5 md:col-span-4">
-            <span className="font-sans font-medium text-ink text-sm">Ghazi</span>
+            <Link href="/" className="w-max opacity-80 hover:opacity-100 transition-opacity duration-200">
+              <Image src="/logo.png" alt="Befuji" height={28} width={120} className="h-7 w-auto" />
+            </Link>
             <p
-              className="font-sans text-sm max-w-xs leading-relaxed"
+              className="font-sans font-medium text-sm max-w-xs leading-relaxed"
               style={{ color: 'rgba(255,255,252,0.4)' }}
             >
               Motion design for brands that refuse to conform.
