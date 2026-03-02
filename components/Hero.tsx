@@ -13,9 +13,13 @@ const ENDINGS = [
   'conform to the rest.',
 ]
 
-const TYPE_SPEED = 55   // ms per char typed
-const DELETE_SPEED = 28 // ms per char deleted
+const DELETE_SPEED = 35 // ms per char deleted (constant)
 const HOLD_MS = 2000    // pause after fully typed
+
+// Eased typing: starts fast (~25ms), slows to ~110ms by the end
+function typeDelay(progress: number) {
+  return 25 + 85 * (progress * progress)
+}
 
 type Phase = 'typing' | 'holding' | 'deleting'
 
@@ -29,9 +33,10 @@ export default function Hero() {
 
     if (phase === 'typing') {
       if (displayed.length < target.length) {
+        const progress = displayed.length / target.length
         const id = setTimeout(
           () => setDisplayed(target.slice(0, displayed.length + 1)),
-          TYPE_SPEED
+          typeDelay(progress)
         )
         return () => clearTimeout(id)
       } else {
@@ -84,10 +89,7 @@ export default function Hero() {
               {displayed}
               <span
                 className="inline-block w-[2px] h-[1em] bg-ink align-middle ml-[1px]"
-                style={{
-                  opacity: phase === 'typing' ? 1 : undefined,
-                  animation: phase !== 'typing' ? 'cursor-blink 0.8s step-end infinite' : 'none',
-                }}
+                style={{ animation: 'cursor-blink 0.8s step-end infinite' }}
               />
             </span>
           </p>
