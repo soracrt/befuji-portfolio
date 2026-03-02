@@ -8,9 +8,9 @@ import ShinyText from './ShinyText'
 import { ShimmerButton } from './ui/shimmer-button'
 
 const ENDINGS = [
-  'fade in.',
-  'disappear.',
-  'conform.',
+  'blend in.',
+  'sell out.',
+  'fade out.',
 ]
 
 const DELETE_SPEED = 35 // ms per char deleted (constant)
