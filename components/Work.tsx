@@ -33,12 +33,8 @@ function LazyVideo({ src }: { src: string }) {
         if (entries[0].isIntersecting) {
           video.src = src
           video.load()
-          const onCanPlay = () => {
-            const glow = glowRef.current
-            if (glow && !glow.src) { glow.src = src; glow.load() }
-            video.removeEventListener('canplay', onCanPlay)
-          }
-          video.addEventListener('canplay', onCanPlay)
+          const glow = glowRef.current
+          if (glow && !glow.src) { glow.src = src; glow.load() }
           loadObserver.disconnect()
         }
       },
