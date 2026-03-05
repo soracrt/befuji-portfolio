@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import Nav from '@/components/Nav'
 
 const fieldClass =
-  'font-sans text-sm text-white bg-transparent border-b border-white/20 py-3 outline-none focus:border-white transition-colors duration-200 w-full placeholder:text-[#888]'
+  'font-sans text-sm text-white bg-transparent border-b border-white/20 py-3 outline-none focus:border-white transition-colors duration-200 w-full placeholder:text-[#888] caret-white'
 
 const SERVICES = [
   { value: 'ads',   label: 'Ads' },
