@@ -83,6 +83,16 @@ function IconMessage() {
   )
 }
 
+function IconSignOut() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  )
+}
+
 // ─── Password Gate ────────────────────────────────────────────────────────────
 
 function PasswordGate({ onAuth }: { onAuth: () => void }) {
@@ -184,119 +194,106 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
   )
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
+// ─── Dock ─────────────────────────────────────────────────────────────────────
 
 const NAV: { id: Section; label: string; icon: React.ReactNode }[] = [
-  { id: 'overview',  label: 'Overview',        icon: <IconGrid /> },
-  { id: 'projects',  label: 'Projects',         icon: <IconFilm /> },
-  { id: 'recent',    label: 'Featured',          icon: <IconStar /> },
-  { id: 'reviews',   label: 'Reviews',          icon: <IconMessage /> },
+  { id: 'overview', label: 'Overview', icon: <IconGrid /> },
+  { id: 'projects', label: 'Projects', icon: <IconFilm /> },
+  { id: 'recent',   label: 'Featured', icon: <IconStar /> },
+  { id: 'reviews',  label: 'Reviews',  icon: <IconMessage /> },
 ]
 
-function Sidebar({ active, setActive }: { active: Section; setActive: (s: Section) => void }) {
+function DockItem({
+  children,
+  tooltip,
+  active,
+  onClick,
+  danger,
+}: {
+  children: React.ReactNode
+  tooltip: string
+  active?: boolean
+  onClick: () => void
+  danger?: boolean
+}) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div className="relative flex flex-col items-center">
+      {hovered && (
+        <div
+          className="absolute bottom-full mb-3 px-2.5 py-1 rounded-lg font-sans whitespace-nowrap pointer-events-none"
+          style={{
+            fontSize: '12px',
+            letterSpacing: '-0.01em',
+            background: 'rgba(28,28,28,0.96)',
+            color: 'rgba(255,255,255,0.7)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 4px 12px rgba(0,0,0,0.5)',
+          }}
+        >
+          {tooltip}
+        </div>
+      )}
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className="relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-150"
+        style={{
+          background: active ? 'rgba(255,255,255,0.09)' : 'transparent',
+          color: danger
+            ? hovered ? '#f87171' : '#585858'
+            : active
+              ? 'rgba(255,255,255,0.9)'
+              : hovered ? 'rgba(255,255,255,0.65)' : '#585858',
+        }}
+      >
+        {children}
+        {active && (
+          <span
+            className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.45)' }}
+          />
+        )}
+      </button>
+    </div>
+  )
+}
+
+function Dock({ active, setActive }: { active: Section; setActive: (s: Section) => void }) {
   function signOut() {
     sessionStorage.removeItem('admin_authed')
     window.location.reload()
   }
 
   return (
-    <aside
-      className="w-[260px] shrink-0 h-screen sticky top-0 flex flex-col"
-      style={{ background: '#1e1e1e', borderRight: '1px solid #303030' }}
-    >
-      <div className="px-6 pt-6 pb-5" style={{ borderBottom: '1px solid #2f2f2e' }}>
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-[22px] h-[22px] rounded-md flex items-center justify-center shrink-0"
-            style={{ background: '#343433', boxShadow: '0 0 0 1px #3e3e3d' }}
-          >
-            <span className="font-sans text-white/40 font-medium" style={{ fontSize: '9.5px' }}>B</span>
-          </div>
-          <span className="font-sans text-white/70 font-medium" style={{ fontSize: '13px', letterSpacing: '-0.02em' }}>
-            kulaire
-          </span>
-          <span
-            className="font-sans text-[#505050] ml-0.5"
-            style={{ fontSize: '9px', letterSpacing: '0.14em', marginTop: '1px' }}
-          >
-            ADMIN
-          </span>
-        </div>
-      </div>
-
-      <nav className="flex-1 px-3 pt-3 flex flex-col gap-0.5">
-        {NAV.map(({ id, label, icon }) => (
-          <button
-            key={id}
-            onClick={() => setActive(id)}
-            className="w-full text-left px-3.5 py-2.5 rounded-lg flex items-center gap-2.5 font-sans transition-colors"
-            style={{
-              fontSize: '14.5px',
-              letterSpacing: '-0.01em',
-              background: active === id ? '#ffffff07' : 'transparent',
-              color: active === id ? 'rgba(255,255,255,0.92)' : '#909090',
-            }}
-          >
-            <span style={{ color: active === id ? 'rgba(255,255,255,0.5)' : '#686868' }}>
-              {icon}
-            </span>
-            {label}
-          </button>
-        ))}
-      </nav>
-
-      <div className="px-5 pb-7 flex flex-col gap-3">
-        <Link
-          href="/"
-          target="_blank"
-          className="font-sans text-[#585858] hover:text-[#909090] transition-colors inline-flex items-center gap-1.5"
-          style={{ fontSize: '13px', letterSpacing: '-0.005em' }}
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-            <polyline points="15 3 21 3 21 9" />
-            <line x1="10" y1="14" x2="21" y2="3" />
-          </svg>
-          View website
-        </Link>
-        <button
-          onClick={signOut}
-          className="font-sans text-[#585858] hover:text-[#909090] transition-colors text-left"
-          style={{ fontSize: '13px', letterSpacing: '-0.005em' }}
-        >
-          Sign out
-        </button>
-      </div>
-    </aside>
-  )
-}
-
-// ─── Top Bar ──────────────────────────────────────────────────────────────────
-
-const SECTION_LABELS: Record<Section, string> = {
-  overview:  'Overview',
-  projects:  'Projects',
-  recent:    'Featured',
-  reviews:   'Reviews',
-}
-
-function TopBar({ section, updatedAt }: { section: Section; updatedAt: string }) {
-  return (
     <div
-      className="flex items-center justify-between px-8 shrink-0"
-      style={{ height: '64px', borderBottom: '1px solid #2f2f2e', background: '#000000' }}
+      className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-3 py-2"
+      style={{
+        background: 'rgba(14,14,14,0.9)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        borderRadius: '18px',
+        boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 8px 40px rgba(0,0,0,0.7)',
+      }}
     >
-      <h1
-        className="font-sans text-white/80 font-medium"
-        style={{ fontSize: '15px', letterSpacing: '-0.02em' }}
-      >
-        {SECTION_LABELS[section]}
-      </h1>
-      {updatedAt && (
-        <span className="font-sans text-[#686868]" style={{ fontSize: '13px' }}>
-          Updated {updatedAt}
-        </span>
-      )}
+      <div className="flex items-center justify-center w-10 h-10 mr-0.5">
+        <img src="/icon.png" alt="kulaire" className="w-6 h-6 object-contain opacity-50" />
+      </div>
+
+      <div className="w-px h-5 mx-0.5" style={{ background: 'rgba(255,255,255,0.08)' }} />
+
+      {NAV.map(({ id, label, icon }) => (
+        <DockItem key={id} active={active === id} onClick={() => setActive(id)} tooltip={label}>
+          {icon}
+        </DockItem>
+      ))}
+
+      <div className="w-px h-5 mx-0.5" style={{ background: 'rgba(255,255,255,0.08)' }} />
+
+      <DockItem onClick={signOut} tooltip="Sign out" danger>
+        <IconSignOut />
+      </DockItem>
     </div>
   )
 }
@@ -1365,26 +1362,23 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#000000' }}>
-      <Sidebar active={section} setActive={setSection} />
-      <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
-        <TopBar section={section} updatedAt={updatedAt} />
-        <main className="flex-1 overflow-auto">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <span className="font-sans text-[#686868] text-base">Loading···</span>
-            </div>
-          ) : section === 'overview' ? (
-            <OverviewSection projects={projects} reviews={reviews} />
-          ) : section === 'projects' ? (
-            <ProjectsSection projects={projects} setProjects={setProjects} />
-          ) : section === 'recent' ? (
-            <RecentSection projects={projects} setProjects={setProjects} />
-          ) : (
-            <ReviewsAdminSection reviews={reviews} setReviews={setReviews} />
-          )}
-        </main>
-      </div>
+    <div className="min-h-screen" style={{ background: '#000000' }}>
+      <main className="min-h-screen overflow-auto pb-28">
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <span className="font-sans text-[#686868] text-base">Loading···</span>
+          </div>
+        ) : section === 'overview' ? (
+          <OverviewSection projects={projects} reviews={reviews} />
+        ) : section === 'projects' ? (
+          <ProjectsSection projects={projects} setProjects={setProjects} />
+        ) : section === 'recent' ? (
+          <RecentSection projects={projects} setProjects={setProjects} />
+        ) : (
+          <ReviewsAdminSection reviews={reviews} setReviews={setReviews} />
+        )}
+      </main>
+      <Dock active={section} setActive={setSection} />
     </div>
   )
 }
