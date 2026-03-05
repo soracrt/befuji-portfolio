@@ -50,6 +50,16 @@ body {
   animation: glow-pulse 2s ease-in-out infinite;
 }
 
+/* Autofill — force dark background on all inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Links — white glow by default, red glow on hover */
 .link-glow-red {
   text-shadow: 0 0 20px rgba(255,255,255,0.35);
