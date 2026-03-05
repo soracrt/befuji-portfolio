@@ -213,6 +213,7 @@ export default function ContactPage() {
                     type="text"
                     name="firstName"
                     placeholder="First name"
+                    autoComplete="off"
                     value={form.firstName}
                     onChange={(e) => {
                       setForm((d) => ({ ...d, firstName: e.target.value }))
@@ -229,6 +230,7 @@ export default function ContactPage() {
                     type="text"
                     name="lastName"
                     placeholder="Last name"
+                    autoComplete="off"
                     value={form.lastName}
                     onChange={(e) => {
                       setForm((d) => ({ ...d, lastName: e.target.value }))
@@ -271,6 +273,7 @@ export default function ContactPage() {
                   type="email"
                   name="email"
                   placeholder="Email"
+                  autoComplete="off"
                   value={form.email}
                   onChange={(e) => {
                     setForm((d) => ({ ...d, email: e.target.value }))
@@ -293,6 +296,7 @@ export default function ContactPage() {
                   type="text"
                   name="projectDescription"
                   placeholder="Project description"
+                  autoComplete="off"
                   value={form.description}
                   onChange={(e) => setForm((d) => ({ ...d, description: e.target.value }))}
                   className={fieldClass}
