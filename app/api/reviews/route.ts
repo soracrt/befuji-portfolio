@@ -76,7 +76,7 @@ async function sendReviewNotification(review: {
   try {
     const resend = new Resend(apiKey)
     await resend.emails.send({
-      from: 'kulaire <onboarding@resend.dev>',
+      from: 'kulaire <hello@kulaire.com>',
       to,
       subject: `New review from ${review.name}`,
       html: `
