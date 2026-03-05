@@ -16,7 +16,7 @@ export async function POST() {
     CORSConfiguration: {
       CORSRules: [
         {
-          AllowedOrigins: ['https://befuji.com', 'http://localhost:3000'],
+          AllowedOrigins: ['https://kulaire.com', 'http://localhost:3000'],
           AllowedMethods: ['GET', 'PUT', 'HEAD'],
           AllowedHeaders: ['Content-Type', 'Content-Length', '*'],
           MaxAgeSeconds: 3600,

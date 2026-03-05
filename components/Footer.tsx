@@ -23,7 +23,7 @@ export default function Footer() {
           {/* Left — brand block */}
           <div className="flex flex-col gap-5">
             <Link href="/" className="w-max opacity-80 hover:opacity-100 transition-opacity duration-200">
-              <Image src="/logo.png" alt="Befuji" height={28} width={120} className="h-7 w-auto" />
+              <Image src="/logo.png" alt="Kulaire" height={28} width={120} className="h-7 w-auto" />
             </Link>
             <p
               className="font-sans font-medium text-sm max-w-xs leading-relaxed"
@@ -89,7 +89,7 @@ export default function Footer() {
             className="font-sans text-xs text-center"
             style={{ color: 'rgba(255,255,252,0.2)' }}
           >
-            &copy; {year} Befuji. All rights reserved.
+            &copy; {year} Kulaire. All rights reserved.
           </p>
         </div>
 

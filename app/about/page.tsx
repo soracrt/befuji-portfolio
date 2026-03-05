@@ -3,7 +3,7 @@ import Nav from '@/components/Nav'
 import { Timeline } from '@/components/ui/timeline'
 
 export const metadata: Metadata = {
-  title: 'About — Befuji',
+  title: 'About — Kulaire',
   description: 'Motion designer working with brands, labels, and startups.',
 }
 
@@ -81,7 +81,7 @@ const timelineData = [
           present.
         </p>
         <p className="font-sans text-sm md:text-[15px] leading-[1.95]" style={{ color: 'rgba(255,255,252,0.45)' }}>
-          befuji. motion design for brands that refuse to blend in.
+          kulaire. motion design for brands that refuse to blend in.
         </p>
       </div>
     ),

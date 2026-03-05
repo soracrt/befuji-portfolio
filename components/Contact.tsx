@@ -32,10 +32,10 @@ export default function Contact() {
         <FadeIn delay={100}>
           <div className="flex flex-col items-center gap-5 mb-20">
             <a
-              href="mailto:hello@befuji.com"
+              href="mailto:hello@kulaire.com"
               className="font-sans text-xs tracking-[0.2em] uppercase text-ink hover:opacity-40 transition-opacity duration-200"
             >
-              hello@befuji.com
+              hello@kulaire.com
             </a>
 
             <span className="block w-px h-7 bg-divider" />
@@ -47,18 +47,6 @@ export default function Contact() {
               className="font-sans text-xs tracking-[0.2em] uppercase text-ink hover:opacity-40 transition-opacity duration-200"
             >
               LinkedIn
-            </a>
-
-            <span className="block w-px h-7 bg-divider" />
-
-            {/* Book a call */}
-            <a
-              href="https://cal.com/befuji"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-sans text-xs tracking-[0.2em] uppercase text-ink border border-ink px-6 py-3 hover:bg-ink hover:text-bg transition-colors duration-200"
-            >
-              Book a call
             </a>
           </div>
         </FadeIn>
@@ -117,7 +105,7 @@ export default function Contact() {
             className="font-sans text-xs tracking-widest mt-24"
             style={{ color: 'rgba(255,255,255,0.2)' }}
           >
-            &copy; {new Date().getFullYear()} befuji
+            &copy; {new Date().getFullYear()} kulaire
           </p>
         </FadeIn>
       </div>

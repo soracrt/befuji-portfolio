@@ -12,10 +12,10 @@ export default function HomeCTA() {
             let's talk.
           </h2>
           <a
-            href="mailto:hello@befuji.com"
+            href="mailto:hello@kulaire.com"
             className="font-sans text-sm text-ink hover:opacity-40 transition-opacity duration-200 inline-block mb-12"
           >
-            hello@befuji.com
+            hello@kulaire.com
           </a>
         </FadeIn>
 

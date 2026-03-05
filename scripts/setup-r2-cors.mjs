@@ -1,6 +1,6 @@
 /**
  * Run once to set CORS policy on the R2 bucket so the admin upload
- * (browser → presigned PUT) is allowed from https://befuji.com
+ * (browser → presigned PUT) is allowed from https://kulaire.com
  *
  *   node scripts/setup-r2-cors.mjs
  */
@@ -35,7 +35,7 @@ await s3.send(
     CORSConfiguration: {
       CORSRules: [
         {
-          AllowedOrigins: ['https://befuji.com', 'http://localhost:3000'],
+          AllowedOrigins: ['https://kulaire.com', 'http://localhost:3000'],
           AllowedMethods: ['PUT'],
           AllowedHeaders: ['Content-Type'],
           MaxAgeSeconds: 3600,

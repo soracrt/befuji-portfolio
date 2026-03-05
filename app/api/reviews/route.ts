@@ -76,7 +76,7 @@ async function sendReviewNotification(review: {
   try {
     const resend = new Resend(apiKey)
     await resend.emails.send({
-      from: 'befuji <onboarding@resend.dev>',
+      from: 'kulaire <onboarding@resend.dev>',
       to,
       subject: `New review from ${review.name}`,
       html: `
@@ -85,7 +85,7 @@ async function sendReviewNotification(review: {
         <blockquote style="border-left:3px solid #ccc;margin:12px 0;padding:0 12px;color:#333">
           ${review.text}
         </blockquote>
-        <p><a href="https://befuji.com/admin">View in admin →</a></p>
+        <p><a href="https://kulaire.com/admin">View in admin →</a></p>
       `,
     })
   } catch (err) {

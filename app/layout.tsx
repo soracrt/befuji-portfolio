@@ -19,7 +19,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'befuji',
+  title: 'kulaire',
   description: 'motion designed to move.',
   icons: {
     icon: '/icon.png',

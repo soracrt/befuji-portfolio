@@ -213,7 +213,7 @@ function Sidebar({ active, setActive }: { active: Section; setActive: (s: Sectio
             <span className="font-sans text-white/40 font-medium" style={{ fontSize: '9.5px' }}>B</span>
           </div>
           <span className="font-sans text-white/70 font-medium" style={{ fontSize: '13px', letterSpacing: '-0.02em' }}>
-            befuji
+            kulaire
           </span>
           <span
             className="font-sans text-[#505050] ml-0.5"

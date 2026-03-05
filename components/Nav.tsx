@@ -36,7 +36,7 @@ export default function Nav() {
         href="/"
         className="hover:opacity-60 transition-opacity duration-200"
       >
-        <img src="/icon.png" alt="befuji" className="h-12 w-auto" />
+        <img src="/icon.png" alt="kulaire" className="h-12 w-auto" />
       </Link>
 
       <div className="flex items-center gap-7">
