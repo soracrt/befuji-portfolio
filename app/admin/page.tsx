@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type Project = {
   id: string
@@ -141,11 +142,8 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="w-full max-w-[296px]">
           <div className="flex justify-center mb-8">
-            <div
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center"
-              style={{ background: 'linear-gradient(160deg, #3a3a39 0%, #2f2f2e 100%)', boxShadow: '0 0 0 1px #404040' }}
-            >
-              <span className="font-sans text-white/50 font-medium" style={{ fontSize: '13px', letterSpacing: '-0.02em' }}>B</span>
+            <div className="flex items-center justify-center">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} style={{ objectFit: 'contain' }} />
             </div>
           </div>
 
