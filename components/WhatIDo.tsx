@@ -4,9 +4,7 @@ import {
   IconWaveSine,
   IconFeather,
   IconPalette,
-  IconBrandInstagram,
   IconMovie,
-  IconAd2,
   IconDeviceLaptop,
 } from '@tabler/icons-react'
 
@@ -22,12 +20,6 @@ const features = [
     tagline: 'Your story in motion.',
     description: 'Cinematic visuals built from your identity — no templates, no shortcuts.',
     icon: <IconMovie size={20} />,
-  },
-  {
-    title: 'Ad Creatives',
-    tagline: 'Scroll-stopping content.',
-    description: 'High-converting ad assets designed to perform across every platform.',
-    icon: <IconAd2 size={20} />,
   },
   {
     title: 'SaaS Videos',
@@ -46,12 +38,6 @@ const features = [
     tagline: 'Clean, fast, intentional.',
     description: 'Minimal sites built with precision — performant and visually sharp.',
     icon: <IconDeviceLaptop size={20} />,
-  },
-  {
-    title: 'Social Content',
-    tagline: 'Built for the feed.',
-    description: 'Short-form video and graphics optimised for engagement and reach.',
-    icon: <IconBrandInstagram size={20} />,
   },
   {
     title: 'Creative Direction',
