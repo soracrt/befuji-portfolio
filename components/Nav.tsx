@@ -139,7 +139,8 @@ export default function Nav() {
                 flexShrink: 0,
                 opacity:    open ? 1 : 0,
                 transform:  open ? 'translateX(0)' : 'translateX(8px)',
-                transition: `opacity 0.3s ease ${0.15 + i * 0.04}s, transform 0.3s ease ${0.15 + i * 0.04}s`,
+                textShadow: accent ? (open ? '0 0 12px rgba(207,92,54,0.7), 0 0 24px rgba(207,92,54,0.3)' : 'none') : 'none',
+                transition: `opacity 0.3s ease ${0.15 + i * 0.04}s, transform 0.3s ease ${0.15 + i * 0.04}s${accent ? `, text-shadow 0.5s ease ${open ? '0.4s' : '0s'}` : ''}`,
               }}
             >
               {label}
