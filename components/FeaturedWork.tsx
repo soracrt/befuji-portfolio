@@ -41,8 +41,9 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
         Border radius rule: outer = inner + padding
         Inner video: rounded-xl (12px), padding: p-3 (12px) → outer: rounded-[24px]
       */}
-      <div
-        className="group cursor-pointer transition-transform duration-500 ease-out hover:scale-[1.02]"
+      <Link
+        href="/work"
+        className="group block transition-transform duration-500 ease-out hover:scale-[1.02]"
         style={{
           background:   '#0a0a0a',
           border:       '1px solid rgba(238,229,233,0.06)',
@@ -99,7 +100,7 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
             </svg>
           </div>
         </div>
-      </div>
+      </Link>
     </FadeIn>
   )
 }
