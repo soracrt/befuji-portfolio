@@ -36,8 +36,8 @@ export default function StatsBar() {
               <div key={key} className="flex flex-col gap-2">
                 {/* Label */}
                 <span
-                  className="font-sans text-[10px] tracking-[0.18em] uppercase"
-                  style={{ color: 'rgba(238,229,233,0.3)' }}
+                  className="font-sans font-extrabold text-[11px] tracking-[0.24em] uppercase"
+                  style={{ color: 'rgba(238,229,233,0.35)' }}
                 >
                   {label}
                 </span>

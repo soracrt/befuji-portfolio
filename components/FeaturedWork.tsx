@@ -108,22 +108,13 @@ export default function FeaturedWork() {
   const [projects, setProjects] = useState<Project[]>([])
 
   useEffect(() => {
-    const cached = sessionStorage.getItem('projects')
-    if (cached) {
-      try {
-        const data = JSON.parse(cached)
-        if (Array.isArray(data)) {
-          setProjects(data.filter((p: Project) => p.isRecent).slice(0, 3))
-        }
-      } catch {}
-      return
-    }
-    fetch('/api/admin/projects')
+    // Always fetch fresh — sessionStorage can hold stale isRecent values
+    // if the admin toggled a project since the last visit.
+    fetch('/api/admin/projects', { cache: 'no-store' })
       .then(r => r.json())
       .then((data: Project[]) => {
         if (Array.isArray(data)) {
-          sessionStorage.setItem('projects', JSON.stringify(data))
-          setProjects(data.filter(p => p.isRecent).slice(0, 3))
+          setProjects(data.filter(p => p.isRecent === true).slice(0, 3))
         }
       })
       .catch(() => {})
