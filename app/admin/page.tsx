@@ -374,11 +374,11 @@ function Dock({ active, setActive }: { active: Section; setActive: (s: Section) 
     <div
       className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-3 py-2"
       style={{
-        background: 'rgba(10,10,10,0.92)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        borderRadius: '18px',
-        boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 8px 40px rgba(0,0,0,0.8)',
+        background: 'rgba(14,12,22,0.88)',
+        backdropFilter: 'blur(32px)',
+        WebkitBackdropFilter: 'blur(32px)',
+        borderRadius: '20px',
+        boxShadow: '0 0 0 1px rgba(120,100,200,0.15), 0 0 0 1px rgba(255,255,255,0.05), 0 12px 48px rgba(0,0,0,0.85)',
       }}
     >
       <div className="flex items-center justify-center w-10 h-10 mr-0.5">
@@ -406,13 +406,23 @@ function Dock({ active, setActive }: { active: Section; setActive: (s: Section) 
 
 function StatCard({ label, value, sub, onClick }: { label: string; value: number; sub?: string; onClick?: () => void }) {
   const animated = useAnimatedCounter(value)
+  const [hovered, setHovered] = useState(false)
   return (
     <div
-      className={`rounded-2xl p-5 flex flex-col gap-3 ${onClick ? 'cursor-pointer' : ''}`}
-      style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+      className={`rounded-2xl p-5 flex flex-col gap-3 transition-all duration-200 ${onClick ? 'cursor-pointer' : ''}`}
+      style={{
+        background: hovered
+          ? 'linear-gradient(145deg, #252530 0%, #1a1a22 100%)'
+          : 'linear-gradient(145deg, #1e1e28 0%, #151519 100%)',
+        boxShadow: hovered
+          ? '0 0 0 1px rgba(120,100,200,0.2), 0 8px 32px rgba(0,0,0,0.5)'
+          : '0 0 0 1px rgba(255,255,255,0.06), 0 4px 16px rgba(0,0,0,0.3)',
+      }}
       onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <div className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
+      <div className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.16em', color: '#888888' }}>
         {label}
       </div>
       <div
@@ -544,15 +554,18 @@ function OverviewSection({
 
         {/* Revenue card */}
         <div
-          className="rounded-2xl p-5 flex flex-col gap-2 cursor-pointer"
-          style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+          className="rounded-2xl p-5 flex flex-col gap-2 cursor-pointer transition-all duration-200"
+          style={{
+            background: 'linear-gradient(145deg, #172018 0%, #111a12 100%)',
+            boxShadow: '0 0 0 1px rgba(74,222,128,0.12), 0 4px 16px rgba(0,0,0,0.3)',
+          }}
           onClick={() => onNavigate('finance')}
         >
           <div className="flex items-center justify-between">
-            <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
+            <span className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.16em', color: '#5ebd7a' }}>
               REVENUE
             </span>
-            <span className="font-sans" style={{ fontSize: '12px', letterSpacing: '0.1em', color: '#383838' }}>
+            <span className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.12em', color: 'rgba(94,189,122,0.4)' }}>
               {thisYear}
             </span>
           </div>
@@ -588,9 +601,9 @@ function OverviewSection({
           {recent.length === 0 ? (
             <div
               className="rounded-xl px-5 py-5"
-              style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+              style={{ background: 'linear-gradient(135deg, #1c1c24 0%, #141418 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)' }}
             >
-              <p className="font-sans text-[#484848]" style={{ fontSize: '15px' }}>No featured projects yet.</p>
+              <p className="font-sans text-[#686868]" style={{ fontSize: '15px' }}>No featured projects yet.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -598,7 +611,7 @@ function OverviewSection({
                 <div
                   key={p.id}
                   className="flex items-center gap-3.5 rounded-xl px-5 py-3.5"
-                  style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+                  style={{ background: 'linear-gradient(135deg, #1c1c24 0%, #141418 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)' }}
                 >
                   <span
                     className="font-sans tabular-nums shrink-0"
@@ -644,9 +657,9 @@ function OverviewSection({
           {latestClients.length === 0 ? (
             <div
               className="rounded-xl px-5 py-5"
-              style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+              style={{ background: 'linear-gradient(135deg, #1a1c1e 0%, #131416 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)' }}
             >
-              <p className="font-sans text-[#484848]" style={{ fontSize: '15px' }}>No clients logged yet.</p>
+              <p className="font-sans text-[#686868]" style={{ fontSize: '15px' }}>No clients logged yet.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -654,7 +667,7 @@ function OverviewSection({
                 <div
                   key={c.id}
                   className="flex items-center gap-3 rounded-xl px-5 py-3.5"
-                  style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+                  style={{ background: 'linear-gradient(135deg, #1a1c1e 0%, #131416 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)' }}
                 >
                   <span
                     className="font-sans text-white/90 flex-1 truncate"
@@ -1250,7 +1263,7 @@ function RecentSection({
                 key={p.id}
                 onClick={() => !maxed && toggle(p.id)}
                 className={`relative rounded-xl overflow-hidden select-none transition-all ${maxed ? 'opacity-25 cursor-not-allowed' : 'cursor-pointer'}`}
-                style={{ boxShadow: p.isRecent ? '0 0 0 1px rgba(255,255,255,0.12)' : '0 0 0 1px #161616' }}
+                style={{ boxShadow: p.isRecent ? '0 0 0 2px rgba(140,120,255,0.4), 0 0 20px rgba(120,100,220,0.15)' : '0 0 0 1px rgba(255,255,255,0.06)' }}
               >
                 <div className="aspect-video bg-[#141414]">
                   <video
@@ -1262,7 +1275,7 @@ function RecentSection({
                   />
                 </div>
 
-                <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#181818' }}>
+                <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: 'linear-gradient(135deg, #1c1c28 0%, #141419 100%)' }}>
                   <div className="min-w-0">
                     <div className="font-sans text-white/90 truncate" style={{ fontSize: '17px', letterSpacing: '-0.01em' }}>
                       {p.title || 'Untitled'}
@@ -1499,8 +1512,8 @@ function ReviewsAdminSection({
                 className="grid gap-4 items-center px-5 py-4 rounded-xl group"
                 style={{
                   gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px',
-                  background: '#181818',
-                  boxShadow: '0 0 0 1px #282828',
+                  background: 'linear-gradient(135deg, #1a1a24 0%, #141419 100%)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.06)',
                 }}
               >
                 <div className="flex flex-col items-center gap-0.5">
@@ -1785,7 +1798,7 @@ function ClientsSection({
       )}
 
       <div className="flex items-center gap-3 mb-6">
-        <div className="flex gap-1 rounded-xl p-1" style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}>
+        <div className="flex gap-1 rounded-xl p-1" style={{ background: 'linear-gradient(135deg, #1e1e28 0%, #161619 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.08)' }}>
           {(['All', 'Paid', 'Pending', 'Unpaid'] as const).map(f => (
             <button
               key={f}
@@ -1842,8 +1855,8 @@ function ClientsSection({
                 className="grid gap-4 items-center px-5 py-4 rounded-xl group"
                 style={{
                   gridTemplateColumns: '1fr 110px 130px 120px 90px 32px',
-                  background: '#181818',
-                  boxShadow: '0 0 0 1px #282828',
+                  background: 'linear-gradient(135deg, #1a1a22 0%, #141418 100%)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.06)',
                 }}
               >
                 <div>
@@ -1989,12 +2002,12 @@ function FinanceSection({
       {/* Stat cards */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {[
-          { label: 'THIS MONTH', value: monthRevenue },
-          { label: `${thisYear} TOTAL`, value: yearRevenue },
-          { label: 'ALL TIME', value: allRevenue },
-        ].map(({ label, value }) => (
-          <div key={label} className="rounded-2xl p-6" style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}>
-            <div className="font-sans mb-3" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>{label}</div>
+          { label: 'THIS MONTH', value: monthRevenue,  bg: 'linear-gradient(145deg, #141a28 0%, #0f1118 100%)', border: 'rgba(99,130,220,0.18)', accent: '#6b82dc' },
+          { label: `${thisYear} TOTAL`, value: yearRevenue, bg: 'linear-gradient(145deg, #1a1428 0%, #130f1a 100%)', border: 'rgba(160,100,220,0.18)', accent: '#a864dc' },
+          { label: 'ALL TIME', value: allRevenue,      bg: 'linear-gradient(145deg, #1a1a14 0%, #141410 100%)', border: 'rgba(200,180,80,0.18)', accent: '#c8b450' },
+        ].map(({ label, value, bg, border, accent }) => (
+          <div key={label} className="rounded-2xl p-6" style={{ background: bg, boxShadow: `0 0 0 1px ${border}, 0 4px 20px rgba(0,0,0,0.35)` }}>
+            <div className="font-sans mb-3" style={{ fontSize: '11px', letterSpacing: '0.16em', color: accent }}>{label}</div>
             <div className="font-sans text-white font-medium" style={{ fontSize: '32px', letterSpacing: '-0.03em', lineHeight: 1 }}>
               {formatCurrency(value, currency)}
             </div>
@@ -2003,7 +2016,7 @@ function FinanceSection({
       </div>
 
       {/* Chart */}
-      <div className="rounded-2xl p-6 mb-6" style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}>
+      <div className="rounded-2xl p-6 mb-6" style={{ background: 'linear-gradient(145deg, #181820 0%, #111116 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 4px 20px rgba(0,0,0,0.4)' }}>
         <div className="font-sans mb-5" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
           MONTHLY REVENUE — {thisYear}
         </div>
@@ -2019,12 +2032,15 @@ function FinanceSection({
               >
                 <div className="flex-1 flex items-end w-full">
                   <div
-                    className="w-full rounded-t-sm transition-all duration-700"
+                    className="w-full rounded-t-md transition-all duration-700"
                     style={{
-                      height: value === 0 ? '2px' : `${Math.max((value / maxVal) * 100, 5)}%`,
+                      height: value === 0 ? '3px' : `${Math.max((value / maxVal) * 100, 5)}%`,
                       background: isCurrent
-                        ? 'rgba(255,255,255,0.65)'
-                        : value > 0 ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.04)',
+                        ? 'linear-gradient(to top, rgba(120,100,255,0.6), rgba(180,160,255,0.9))'
+                        : value > 0
+                          ? 'linear-gradient(to top, rgba(255,255,255,0.06), rgba(255,255,255,0.18))'
+                          : 'rgba(255,255,255,0.03)',
+                      boxShadow: isCurrent ? '0 0 12px rgba(140,120,255,0.4)' : 'none',
                     }}
                   />
                 </div>
@@ -2045,8 +2061,8 @@ function FinanceSection({
             >
               <defs>
                 <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                  <stop offset="0%" stopColor="rgba(140,120,255,0.25)" />
+                  <stop offset="100%" stopColor="rgba(140,120,255,0)" />
                 </linearGradient>
               </defs>
               {(() => {
@@ -2059,7 +2075,7 @@ function FinanceSection({
                 return (
                   <>
                     <path d={area} fill="url(#areaGrad)" />
-                    <path d={line} fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinejoin="round" />
+                    <path d={line} fill="none" stroke="rgba(160,140,255,0.7)" strokeWidth="2" strokeLinejoin="round" />
                     {pts.map((p, i) => (
                       <circle
                         key={i}
@@ -2097,7 +2113,7 @@ function FinanceSection({
               <div
                 key={c.id}
                 className="flex items-center gap-4 rounded-xl px-5 py-3.5"
-                style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
+                style={{ background: 'linear-gradient(135deg, #172018 0%, #121510 100%)', boxShadow: '0 0 0 1px rgba(74,222,128,0.08)' }}
               >
                 <span className="font-sans text-white/85 flex-1 truncate" style={{ fontSize: '16px', letterSpacing: '-0.01em' }}>
                   {c.clientName}
@@ -2169,7 +2185,7 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen" style={{ background: 'radial-gradient(ellipse at 15% -5%, rgba(80,55,140,0.28) 0%, transparent 45%), radial-gradient(ellipse at 85% 100%, rgba(20,55,90,0.22) 0%, transparent 45%), #080808' }}>
       <main className="min-h-screen overflow-auto pb-28">
         {loading ? (
           <div className="flex items-center justify-center h-64">
