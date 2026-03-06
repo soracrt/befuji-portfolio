@@ -1,133 +1,107 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { motion, useReducedMotion } from 'motion/react'
 import { InstagramIcon } from 'lucide-react'
-
-function FadeIn({ delay = 0, children, className }: { delay?: number; children: React.ReactNode; className?: string }) {
-  const reduced = useReducedMotion()
-  if (reduced) return <div className={className}>{children}</div>
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -6, filter: 'blur(4px)' }}
-      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.7 }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function LinkGroup({ label, links, delay }: {
-  label: string
-  delay: number
-  links: { title: string; href: string; external?: boolean; icon?: React.ComponentType<{ className?: string }> }[]
-}) {
-  return (
-    <FadeIn delay={delay}>
-      <h3
-        className="font-sans text-[10px] tracking-[0.2em] uppercase mb-4"
-        style={{ color: 'rgba(238,229,233,0.3)' }}
-      >
-        {label}
-      </h3>
-      <ul className="flex flex-col gap-2.5">
-        {links.map(link => {
-          const inner = (
-            <span className="inline-flex items-center gap-1.5">
-              {link.icon && <link.icon className="w-3 h-3" />}
-              {link.title}
-            </span>
-          )
-          const cls = "font-sans text-xs transition-opacity duration-150 hover:opacity-60"
-          const style = { color: 'rgba(238,229,233,0.5)' }
-          return (
-            <li key={link.title}>
-              {link.external
-                ? <a href={link.href} target="_blank" rel="noopener noreferrer" className={cls} style={style}>{inner}</a>
-                : <Link href={link.href} className={cls} style={style}>{inner}</Link>
-              }
-            </li>
-          )
-        })}
-      </ul>
-    </FadeIn>
-  )
-}
 
 export function FooterSection() {
   const year = new Date().getFullYear()
 
   return (
-    <footer
-      className="relative w-full rounded-t-3xl px-10 py-12"
-      style={{
-        background: `radial-gradient(40% 120px at 50% 0%, rgba(207,92,54,0.07), transparent), #0a0a0a`,
-        border: '1px solid rgba(238,229,233,0.06)',
-        borderBottom: 'none',
-      }}
-    >
-      {/* Top glow line */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px h-px w-1/3 rounded-full"
-        style={{ background: 'rgba(207,92,54,0.5)', filter: 'blur(3px)' }}
-      />
+    <footer className="w-full px-10 pt-20 pb-8" style={{ borderTop: '1px solid rgba(238,229,233,0.07)' }}>
 
-      {/* Single flat grid: brand + 3 link columns */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-10">
+      {/* Top section — two large text blocks */}
+      <div className="flex flex-col md:flex-row gap-16 md:gap-24 mb-16">
 
-        {/* Brand */}
-        <FadeIn delay={0} className="flex flex-col gap-4 col-span-2 sm:col-span-1">
-          <Image src="/logo.png" alt="kulaire" width={88} height={22} className="h-5 w-auto opacity-80" />
-          <p
-            className="font-sans text-xs leading-relaxed"
-            style={{ color: 'rgba(238,229,233,0.25)', maxWidth: '180px' }}
+        {/* Left: CTA */}
+        <div className="flex-1">
+          <h2
+            className="font-display font-bold leading-[1.0] mb-8"
+            style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em' }}
           >
-            Motion design, brand films, and web — built with intention.
-          </p>
-          <p className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.15)' }}>
-            &copy; {year} Kulaire.
-          </p>
-        </FadeIn>
+            Ready to work<br />with us?
+          </h2>
+          <a
+            href="/contact"
+            className="inline-flex items-center font-sans text-xs tracking-[0.08em] uppercase px-4 py-2 rounded-full transition-all duration-200 hover:opacity-70"
+            style={{ border: '1px solid rgba(238,229,233,0.25)', color: 'rgba(238,229,233,0.6)' }}
+          >
+            Get in touch →
+          </a>
+        </div>
 
-        {/* Navigate */}
-        <LinkGroup
-          label="Navigate"
-          delay={0.08}
-          links={[
-            { title: 'Work',    href: '/work' },
-            { title: 'Reviews', href: '/reviews' },
-            { title: 'FAQ',     href: '/faq' },
-            { title: 'Contact', href: '/contact' },
-          ]}
-        />
-
-        {/* Services */}
-        <LinkGroup
-          label="Services"
-          delay={0.14}
-          links={[
-            { title: 'Motion Design',   href: '/contact' },
-            { title: 'Brand Films',     href: '/contact' },
-            { title: 'SaaS Videos',     href: '/contact' },
-            { title: 'Web Development', href: '/contact' },
-          ]}
-        />
-
-        {/* Connect */}
-        <LinkGroup
-          label="Connect"
-          delay={0.2}
-          links={[
-            { title: '@soracrt', href: 'https://instagram.com/soracrt', external: true, icon: InstagramIcon },
-          ]}
-        />
+        {/* Right: tagline + info */}
+        <div className="flex-1">
+          <h2
+            className="font-display font-bold leading-[1.0] mb-8"
+            style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em' }}
+          >
+            Don&apos;t<br />be boring.
+          </h2>
+          <div className="flex gap-12">
+            <div>
+              <p className="font-sans text-sm font-medium mb-1" style={{ color: '#EEE5E9' }}>Motion</p>
+              <p className="font-sans text-xs leading-relaxed" style={{ color: 'rgba(238,229,233,0.35)' }}>
+                Film, ads, SaaS<br />brand videos.
+              </p>
+            </div>
+            <div>
+              <p className="font-sans text-sm font-medium mb-1" style={{ color: '#EEE5E9' }}>Web</p>
+              <p className="font-sans text-xs leading-relaxed" style={{ color: 'rgba(238,229,233,0.35)' }}>
+                Minimal sites,<br />built fast.
+              </p>
+            </div>
+          </div>
+        </div>
 
       </div>
+
+      {/* Divider */}
+      <div style={{ borderTop: '1px solid rgba(238,229,233,0.07)', marginBottom: '20px' }} />
+
+      {/* Middle row — nav left, socials right */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-8">
+          {[
+            { label: 'Work',    href: '/work' },
+            { label: 'Reviews', href: '/reviews' },
+            { label: 'FAQ',     href: '/faq' },
+            { label: 'Contact', href: '/contact' },
+          ].map(({ label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className="font-sans text-xs tracking-[0.1em] uppercase transition-opacity duration-150 hover:opacity-60"
+              style={{ color: 'rgba(238,229,233,0.4)' }}
+            >
+              • {label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-5">
+          <a
+            href="https://instagram.com/soracrt"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-opacity duration-150 hover:opacity-60"
+            style={{ color: 'rgba(238,229,233,0.4)' }}
+            aria-label="Instagram"
+          >
+            <InstagramIcon className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+
+      {/* Bottom row — copyright */}
+      <div className="flex items-center justify-between">
+        <p className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.18)' }}>
+          &copy; {year} Kulaire. All rights reserved.
+        </p>
+        <p className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.18)' }}>
+          kulaire.com
+        </p>
+      </div>
+
     </footer>
   )
 }
