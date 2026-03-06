@@ -20,7 +20,7 @@ body {
 
 /* Selection */
 ::selection {
-  background-color: #a10702;
+  background-color: #CF5C36;
   color: #fffffc;
 }
 
@@ -40,23 +40,10 @@ body {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }
 
-/* "blend in" glow pulse — breathing white text-shadow */
-@keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 6px rgba(255,255,255,0.4); }
-  50%       { text-shadow: 0 0 16px rgba(255,255,255,0.9); }
+/* Link accent hover */
+.link-accent {
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
-
-.blend-in-glow {
-  animation: glow-pulse 2s ease-in-out infinite;
-}
-
-/* Links — white glow by default, red glow on hover */
-.link-glow-red {
-  text-shadow: 0 0 20px rgba(255,255,255,0.35);
-  transition: color 0.2s ease, text-shadow 0.2s ease, border-color 0.2s ease;
-}
-.link-glow-red:hover {
-  color: #a10702;
-  text-shadow: 0 0 16px rgba(161,7,2,0.8), 0 0 32px rgba(161,7,2,0.4);
-  border-color: #a10702;
+.link-accent:hover {
+  color: #CF5C36;
 }
