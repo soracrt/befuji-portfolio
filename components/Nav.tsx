@@ -12,7 +12,7 @@ const LINKS = [
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 405
+const OPEN_WIDTH  = 445
 const CLOSED_SIZE = 44
 
 export default function Nav() {
