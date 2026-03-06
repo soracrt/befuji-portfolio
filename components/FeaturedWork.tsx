@@ -131,8 +131,8 @@ export default function FeaturedWork() {
         <FadeIn>
           <div className="flex items-center justify-between mb-10">
             <span
-              className="font-sans text-xs tracking-[0.14em] uppercase"
-              style={{ color: 'rgba(238,229,233,0.3)' }}
+              className="font-display font-bold tracking-[-0.02em]"
+              style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', color: '#EEE5E9' }}
             >
               Featured Work
             </span>
