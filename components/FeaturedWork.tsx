@@ -19,18 +19,8 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          video.src = project.video
-          video.load()
-          observer.disconnect()
-        }
-      },
-      { rootMargin: '600px' }
-    )
-    observer.observe(video)
-    return () => observer.disconnect()
+    video.src = project.video
+    video.load()
   }, [project.video])
 
   const subtitle = project.client || project.category || ''
@@ -63,7 +53,7 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
             muted
             loop
             playsInline
-            preload="none"
+            preload="auto"
           />
         </div>
 
