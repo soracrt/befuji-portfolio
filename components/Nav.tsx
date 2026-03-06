@@ -80,13 +80,14 @@ export default function Nav() {
         {/* Inner row — fixed full width so content doesn't reflow */}
         <div
           style={{
-            width:       `${OPEN_WIDTH}px`,
-            height:      '100%',
-            display:     'flex',
-            alignItems:  'center',
-            gap:         '18px',
-            paddingLeft: '0px',
-            paddingRight:'20px',
+            width:          `${OPEN_WIDTH}px`,
+            height:         '100%',
+            display:        'flex',
+            alignItems:     'center',
+            justifyContent: 'flex-start',
+            gap:            '14px',
+            paddingLeft:    '0px',
+            paddingRight:   '20px',
           }}
         >
           {/* Logo button — same size as closed pill, img absolutely centered */}
@@ -103,7 +104,7 @@ export default function Nav() {
               outline:     'none',
               padding:     0,
               cursor:      'pointer',
-              marginRight: '6px',
+              marginRight: '0px',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
