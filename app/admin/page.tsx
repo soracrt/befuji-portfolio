@@ -226,7 +226,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
         <Link
           href="/"
           className="font-sans text-[#606060] hover:text-[#909090] transition-colors inline-flex items-center gap-1.5"
-          style={{ fontSize: '13px', letterSpacing: '-0.01em' }}
+          style={{ fontSize: '15px', letterSpacing: '-0.01em' }}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="15 18 9 12 15 6" />
@@ -249,7 +249,7 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
           </h1>
           <p
             className="font-sans text-center mb-8"
-            style={{ fontSize: '14.5px', color: '#707070', letterSpacing: '-0.01em' }}
+            style={{ fontSize: '17px', color: '#707070', letterSpacing: '-0.01em' }}
           >
             Enter your password to continue.
           </p>
@@ -261,13 +261,13 @@ function PasswordGate({ onAuth }: { onAuth: () => void }) {
               onChange={e => { setValue(e.target.value); setError(false) }}
               placeholder="Password"
               autoFocus
-              className={`w-full bg-[#2c2c2b] rounded-xl px-4 py-3 font-sans text-sm text-white/80 placeholder-[#272727] outline-none transition-all ring-1 ${
+              className={`w-full bg-[#2c2c2b] rounded-xl px-4 py-3 font-sans text-sm text-white/90 placeholder-[#272727] outline-none transition-all ring-1 ${
                 error ? 'ring-red-500/20' : 'ring-[#3a3a3a] focus:ring-[#484848]'
               }`}
               style={{ letterSpacing: '-0.01em' }}
             />
             {error && (
-              <p className="font-sans text-red-400/50 text-center -mt-0.5" style={{ fontSize: '12px' }}>
+              <p className="font-sans text-red-400/50 text-center -mt-0.5" style={{ fontSize: '16px' }}>
                 Incorrect password. Try again.
               </p>
             )}
@@ -320,7 +320,7 @@ function DockItem({
         <div
           className="absolute bottom-full mb-3 px-2.5 py-1.5 rounded-lg font-sans whitespace-nowrap pointer-events-none flex items-center gap-2"
           style={{
-            fontSize: '12px',
+            fontSize: '16px',
             letterSpacing: '-0.01em',
             background: 'rgba(20,20,20,0.97)',
             color: 'rgba(255,255,255,0.65)',
@@ -409,18 +409,18 @@ function StatCard({ label, value, sub, onClick }: { label: string; value: number
   return (
     <div
       className={`rounded-2xl p-5 flex flex-col gap-3 ${onClick ? 'cursor-pointer' : ''}`}
-      style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1c1c1c' }}
+      style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
       onClick={onClick}
     >
-      <div className="font-sans" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>
+      <div className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
         {label}
       </div>
       <div
         className="font-sans text-white font-medium tabular-nums flex items-baseline gap-1"
-        style={{ fontSize: '40px', letterSpacing: '-0.04em', lineHeight: 1 }}
+        style={{ fontSize: '48px', letterSpacing: '-0.04em', lineHeight: 1 }}
       >
         {animated}
-        {sub && <span style={{ fontSize: '22px', color: '#404040' }}>{sub}</span>}
+        {sub && <span style={{ fontSize: '24px', color: '#707070' }}>{sub}</span>}
       </div>
     </div>
   )
@@ -468,11 +468,11 @@ function OverviewSection({
         <div>
           <h1
             className="font-sans text-white font-medium"
-            style={{ fontSize: '34px', letterSpacing: '-0.04em', lineHeight: 1.1 }}
+            style={{ fontSize: '40px', letterSpacing: '-0.04em', lineHeight: 1.1 }}
           >
             {getGreeting()}, Ghazi.
           </h1>
-          <p className="font-sans mt-1.5" style={{ fontSize: '14px', color: '#505050', letterSpacing: '-0.01em' }}>
+          <p className="font-sans mt-1.5" style={{ fontSize: '16px', color: '#888888', letterSpacing: '-0.01em' }}>
             {now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
         </div>
@@ -481,7 +481,7 @@ function OverviewSection({
           onClick={() => setShowPreview(v => !v)}
           className="flex items-center gap-2 font-sans transition-all"
           style={{
-            fontSize: '13px',
+            fontSize: '15px',
             letterSpacing: '-0.01em',
             color: showPreview ? 'rgba(255,255,255,0.65)' : '#585858',
             padding: '8px 14px',
@@ -500,11 +500,11 @@ function OverviewSection({
       {showPreview && (
         <div
           className="mb-8 rounded-2xl overflow-hidden"
-          style={{ boxShadow: '0 0 0 1px #1c1c1c', height: '500px' }}
+          style={{ boxShadow: '0 0 0 1px #282828', height: '500px' }}
         >
           <div
             className="flex items-center gap-3 px-4 py-2.5"
-            style={{ background: '#0f0f0f', borderBottom: '1px solid #181818' }}
+            style={{ background: '#181818', borderBottom: '1px solid #181818' }}
           >
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ background: '#252525' }} />
@@ -513,7 +513,7 @@ function OverviewSection({
             </div>
             <div
               className="flex-1 mx-4 rounded-md px-3 py-1 font-sans text-center"
-              style={{ background: '#161616', fontSize: '12px', color: '#484848' }}
+              style={{ background: '#1e1e1e', fontSize: '16px', color: '#787878' }}
             >
               {typeof window !== 'undefined' ? window.location.origin : ''}
             </div>
@@ -545,24 +545,24 @@ function OverviewSection({
         {/* Revenue card */}
         <div
           className="rounded-2xl p-5 flex flex-col gap-2 cursor-pointer"
-          style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1c1c1c' }}
+          style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
           onClick={() => onNavigate('finance')}
         >
           <div className="flex items-center justify-between">
-            <span className="font-sans" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>
+            <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
               REVENUE
             </span>
-            <span className="font-sans" style={{ fontSize: '9.5px', letterSpacing: '0.1em', color: '#383838' }}>
+            <span className="font-sans" style={{ fontSize: '12px', letterSpacing: '0.1em', color: '#383838' }}>
               {thisYear}
             </span>
           </div>
           <div
             className="font-sans text-white font-medium"
-            style={{ fontSize: '22px', letterSpacing: '-0.03em', lineHeight: 1.1, marginTop: '4px' }}
+            style={{ fontSize: '24px', letterSpacing: '-0.03em', lineHeight: 1.1, marginTop: '4px' }}
           >
             {formatCurrency(yearRevenue, currency)}
           </div>
-          <div className="font-sans" style={{ fontSize: '12px', color: '#484848', letterSpacing: '-0.01em' }}>
+          <div className="font-sans" style={{ fontSize: '16px', color: '#787878', letterSpacing: '-0.01em' }}>
             {formatCurrency(monthRevenue, currency)} this month
           </div>
         </div>
@@ -573,13 +573,13 @@ function OverviewSection({
         {/* Featured on homepage */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <span className="font-sans" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>
+            <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
               FEATURED ON HOMEPAGE
             </span>
             <button
               onClick={() => onNavigate('recent')}
               className="font-sans hover:text-[#909090] transition-colors"
-              style={{ fontSize: '12px', color: '#484848' }}
+              style={{ fontSize: '16px', color: '#787878' }}
             >
               Manage →
             </button>
@@ -588,9 +588,9 @@ function OverviewSection({
           {recent.length === 0 ? (
             <div
               className="rounded-xl px-5 py-5"
-              style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #181818' }}
+              style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
             >
-              <p className="font-sans text-[#484848]" style={{ fontSize: '13.5px' }}>No featured projects yet.</p>
+              <p className="font-sans text-[#484848]" style={{ fontSize: '15px' }}>No featured projects yet.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -598,24 +598,24 @@ function OverviewSection({
                 <div
                   key={p.id}
                   className="flex items-center gap-3.5 rounded-xl px-5 py-3.5"
-                  style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #181818' }}
+                  style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
                 >
                   <span
                     className="font-sans tabular-nums shrink-0"
-                    style={{ fontSize: '12px', color: '#404040', width: '14px' }}
+                    style={{ fontSize: '16px', color: '#707070', width: '14px' }}
                   >
                     {i + 1}
                   </span>
                   <span
-                    className="font-sans text-white/80 flex-1 truncate"
-                    style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+                    className="font-sans text-white/90 flex-1 truncate"
+                    style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
                   >
                     {p.title || 'Untitled'}
                   </span>
                   {p.category && (
                     <span
                       className="font-sans shrink-0"
-                      style={{ fontSize: '11px', letterSpacing: '0.1em', color: '#585858' }}
+                      style={{ fontSize: '15px', letterSpacing: '0.1em', color: '#909090' }}
                     >
                       {p.category.toUpperCase()}
                     </span>
@@ -629,13 +629,13 @@ function OverviewSection({
         {/* Latest clients */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <span className="font-sans" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>
+            <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
               LATEST CLIENTS
             </span>
             <button
               onClick={() => onNavigate('clients')}
               className="font-sans hover:text-[#909090] transition-colors"
-              style={{ fontSize: '12px', color: '#484848' }}
+              style={{ fontSize: '16px', color: '#787878' }}
             >
               View all →
             </button>
@@ -644,9 +644,9 @@ function OverviewSection({
           {latestClients.length === 0 ? (
             <div
               className="rounded-xl px-5 py-5"
-              style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #181818' }}
+              style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
             >
-              <p className="font-sans text-[#484848]" style={{ fontSize: '13.5px' }}>No clients logged yet.</p>
+              <p className="font-sans text-[#484848]" style={{ fontSize: '15px' }}>No clients logged yet.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -654,21 +654,21 @@ function OverviewSection({
                 <div
                   key={c.id}
                   className="flex items-center gap-3 rounded-xl px-5 py-3.5"
-                  style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #181818' }}
+                  style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
                 >
                   <span
-                    className="font-sans text-white/80 flex-1 truncate"
-                    style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+                    className="font-sans text-white/90 flex-1 truncate"
+                    style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
                   >
                     {c.clientName}
                   </span>
-                  <span className="font-sans shrink-0" style={{ fontSize: '12px', color: '#585858' }}>
+                  <span className="font-sans shrink-0" style={{ fontSize: '16px', color: '#909090' }}>
                     {c.service}
                   </span>
                   <span
                     className="font-sans shrink-0 px-2 py-0.5 rounded-md"
                     style={{
-                      fontSize: '10.5px',
+                      fontSize: '15px',
                       letterSpacing: '0.06em',
                       background:
                         c.status === 'Paid' ? 'rgba(34,197,94,0.08)' :
@@ -693,11 +693,11 @@ function OverviewSection({
           <div key={n.id} className="flex items-center gap-1.5">
             <kbd
               className="font-mono rounded"
-              style={{ fontSize: '10px', padding: '2px 6px', background: '#141414', color: '#404040', border: '1px solid #1e1e1e' }}
+              style={{ fontSize: '10px', padding: '2px 6px', background: '#181818', color: '#707070', border: '1px solid #1e1e1e' }}
             >
               {n.shortcut}
             </kbd>
-            <span className="font-sans" style={{ fontSize: '11px', color: '#363636' }}>{n.label}</span>
+            <span className="font-sans" style={{ fontSize: '15px', color: '#363636' }}>{n.label}</span>
           </div>
         ))}
       </div>
@@ -744,8 +744,8 @@ function EditableCell({
           if (e.key === 'Escape') onCancel()
         }}
         placeholder={placeholder}
-        className="bg-[#1e1e1e] rounded-md px-2 py-1 text-white/80 outline-none w-full font-sans ring-1 ring-[#343434]"
-        style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+        className="bg-[#1e1e1e] rounded-md px-2 py-1 text-white/90 outline-none w-full font-sans ring-1 ring-[#343434]"
+        style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
       />
     )
   }
@@ -754,8 +754,8 @@ function EditableCell({
     <span
       onClick={onStart}
       title="Click to edit"
-      className="cursor-pointer font-sans text-white/75 hover:text-white/95 transition-colors truncate block"
-      style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+      className="cursor-pointer font-sans text-white/85 hover:text-white/95 transition-colors truncate block"
+      style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
     >
       {value || <span className="text-[#404040]">{placeholder}</span>}
     </span>
@@ -789,10 +789,10 @@ function CategorySelect({
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full bg-[#161616] rounded-xl px-4 py-3 font-sans text-white/80 outline-none ring-1 ring-[#222] hover:ring-[#2e2e2e] transition-all text-left flex items-center justify-between"
-        style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+        className="w-full bg-[#161616] rounded-xl px-4 py-3 font-sans text-white/90 outline-none ring-1 ring-[#222] hover:ring-[#2e2e2e] transition-all text-left flex items-center justify-between"
+        style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
       >
-        {value || <span style={{ color: '#404040' }}>—</span>}
+        {value || <span style={{ color: '#707070' }}>—</span>}
         <svg
           width="10" height="10" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
@@ -820,9 +820,9 @@ function CategorySelect({
               className={`w-full text-left px-4 py-3 font-sans transition-colors ${
                 opt === value
                   ? 'bg-[#2a2a2a] text-white/90'
-                  : 'text-white/50 hover:bg-[#252525] hover:text-white/75'
+                  : 'text-white/50 hover:bg-[#252525] hover:text-white/85'
               }`}
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             >
               {opt}
             </button>
@@ -911,12 +911,12 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
     >
       <div
         className="relative rounded-2xl w-full max-w-[480px] mx-4"
-        style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #222, 0 24px 64px rgba(0,0,0,0.8)' }}
+        style={{ background: '#181818', boxShadow: '0 0 0 1px #222, 0 24px 64px rgba(0,0,0,0.8)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-5">
-            <span className="font-sans text-white/80 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
+            <span className="font-sans text-white/90 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
               Upload video
             </span>
             <button
@@ -961,8 +961,8 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-sans text-white/70 truncate" style={{ fontSize: '12.5px', letterSpacing: '-0.01em' }}>{file.name}</div>
-                  <div className="font-sans mt-0.5" style={{ fontSize: '11px', color: '#505050' }}>{formatSize(file.size)}</div>
+                  <div className="font-sans text-white/70 truncate" style={{ fontSize: '16px', letterSpacing: '-0.01em' }}>{file.name}</div>
+                  <div className="font-sans mt-0.5" style={{ fontSize: '15px', color: '#888888' }}>{formatSize(file.size)}</div>
                 </div>
                 <button type="button" onClick={e => { e.stopPropagation(); setFile(null) }} className="text-[#404040] hover:text-[#686868] transition-colors shrink-0">
                   <IconClose />
@@ -974,8 +974,8 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                   <polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
-                <span className="font-sans text-center" style={{ fontSize: '13.5px', color: '#404040', letterSpacing: '-0.01em' }}>
-                  Drop mp4 or mov, or <span style={{ color: '#686868' }}>browse</span>
+                <span className="font-sans text-center" style={{ fontSize: '15px', color: '#707070', letterSpacing: '-0.01em' }}>
+                  Drop mp4 or mov, or <span style={{ color: '#c8c8c8' }}>browse</span>
                 </span>
               </div>
             )}
@@ -986,16 +986,16 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="Title"
-              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
             <CategorySelect value={category} onChange={setCategory} />
             <input
               value={client}
               onChange={e => setClient(e.target.value)}
               placeholder="Client"
-              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
 
             {uploading ? (
@@ -1007,13 +1007,13 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
                   />
                 </div>
                 <div className="flex justify-between mt-1.5">
-                  <span className="font-sans text-[#585858]" style={{ fontSize: '12.5px' }}>Uploading to R2</span>
-                  <span className="font-sans text-[#585858] tabular-nums" style={{ fontSize: '12.5px' }}>{progress}%</span>
+                  <span className="font-sans text-[#585858]" style={{ fontSize: '16px' }}>Uploading to R2</span>
+                  <span className="font-sans text-[#585858] tabular-nums" style={{ fontSize: '16px' }}>{progress}%</span>
                 </div>
               </div>
             ) : (
               <>
-                {error && <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '12px' }}>{error}</p>}
+                {error && <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '16px' }}>{error}</p>}
                 <button
                   type="submit"
                   disabled={!file}
@@ -1093,7 +1093,7 @@ function ProjectsSection({
         <button
           onClick={() => setShowUpload(true)}
           className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors"
-          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+          style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
         >
           + Upload video
         </button>
@@ -1115,7 +1115,7 @@ function ProjectsSection({
         <div>
           <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '20px 96px 1fr 1fr 1fr 32px' }}>
             {(['', '', 'Title', 'Category', 'Client', ''] as const).map((col, i) => (
-              <div key={i} className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.11em', color: '#505050' }}>
+              <div key={i} className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.11em', color: '#888888' }}>
                 {col}
               </div>
             ))}
@@ -1231,10 +1231,10 @@ function RecentSection({
   return (
     <div className="p-8 w-full max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <p className="font-sans" style={{ fontSize: '14px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
+        <p className="font-sans" style={{ fontSize: '16px', color: '#c0c0c0', letterSpacing: '-0.01em' }}>
           Select up to 3 projects to feature on the homepage.
         </p>
-        <span className="font-sans ml-auto" style={{ fontSize: '13.5px', color: '#585858' }}>
+        <span className="font-sans ml-auto" style={{ fontSize: '15px', color: '#909090' }}>
           {featuredCount}/3
         </span>
       </div>
@@ -1262,13 +1262,13 @@ function RecentSection({
                   />
                 </div>
 
-                <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#0f0f0f' }}>
+                <div className="px-3.5 py-3 flex items-center justify-between gap-3" style={{ background: '#181818' }}>
                   <div className="min-w-0">
-                    <div className="font-sans text-white/80 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>
+                    <div className="font-sans text-white/90 truncate" style={{ fontSize: '17px', letterSpacing: '-0.01em' }}>
                       {p.title || 'Untitled'}
                     </div>
                     {p.category && (
-                      <div className="font-sans mt-0.5 truncate" style={{ fontSize: '11.5px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
+                      <div className="font-sans mt-0.5 truncate" style={{ fontSize: '15px', letterSpacing: '0.1em', color: '#c0c0c0' }}>
                         {p.category.toUpperCase()}
                       </div>
                     )}
@@ -1290,7 +1290,7 @@ function RecentSection({
                     className="absolute top-2 left-2 rounded-md px-1.5 py-[3px]"
                     style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)' }}
                   >
-                    <span className="font-sans text-white/70" style={{ fontSize: '9.5px', letterSpacing: '0.12em' }}>
+                    <span className="font-sans text-white/70" style={{ fontSize: '12px', letterSpacing: '0.12em' }}>
                       FEATURED
                     </span>
                   </div>
@@ -1344,12 +1344,12 @@ function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
     >
       <div
         className="relative rounded-2xl w-full max-w-[480px] mx-4"
-        style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #222, 0 24px 64px rgba(0,0,0,0.8)' }}
+        style={{ background: '#181818', boxShadow: '0 0 0 1px #222, 0 24px 64px rgba(0,0,0,0.8)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-5">
-            <span className="font-sans text-white/80 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
+            <span className="font-sans text-white/90 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
               Add review
             </span>
             <button type="button" onClick={onClose} className="text-[#686868] hover:text-[#a0a0a0] transition-colors p-0.5">
@@ -1363,16 +1363,16 @@ function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               onChange={e => setName(e.target.value)}
               placeholder="Name"
               required
-              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
             <CategorySelect value={service} onChange={setService} options={REVIEW_SERVICES} />
             <input
               value={company}
               onChange={e => setCompany(e.target.value)}
               placeholder="Company (optional)"
-              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
             <div className="relative">
               <textarea
@@ -1381,18 +1381,18 @@ function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                 placeholder="Review text (max 120 chars)"
                 required
                 rows={3}
-                className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all resize-none"
-                style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+                className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#383838] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all resize-none"
+                style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
               />
               <span
                 className="absolute bottom-2.5 right-3.5 font-mono tabular-nums pointer-events-none"
-                style={{ fontSize: '11.5px', color: text.length >= 120 ? '#a10702' : '#404040' }}
+                style={{ fontSize: '15px', color: text.length >= 120 ? '#a10702' : '#404040' }}
               >
                 {text.length}/120
               </span>
             </div>
 
-            {error && <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '12px' }}>{error}</p>}
+            {error && <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '16px' }}>{error}</p>}
 
             <button
               type="submit"
@@ -1466,14 +1466,14 @@ function ReviewsAdminSection({
       )}
 
       <div className="flex items-center gap-3 mb-6">
-        <p className="font-sans" style={{ fontSize: '14px', color: '#a0a0a0', letterSpacing: '-0.01em' }}>
+        <p className="font-sans" style={{ fontSize: '16px', color: '#c0c0c0', letterSpacing: '-0.01em' }}>
           Select up to 3 reviews to feature on the homepage.
         </p>
-        <span className="font-sans" style={{ fontSize: '13.5px', color: '#585858' }}>{featuredCount}/3</span>
+        <span className="font-sans" style={{ fontSize: '15px', color: '#909090' }}>{featuredCount}/3</span>
         <button
           onClick={() => setShowAdd(true)}
           className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors ml-4"
-          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+          style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
         >
           + Add review
         </button>
@@ -1485,7 +1485,7 @@ function ReviewsAdminSection({
         <div className="flex flex-col gap-1.5">
           <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px' }}>
             {(['', 'Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
-              <div key={i} className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.11em', color: '#505050' }}>
+              <div key={i} className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.11em', color: '#888888' }}>
                 {col}
               </div>
             ))}
@@ -1499,8 +1499,8 @@ function ReviewsAdminSection({
                 className="grid gap-4 items-center px-5 py-4 rounded-xl group"
                 style={{
                   gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px',
-                  background: '#0f0f0f',
-                  boxShadow: '0 0 0 1px #1c1c1c',
+                  background: '#181818',
+                  boxShadow: '0 0 0 1px #282828',
                 }}
               >
                 <div className="flex flex-col items-center gap-0.5">
@@ -1525,17 +1525,17 @@ function ReviewsAdminSection({
                 </div>
 
                 <div className="min-w-0">
-                  <div className="font-sans text-white/80 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>{r.name}</div>
+                  <div className="font-sans text-white/90 truncate" style={{ fontSize: '17px', letterSpacing: '-0.01em' }}>{r.name}</div>
                   {r.company && (
-                    <div className="font-sans truncate mt-0.5" style={{ fontSize: '11.5px', color: '#585858' }}>{r.company}</div>
+                    <div className="font-sans truncate mt-0.5" style={{ fontSize: '15px', color: '#909090' }}>{r.company}</div>
                   )}
                 </div>
 
-                <span className="font-sans" style={{ fontSize: '11.5px', letterSpacing: '0.1em', color: '#a0a0a0' }}>
+                <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.1em', color: '#c0c0c0' }}>
                   {r.service.toUpperCase()}
                 </span>
 
-                <span className="font-sans truncate" style={{ fontSize: '13.5px', color: '#585858', letterSpacing: '-0.01em' }} title={r.text}>
+                <span className="font-sans truncate" style={{ fontSize: '15px', color: '#909090', letterSpacing: '-0.01em' }} title={r.text}>
                   {r.text}
                 </span>
 
@@ -1633,12 +1633,12 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
     >
       <div
         className="relative rounded-2xl w-full max-w-[520px] mx-4"
-        style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1e1e1e, 0 24px 64px rgba(0,0,0,0.85)' }}
+        style={{ background: '#181818', boxShadow: '0 0 0 1px #1e1e1e, 0 24px 64px rgba(0,0,0,0.85)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-5">
-            <span className="font-sans text-white/80 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
+            <span className="font-sans text-white/90 font-medium" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
               Log client
             </span>
             <button type="button" onClick={onClose} className="text-[#686868] hover:text-[#a0a0a0] transition-colors p-0.5">
@@ -1653,8 +1653,8 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                 onChange={e => setClientName(e.target.value)}
                 placeholder="Client name"
                 required
-                className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
-                style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+                className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+                style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
               />
               <CategorySelect value={service} onChange={setService} options={CLIENT_SERVICES} />
             </div>
@@ -1663,8 +1663,8 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
               placeholder="Project name"
-              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
 
             <div className="flex gap-2.5">
@@ -1675,10 +1675,10 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                 type="number"
                 min="0"
                 step="any"
-                className="flex-1 bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
-                style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+                className="flex-1 bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+                style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
               />
-              <div className="flex rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px #1e1e1e' }}>
+              <div className="flex rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px #2e2e2e' }}>
                 {(['USD', 'IDR'] as const).map(cur => (
                   <button
                     key={cur}
@@ -1686,7 +1686,7 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                     onClick={() => setCurrency(cur)}
                     className="px-4 font-sans transition-colors"
                     style={{
-                      fontSize: '13px',
+                      fontSize: '15px',
                       background: currency === cur ? '#1e1e1e' : '#111111',
                       color: currency === cur ? 'rgba(255,255,255,0.75)' : '#484848',
                     }}
@@ -1700,7 +1700,7 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                 onChange={e => setDate(e.target.value)}
                 type="date"
                 className="bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/70 outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
-                style={{ fontSize: '14px', letterSpacing: '-0.01em', colorScheme: 'dark', minWidth: '150px' }}
+                style={{ fontSize: '16px', letterSpacing: '-0.01em', colorScheme: 'dark', minWidth: '150px' }}
               />
             </div>
 
@@ -1712,7 +1712,7 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
                   onClick={() => setStatus(s)}
                   className="flex-1 py-2.5 rounded-xl font-sans transition-all"
                   style={{
-                    fontSize: '13px',
+                    fontSize: '15px',
                     letterSpacing: '-0.01em',
                     background: status === s ? STATUS_COLORS[s].bg : '#111111',
                     color: status === s ? STATUS_COLORS[s].text : '#484848',
@@ -1730,11 +1730,11 @@ function AddClientModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               onChange={e => setNotes(e.target.value)}
               placeholder="Notes (optional)"
               rows={2}
-              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/80 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all resize-none"
-              style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#353535] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all resize-none"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
 
-            {error && <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '12px' }}>{error}</p>}
+            {error && <p className="font-sans text-red-400/60 text-center" style={{ fontSize: '16px' }}>{error}</p>}
 
             <button
               type="submit"
@@ -1785,14 +1785,14 @@ function ClientsSection({
       )}
 
       <div className="flex items-center gap-3 mb-6">
-        <div className="flex gap-1 rounded-xl p-1" style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1c1c1c' }}>
+        <div className="flex gap-1 rounded-xl p-1" style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}>
           {(['All', 'Paid', 'Pending', 'Unpaid'] as const).map(f => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className="font-sans px-3 py-1.5 rounded-lg transition-all"
               style={{
-                fontSize: '12.5px',
+                fontSize: '16px',
                 letterSpacing: '-0.01em',
                 background: filter === f ? '#1c1c1c' : 'transparent',
                 color: filter === f
@@ -1804,13 +1804,13 @@ function ClientsSection({
             </button>
           ))}
         </div>
-        <span className="font-sans ml-1" style={{ fontSize: '13px', color: '#404040' }}>
+        <span className="font-sans ml-1" style={{ fontSize: '15px', color: '#707070' }}>
           {sorted.length} {sorted.length === 1 ? 'client' : 'clients'}
         </span>
         <button
           onClick={() => setShowAdd(true)}
           className="ml-auto font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors"
-          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
+          style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
         >
           + Log client
         </button>
@@ -1818,7 +1818,7 @@ function ClientsSection({
 
       {sorted.length === 0 ? (
         <div className="text-center py-20">
-          <p className="font-sans text-[#404040]" style={{ fontSize: '14px' }}>
+          <p className="font-sans text-[#404040]" style={{ fontSize: '16px' }}>
             {filter === 'All' ? 'No clients logged yet.' : `No ${filter.toLowerCase()} clients.`}
           </p>
         </div>
@@ -1829,7 +1829,7 @@ function ClientsSection({
             style={{ gridTemplateColumns: '1fr 110px 130px 120px 90px 32px' }}
           >
             {(['Client', 'Service', 'Project', 'Amount', 'Status', ''] as const).map((col, i) => (
-              <div key={i} className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.11em', color: '#505050' }}>
+              <div key={i} className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.11em', color: '#888888' }}>
                 {col}
               </div>
             ))}
@@ -1842,40 +1842,40 @@ function ClientsSection({
                 className="grid gap-4 items-center px-5 py-4 rounded-xl group"
                 style={{
                   gridTemplateColumns: '1fr 110px 130px 120px 90px 32px',
-                  background: '#0f0f0f',
-                  boxShadow: '0 0 0 1px #1c1c1c',
+                  background: '#181818',
+                  boxShadow: '0 0 0 1px #282828',
                 }}
               >
                 <div>
-                  <div className="font-sans text-white/80 truncate" style={{ fontSize: '14.5px', letterSpacing: '-0.01em' }}>
+                  <div className="font-sans text-white/90 truncate" style={{ fontSize: '17px', letterSpacing: '-0.01em' }}>
                     {c.clientName}
                   </div>
-                  <div className="font-sans mt-0.5" style={{ fontSize: '11.5px', color: '#484848' }}>
+                  <div className="font-sans mt-0.5" style={{ fontSize: '15px', color: '#787878' }}>
                     {new Date(c.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </div>
                   {c.notes && (
-                    <div className="font-sans mt-0.5 truncate" style={{ fontSize: '11.5px', color: '#404040' }} title={c.notes}>
+                    <div className="font-sans mt-0.5 truncate" style={{ fontSize: '15px', color: '#707070' }} title={c.notes}>
                       {c.notes}
                     </div>
                   )}
                 </div>
 
-                <span className="font-sans" style={{ fontSize: '11.5px', letterSpacing: '0.1em', color: '#585858' }}>
+                <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.1em', color: '#909090' }}>
                   {c.service.toUpperCase()}
                 </span>
 
-                <span className="font-sans truncate" style={{ fontSize: '13.5px', color: '#585858', letterSpacing: '-0.01em' }}>
+                <span className="font-sans truncate" style={{ fontSize: '15px', color: '#909090', letterSpacing: '-0.01em' }}>
                   {c.projectName || '—'}
                 </span>
 
-                <span className="font-sans font-medium tabular-nums" style={{ fontSize: '14px', letterSpacing: '-0.02em', color: 'rgba(255,255,255,0.75)' }}>
+                <span className="font-sans font-medium tabular-nums" style={{ fontSize: '16px', letterSpacing: '-0.02em', color: 'rgba(255,255,255,0.75)' }}>
                   {c.currency === 'USD' ? '$' : 'Rp '}{c.amount.toLocaleString()}
                 </span>
 
                 <span
                   className="font-sans px-2 py-0.5 rounded-md text-center inline-block"
                   style={{
-                    fontSize: '10.5px',
+                    fontSize: '15px',
                     letterSpacing: '0.06em',
                     background: STATUS_COLORS[c.status].bg,
                     color: STATUS_COLORS[c.status].text,
@@ -1951,14 +1951,14 @@ function FinanceSection({
           Finance
         </h2>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px #1c1c1c' }}>
+          <div className="flex rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px #282828' }}>
             {(['USD', 'IDR'] as DisplayCurrency[]).map(cur => (
               <button
                 key={cur}
                 onClick={() => setCurrency(cur)}
                 className="px-4 py-2 font-sans transition-colors"
                 style={{
-                  fontSize: '13px',
+                  fontSize: '15px',
                   background: currency === cur ? '#1c1c1c' : '#0f0f0f',
                   color: currency === cur ? 'rgba(255,255,255,0.75)' : '#484848',
                 }}
@@ -1967,14 +1967,14 @@ function FinanceSection({
               </button>
             ))}
           </div>
-          <div className="flex rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px #1c1c1c' }}>
+          <div className="flex rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px #282828' }}>
             {([['bar', 'Bar'], ['line', 'Line']] as const).map(([mode, label]) => (
               <button
                 key={mode}
                 onClick={() => setChartMode(mode)}
                 className="px-4 py-2 font-sans transition-colors"
                 style={{
-                  fontSize: '13px',
+                  fontSize: '15px',
                   background: chartMode === mode ? '#1c1c1c' : '#0f0f0f',
                   color: chartMode === mode ? 'rgba(255,255,255,0.75)' : '#484848',
                 }}
@@ -1993,9 +1993,9 @@ function FinanceSection({
           { label: `${thisYear} TOTAL`, value: yearRevenue },
           { label: 'ALL TIME', value: allRevenue },
         ].map(({ label, value }) => (
-          <div key={label} className="rounded-2xl p-6" style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1c1c1c' }}>
-            <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>{label}</div>
-            <div className="font-sans text-white font-medium" style={{ fontSize: '28px', letterSpacing: '-0.03em', lineHeight: 1 }}>
+          <div key={label} className="rounded-2xl p-6" style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}>
+            <div className="font-sans mb-3" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>{label}</div>
+            <div className="font-sans text-white font-medium" style={{ fontSize: '32px', letterSpacing: '-0.03em', lineHeight: 1 }}>
               {formatCurrency(value, currency)}
             </div>
           </div>
@@ -2003,8 +2003,8 @@ function FinanceSection({
       </div>
 
       {/* Chart */}
-      <div className="rounded-2xl p-6 mb-6" style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1c1c1c' }}>
-        <div className="font-sans mb-5" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>
+      <div className="rounded-2xl p-6 mb-6" style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}>
+        <div className="font-sans mb-5" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
           MONTHLY REVENUE — {thisYear}
         </div>
 
@@ -2028,7 +2028,7 @@ function FinanceSection({
                     }}
                   />
                 </div>
-                <span className="font-sans" style={{ fontSize: '9.5px', color: isCurrent ? '#686868' : '#303030' }}>
+                <span className="font-sans" style={{ fontSize: '12px', color: isCurrent ? '#686868' : '#303030' }}>
                   {label}
                 </span>
               </div>
@@ -2078,7 +2078,7 @@ function FinanceSection({
             <div className="flex mt-2">
               {monthlyData.map(({ label, isCurrent }) => (
                 <div key={label} className="flex-1 text-center">
-                  <span className="font-sans" style={{ fontSize: '9.5px', color: isCurrent ? '#686868' : '#303030' }}>{label}</span>
+                  <span className="font-sans" style={{ fontSize: '12px', color: isCurrent ? '#686868' : '#303030' }}>{label}</span>
                 </div>
               ))}
             </div>
@@ -2089,7 +2089,7 @@ function FinanceSection({
       {/* Paid clients list */}
       {recentPaid.length > 0 && (
         <div>
-          <div className="font-sans mb-3" style={{ fontSize: '10.5px', letterSpacing: '0.13em', color: '#505050' }}>
+          <div className="font-sans mb-3" style={{ fontSize: '15px', letterSpacing: '0.13em', color: '#888888' }}>
             PAID CLIENTS
           </div>
           <div className="flex flex-col gap-1.5">
@@ -2097,25 +2097,25 @@ function FinanceSection({
               <div
                 key={c.id}
                 className="flex items-center gap-4 rounded-xl px-5 py-3.5"
-                style={{ background: '#0f0f0f', boxShadow: '0 0 0 1px #1c1c1c' }}
+                style={{ background: '#181818', boxShadow: '0 0 0 1px #282828' }}
               >
-                <span className="font-sans text-white/75 flex-1 truncate" style={{ fontSize: '14px', letterSpacing: '-0.01em' }}>
+                <span className="font-sans text-white/85 flex-1 truncate" style={{ fontSize: '16px', letterSpacing: '-0.01em' }}>
                   {c.clientName}
                 </span>
                 {c.projectName && (
-                  <span className="font-sans truncate" style={{ fontSize: '12.5px', color: '#585858', maxWidth: '200px' }}>
+                  <span className="font-sans truncate" style={{ fontSize: '16px', color: '#909090', maxWidth: '200px' }}>
                     {c.projectName}
                   </span>
                 )}
-                <span className="font-sans shrink-0" style={{ fontSize: '12px', color: '#484848' }}>
+                <span className="font-sans shrink-0" style={{ fontSize: '16px', color: '#787878' }}>
                   {c.service}
                 </span>
-                <span className="font-sans shrink-0" style={{ fontSize: '12px', color: '#404040' }}>
+                <span className="font-sans shrink-0" style={{ fontSize: '16px', color: '#707070' }}>
                   {new Date(c.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </span>
                 <span
                   className="font-sans font-medium tabular-nums shrink-0"
-                  style={{ fontSize: '14px', letterSpacing: '-0.02em', color: 'rgba(255,255,255,0.8)' }}
+                  style={{ fontSize: '16px', letterSpacing: '-0.02em', color: 'rgba(255,255,255,0.8)' }}
                 >
                   {formatCurrency(toDisplay(c.amount, c.currency, currency), currency)}
                 </span>
@@ -2127,7 +2127,7 @@ function FinanceSection({
 
       {paidClients.length === 0 && (
         <div className="text-center py-10">
-          <p className="font-sans text-[#404040]" style={{ fontSize: '14px' }}>No paid clients yet. Log your first client to see revenue here.</p>
+          <p className="font-sans text-[#404040]" style={{ fontSize: '16px' }}>No paid clients yet. Log your first client to see revenue here.</p>
         </div>
       )}
     </div>
@@ -2169,7 +2169,7 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className="min-h-screen" style={{ background: '#080808' }}>
+    <div className="min-h-screen" style={{ background: '#0a0a0a' }}>
       <main className="min-h-screen overflow-auto pb-28">
         {loading ? (
           <div className="flex items-center justify-center h-64">
@@ -2210,7 +2210,7 @@ export default function AdminPage() {
   }, [])
 
   if (authed === null) {
-    return <div className="min-h-screen" style={{ background: '#080808' }} />
+    return <div className="min-h-screen" style={{ background: '#0a0a0a' }} />
   }
 
   if (!authed) {
