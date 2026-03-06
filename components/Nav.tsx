@@ -4,15 +4,14 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 
 const LINKS = [
-  { label: 'Home',        href: '/' },
-  { label: 'Work',        href: '/work' },
-  { label: 'FAQ',         href: '/faq' },
-  { label: 'Contact',     href: '/contact' },
-  { label: 'Get a Quote', href: '/contact', accent: true },
+  { label: 'Home',    href: '/' },
+  { label: 'Work',    href: '/work' },
+  { label: 'FAQ',     href: '/faq' },
+  { label: 'Contact', href: '/contact', accent: true },
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 445
+const OPEN_WIDTH  = 360
 const CLOSED_SIZE = 44
 
 export default function Nav() {
@@ -131,7 +130,7 @@ export default function Nav() {
               key={label}
               href={href}
               onClick={() => setOpen(false)}
-              className={`font-sans text-xs tracking-[0.12em] uppercase${accent ? ' font-bold' : ''}`}
+              className="font-sans text-xs tracking-[0.12em] uppercase"
               style={{
                 color:      accent ? '#CF5C36' : 'rgba(238,229,233,0.65)',
                 whiteSpace: 'nowrap',
