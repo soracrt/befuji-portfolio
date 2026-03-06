@@ -156,7 +156,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
               className="font-sans font-medium text-ink tracking-[-0.025em] mb-16"
               style={{
                 fontSize: 'clamp(3rem, 7vw, 6rem)',
-                textShadow: '0 0 40px rgba(161,7,2,0.35), 0 0 80px rgba(161,7,2,0.15)',
+                textShadow: '0 0 40px rgba(207,92,54,0.35), 0 0 80px rgba(207,92,54,0.15)',
               }}
             >
               Reviews
@@ -212,7 +212,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                       className="h-[3px] rounded-full transition-all duration-300"
                       style={{
                         width: i === page ? '32px' : '16px',
-                        background: i === page ? '#a10702' : 'rgba(255,255,252,0.2)',
+                        background: i === page ? '#CF5C36' : 'rgba(255,255,252,0.2)',
                       }}
                       aria-label={`Page ${i + 1}`}
                     />
@@ -296,7 +296,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                   </label>
                   <span
                     className="font-mono text-xs tabular-nums"
-                    style={{ color: text.length >= 120 ? '#a10702' : 'rgba(255,255,252,0.4)' }}
+                    style={{ color: text.length >= 120 ? '#CF5C36' : 'rgba(255,255,252,0.4)' }}
                   >
                     {text.length}/120
                   </span>
