@@ -1,79 +1,30 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
+import { FaqList, type FaqItem } from './ui/faq-monochrome'
 
-const faqItems = [
+const faqItems: FaqItem[] = [
   {
-    q: "What's your typical turnaround time?",
-    a: 'Around a week — 1 day for storyboarding, 2–3 days for the edit, 1 day for revisions.',
+    question: "What's your typical turnaround time?",
+    answer:   'Around a week — 1 day for storyboarding, 2–3 days for the edit, 1 day for revisions.',
+    meta:     'Timeline',
   },
   {
-    q: 'Do you work with early-stage startups?',
-    a: "Yes. Anyone with an idea worth visualizing. It doesn't matter where you're at — if you have a vision, that's enough.",
+    question: 'Do you work with early-stage startups?',
+    answer:   "Yes. Anyone with an idea worth visualizing. It doesn't matter where you're at — if you have a vision, that's enough.",
+    meta:     'Clients',
   },
   {
-    q: 'What do you need to get started?',
-    a: 'Your vision, target audience, and the type of content you want. The more context, the better the output.',
+    question: 'What do you need to get started?',
+    answer:   'Your vision, target audience, and the type of content you want. The more context, the better the output.',
+    meta:     'Process',
   },
   {
-    q: 'How many revision rounds are included?',
-    a: '2 rounds.',
+    question: 'How many revision rounds are included?',
+    answer:   '2 rounds.',
+    meta:     'Revisions',
   },
 ]
-
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <div
-      className="border-b"
-      style={{ borderColor: 'rgba(238,229,233,0.07)' }}
-    >
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between py-5 text-left transition-opacity duration-150 hover:opacity-60"
-      >
-        <span
-          className="font-sans"
-          style={{ fontSize: '14px', color: '#EEE5E9', letterSpacing: '-0.01em' }}
-        >
-          {q}
-        </span>
-        <svg
-          width="12" height="12" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" strokeWidth="2.5"
-          strokeLinecap="round" strokeLinejoin="round"
-          style={{
-            color:     'rgba(238,229,233,0.3)',
-            transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
-            transition: 'transform 0.25s ease',
-            flexShrink: 0,
-            marginLeft: '16px',
-          }}
-        >
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-      </button>
-
-      <div
-        style={{
-          maxHeight:  open ? '200px' : '0',
-          overflow:   'hidden',
-          transition: 'max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        <p
-          className="font-sans pb-5 leading-relaxed"
-          style={{ fontSize: '13px', color: 'rgba(238,229,233,0.45)', letterSpacing: '0.01em' }}
-        >
-          {a}
-        </p>
-      </div>
-    </div>
-  )
-}
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -84,11 +35,11 @@ export default function Footer() {
         className="max-w-5xl mx-auto rounded-3xl px-10 py-12"
         style={{ background: '#0a0a0a', border: '1px solid rgba(238,229,233,0.06)' }}
       >
-        {/* FAQ header */}
+        {/* Header */}
         <div className="flex items-end justify-between mb-8">
           <h2
-            className="font-display"
-            style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', color: '#EEE5E9', fontWeight: 400, letterSpacing: '-0.03em' }}
+            className="font-display font-bold"
+            style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em' }}
           >
             Common questions
           </h2>
@@ -101,11 +52,9 @@ export default function Footer() {
           </Link>
         </div>
 
-        {/* FAQ list */}
+        {/* FAQ cards */}
         <div className="mb-12">
-          {faqItems.map((item, i) => (
-            <FAQItem key={i} q={item.q} a={item.a} />
-          ))}
+          <FaqList items={faqItems} />
         </div>
 
         {/* Bottom bar */}
