@@ -132,7 +132,7 @@ export default function Nav() {
               key={label}
               href={href}
               onClick={() => setOpen(false)}
-              className="font-sans text-xs tracking-[0.12em] uppercase hover:opacity-50 transition-opacity duration-150"
+              className="font-sans text-xs tracking-[0.12em] uppercase"
               style={{
                 color:      accent ? '#CF5C36' : 'rgba(238,229,233,0.65)',
                 whiteSpace: 'nowrap',
@@ -140,7 +140,25 @@ export default function Nav() {
                 opacity:    open ? 1 : 0,
                 transform:  open ? 'translateX(0)' : 'translateX(8px)',
                 textShadow: accent ? (open ? '0 0 12px rgba(207,92,54,0.7), 0 0 24px rgba(207,92,54,0.3)' : 'none') : 'none',
-                transition: `opacity 0.3s ease ${0.15 + i * 0.04}s, transform 0.3s ease ${0.15 + i * 0.04}s${accent ? `, text-shadow 0.5s ease ${open ? '0.4s' : '0s'}` : ''}`,
+                transition: `opacity 0.3s ease ${0.15 + i * 0.04}s, transform 0.3s ease ${0.15 + i * 0.04}s, color 0.15s ease, text-shadow 0.15s ease${accent ? `, text-shadow 0.5s ease ${open ? '0.4s' : '0s'}` : ''}`,
+              }}
+              onMouseEnter={e => {
+                if (accent) {
+                  e.currentTarget.style.color = '#ff7f47'
+                  e.currentTarget.style.textShadow = '0 0 16px rgba(207,92,54,0.9), 0 0 32px rgba(207,92,54,0.5)'
+                } else {
+                  e.currentTarget.style.color = '#ffffff'
+                  e.currentTarget.style.textShadow = '0 0 12px rgba(255,255,255,0.6), 0 0 24px rgba(255,255,255,0.2)'
+                }
+              }}
+              onMouseLeave={e => {
+                if (accent) {
+                  e.currentTarget.style.color = '#CF5C36'
+                  e.currentTarget.style.textShadow = open ? '0 0 12px rgba(207,92,54,0.7), 0 0 24px rgba(207,92,54,0.3)' : 'none'
+                } else {
+                  e.currentTarget.style.color = 'rgba(238,229,233,0.65)'
+                  e.currentTarget.style.textShadow = 'none'
+                }
               }}
             >
               {label}
