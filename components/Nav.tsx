@@ -7,11 +7,12 @@ const LINKS = [
   { label: 'Home',        href: '/' },
   { label: 'Work',        href: '/work' },
   { label: 'FAQ',         href: '/faq' },
+  { label: 'Contact',     href: '/contact' },
   { label: 'Get a Quote', href: '/contact', accent: true },
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 390
+const OPEN_WIDTH  = 480
 const CLOSED_SIZE = 44
 
 export default function Nav() {
