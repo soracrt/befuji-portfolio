@@ -4,8 +4,6 @@ import {
   IconMovie,
   IconDeviceLaptop,
   IconLayout,
-  IconBrandDiscord,
-  IconUsers,
 } from '@tabler/icons-react'
 
 const features = [
@@ -33,18 +31,6 @@ const features = [
     description: 'High-impact pages designed to communicate value and drive action.',
     icon: <IconLayout size={20} />,
   },
-  {
-    title: 'Discord Management',
-    tagline: 'Build something people stay for.',
-    description: 'Server setup, moderation systems, and community growth from the ground up.',
-    icon: <IconBrandDiscord size={20} />,
-  },
-  {
-    title: 'Community Growth',
-    tagline: 'Engaged, not just big.',
-    description: 'Content strategy and engagement systems that turn members into advocates.',
-    icon: <IconUsers size={20} />,
-  },
 ]
 
 function Feature({
@@ -64,8 +50,8 @@ function Feature({
     <div
       className={cn(
         'flex flex-col py-10 relative group/feature border-r',
-        (index === 0 || index === 3) && 'border-l',
-        index < 3 && 'border-b',
+        (index === 0 || index === 2) && 'border-l',
+        index < 2 && 'border-b',
       )}
       style={{ borderColor: '#1a1a1a' }}
     >
@@ -123,7 +109,7 @@ export default function WhatIDo() {
   return (
     <section className="px-8 pb-24">
       <div className="max-w-5xl mx-auto border-t border-b" style={{ borderColor: '#1a1a1a' }}>
-        <div className="grid grid-cols-2 md:grid-cols-3">
+        <div className="grid grid-cols-2">
           {features.map((f, i) => (
             <Feature key={f.title} {...f} index={i} />
           ))}

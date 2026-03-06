@@ -6,9 +6,9 @@ import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 import { FaqSection } from '@/components/ui/faq-section'
 
-type Category = 'General' | 'Website' | 'Discord'
+type Category = 'General' | 'Website'
 
-const CATEGORIES: Category[] = ['General', 'Website', 'Discord']
+const CATEGORIES: Category[] = ['General', 'Website']
 
 const FAQS: Record<Category, { question: string; answer: string }[]> = {
   General: [
@@ -59,34 +59,11 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
       answer:   'A standard landing page takes 5–7 days. More complex builds are scoped individually.',
     },
   ],
-  Discord: [
-    {
-      question: 'What is the Kulaire Discord community?',
-      answer:   'A space for creators, editors, and motion designers to share work, get feedback, and stay sharp.',
-    },
-    {
-      question: 'How do I join the Discord?',
-      answer:   'Reach out through the contact page or DM @soracrt on Instagram — we\'ll send you the invite link.',
-    },
-    {
-      question: 'Is it free to join?',
-      answer:   'Yes. The community is free. Some premium channels and resources may be gated in the future.',
-    },
-    {
-      question: 'What kind of content is shared in the server?',
-      answer:   'Motion design breakdowns, editing tips, plugin recommendations, client acquisition advice, and member work showcases.',
-    },
-    {
-      question: 'Can I promote my own work or services?',
-      answer:   'Yes — there are dedicated channels for self-promotion. Keep it relevant and quality-first.',
-    },
-  ],
 }
 
 const CATEGORY_LABELS: Record<Category, string> = {
   General: 'General',
   Website: 'Website FAQ',
-  Discord: 'Discord Community',
 }
 
 export default function FaqPage() {
