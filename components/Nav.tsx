@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 
 const LINKS = [
+  { label: 'Home',     href: '/' },
   { label: 'Work',     href: '/work' },
   { label: 'Services', href: '/contact' },
   { label: 'Reviews',  href: '/reviews' },
@@ -12,7 +13,7 @@ const LINKS = [
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 430
+const OPEN_WIDTH  = 510
 const CLOSED_SIZE = 44
 
 export default function Nav() {
