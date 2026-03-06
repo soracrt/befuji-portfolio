@@ -46,7 +46,7 @@ export default function Nav() {
     <nav
       className="fixed top-5 left-0 right-0 z-50 flex justify-center px-8"
       style={{
-        transform:  visible ? 'translateY(0)' : 'translateY(-140%)',
+        transform:  visible ? 'translateY(0)' : 'translateY(-200%)',
         transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
       }}
     >
