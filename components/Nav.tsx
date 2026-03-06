@@ -103,7 +103,7 @@ export default function Nav() {
               outline:     'none',
               padding:     0,
               cursor:      'pointer',
-              marginRight: '28px',
+              marginRight: '6px',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
