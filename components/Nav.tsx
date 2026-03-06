@@ -111,6 +111,8 @@ export default function Nav() {
                   height:    '20px',
                   objectFit: 'contain',
                   display:   'block',
+                  border:    'none',
+                  outline:   'none',
                 }}
               />
             </span>
