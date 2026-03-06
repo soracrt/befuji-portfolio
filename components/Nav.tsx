@@ -22,15 +22,27 @@ export default function Nav() {
   const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let collapseTimer: ReturnType<typeof setTimeout> | null = null
+
     const onScroll = () => {
       const y = window.scrollY
       const scrollingDown = y > lastY.current && y > 80
-      if (scrollingDown) { setOpen(false); setVisible(false) }
-      else               { setVisible(true) }
+      if (scrollingDown) {
+        // Slide up first
+        setVisible(false)
+        // Contract to circle only after slide-up finishes
+        collapseTimer = setTimeout(() => setOpen(false), 420)
+      } else {
+        if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null }
+        setVisible(true)
+      }
       lastY.current = y
     }
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (collapseTimer) clearTimeout(collapseTimer)
+    }
   }, [])
 
   useEffect(() => {
