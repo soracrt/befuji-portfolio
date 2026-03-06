@@ -131,7 +131,7 @@ export default function Nav() {
               key={label}
               href={href}
               onClick={() => setOpen(false)}
-              className="font-sans text-xs tracking-[0.12em] uppercase"
+              className={`font-sans text-xs tracking-[0.12em] uppercase${accent ? ' font-bold' : ''}`}
               style={{
                 color:      accent ? '#CF5C36' : 'rgba(238,229,233,0.65)',
                 whiteSpace: 'nowrap',
