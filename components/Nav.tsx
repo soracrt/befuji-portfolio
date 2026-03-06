@@ -75,24 +75,28 @@ export default function Nav() {
             display:     'flex',
             alignItems:  'center',
             gap:         '18px',
-            paddingLeft: '5px',
+            paddingLeft: '0px',
             paddingRight:'20px',
           }}
         >
-          {/* Logo circle — always on the left */}
+          {/* Logo — fills the closed pill size exactly so it's always centered */}
           <button
             onClick={() => setOpen(o => !o)}
-            className="flex items-center justify-center rounded-full flex-shrink-0 transition-all duration-300"
-            style={{
-              width:      `${CLOSED_SIZE - 10}px`,
-              height:     `${CLOSED_SIZE - 10}px`,
-              background: open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
-              border:     `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
-              flexShrink: 0,
-            }}
+            className="flex items-center justify-center flex-shrink-0"
+            style={{ width: `${CLOSED_SIZE}px`, height: `${CLOSED_SIZE}px` }}
             aria-label="Toggle navigation"
           >
-            <Image src="/logo.png" alt="kulaire" width={16} height={16} className="w-4 h-auto" />
+            <span
+              className="flex items-center justify-center rounded-full transition-all duration-300"
+              style={{
+                width:      '34px',
+                height:     '34px',
+                background: open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
+                border:     `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
+              }}
+            >
+              <Image src="/logo.png" alt="kulaire" width={16} height={16} className="w-4 h-auto" />
+            </span>
           </button>
 
           {/* Links — always rendered, revealed by pill expansion */}
