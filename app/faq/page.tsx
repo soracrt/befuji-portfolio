@@ -14,49 +14,29 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
   General: [
     {
       question: "What's your typical turnaround time?",
-      answer:   'Around a week — 1 day for storyboarding, 2–3 days for the edit, 1 day for revisions.',
+      answer:   "Depends on the project. Usually 1–5 days — simpler edits land faster, more complex ones take longer. If you don't have a script or storyboard ready, that adds time too, so coming prepared helps a lot.",
     },
     {
       question: 'Do you work with early-stage startups?',
-      answer:   "Yes. Anyone with an idea worth visualizing. It doesn't matter where you're at — if you have a vision, that's enough.",
+      answer:   "Yeah, absolutely. As long as you know what you're building and who it's for, I can work with you.",
     },
     {
       question: 'What do you need to get started?',
-      answer:   'Your vision, target audience, and the type of content you want. The more context, the better the output.',
-    },
-    {
-      question: 'How many revision rounds are included?',
-      answer:   '2 rounds.',
-    },
-    {
-      question: 'Do you offer ongoing retainer packages?',
-      answer:   'Yes — monthly retainers are available for brands that need consistent content. Reach out and we can put something together.',
-    },
-    {
-      question: 'What formats do you deliver in?',
-      answer:   'MP4 (H.264/H.265) at up to 4K resolution. Additional formats on request.',
+      answer:   "Your vision, mission, and target audience. From there, send over any creative direction — whether you want an explainer, a product demo, whatever fits. If you have videos you love and want to reference, send those too. Color schemes, brand assets, the basics.",
     },
   ],
   Website: [
     {
       question: 'What kind of websites do you build?',
-      answer:   'Minimal, fast, and visually sharp sites — portfolios, landing pages, SaaS marketing sites. Built with Next.js and Tailwind.',
+      answer:   'Portfolios, service sites, marketing pages, and SaaS — basically anything business-facing that needs to look clean and convert.',
     },
     {
       question: 'Do you handle hosting and deployment?',
-      answer:   'Yes. We deploy to Vercel or your preferred host and can manage the domain setup end-to-end.',
-    },
-    {
-      question: 'Can you redesign an existing site?',
-      answer:   'Absolutely. Send over your current site and we can audit it and quote a redesign.',
+      answer:   'Vercel, yes. Serverless setups have a 2-user free limit so anything beyond that comes with an extra fee. Monthly maintenance is $20.',
     },
     {
       question: 'Do you build e-commerce stores?',
-      answer:   'We work with Shopify for e-commerce. Custom storefronts and headless setups are available on request.',
-    },
-    {
-      question: 'How long does a website project take?',
-      answer:   'A standard landing page takes 5–7 days. More complex builds are scoped individually.',
+      answer:   "Not currently, but it's something being added soon.",
     },
   ],
 }
