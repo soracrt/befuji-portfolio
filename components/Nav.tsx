@@ -3,16 +3,19 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { AnimatePresence, motion } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-const NAV_LINKS = [
+const LEFT_LINKS = [
   { label: 'Work',     href: '/work' },
   { label: 'Services', href: '/contact' },
-  { label: 'Reviews',  href: '/reviews' },
-  { label: 'FAQ',      href: '/faq' },
-  { label: 'Contact',  href: '/contact' },
+]
+
+const RIGHT_LINKS = [
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'FAQ',     href: '/faq' },
+  { label: 'Contact', href: '/contact', accent: true },
 ]
 
 export default function Nav() {
@@ -44,62 +47,90 @@ export default function Nav() {
 
   return (
     <nav
-      ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 px-8 pt-5"
+      className="fixed top-5 left-0 right-0 z-50 flex justify-center px-8"
       style={{
-        transform:  visible ? 'translateY(0)' : 'translateY(-100%)',
-        transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform:  visible ? 'translateY(0)' : 'translateY(-120%)',
+        transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
       }}
     >
-      {/* Logo — centered */}
-      <div className="flex justify-center">
-        <button
-          onClick={() => setOpen(o => !o)}
-          className="hover:opacity-70 transition-opacity duration-200"
-          aria-label={open ? 'Close navigation' : 'Open navigation'}
-        >
-          <Image
-            src="/logo.png"
-            alt="kulaire"
-            height={24}
-            width={96}
-            className="h-6 w-auto"
-          />
-        </button>
-      </div>
-
-      {/* Expandable links */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="links"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            className="flex items-center justify-center gap-8 pt-4 pb-2"
-          >
-            {NAV_LINKS.map(({ label, href }, i) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.25, delay: i * 0.04, ease: EASE }}
+      <motion.div
+        ref={navRef}
+        layout
+        transition={{ duration: 0.45, ease: EASE }}
+        className="flex items-center"
+        style={{
+          borderRadius:         '9999px',
+          backdropFilter:       'blur(28px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+          background:           'rgba(12,12,12,0.6)',
+          border:               '1px solid rgba(238,229,233,0.1)',
+          boxShadow:            '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)',
+          padding:              open ? '7px 20px' : '7px',
+          gap:                  open ? '20px' : '0px',
+        }}
+      >
+        {/* Left links — slide in from left */}
+        <AnimatePresence>
+          {open && LEFT_LINKS.map(({ label, href }, i) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, x: -14, width: 0, marginRight: 0 }}
+              animate={{ opacity: 1, x: 0, width: 'auto' }}
+              exit={{   opacity: 0, x: -10, width: 0 }}
+              transition={{ duration: 0.35, delay: (LEFT_LINKS.length - 1 - i) * 0.05, ease: EASE }}
+              style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}
+            >
+              <Link
+                href={href}
+                onClick={() => setOpen(false)}
+                className="font-sans text-xs tracking-[0.12em] uppercase transition-opacity duration-150 hover:opacity-50"
+                style={{ color: 'rgba(238,229,233,0.6)' }}
               >
-                <Link
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className="font-sans text-xs tracking-[0.14em] uppercase transition-opacity duration-150 hover:opacity-60"
-                  style={{ color: label === 'Contact' ? '#CF5C36' : '#EEE5E9' }}
-                >
-                  {label}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {label}
+              </Link>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        {/* Logo circle — always centered */}
+        <motion.button
+          layout
+          onClick={() => setOpen(o => !o)}
+          className="flex items-center justify-center rounded-full flex-shrink-0 transition-all duration-300"
+          style={{
+            width:      '34px',
+            height:     '34px',
+            background: open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
+            border:     `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
+          }}
+          aria-label="Toggle navigation"
+        >
+          <Image src="/logo.png" alt="kulaire" width={18} height={18} className="w-[18px] h-auto" />
+        </motion.button>
+
+        {/* Right links — slide in left to right */}
+        <AnimatePresence>
+          {open && RIGHT_LINKS.map(({ label, href, accent }, i) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, x: 14, width: 0 }}
+              animate={{ opacity: 1, x: 0, width: 'auto' }}
+              exit={{   opacity: 0, x: 10, width: 0 }}
+              transition={{ duration: 0.35, delay: i * 0.05, ease: EASE }}
+              style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}
+            >
+              <Link
+                href={href}
+                onClick={() => setOpen(false)}
+                className="font-sans text-xs tracking-[0.12em] uppercase transition-opacity duration-150 hover:opacity-50"
+                style={{ color: accent ? '#CF5C36' : 'rgba(238,229,233,0.6)' }}
+              >
+                {label}
+              </Link>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
     </nav>
   )
 }
