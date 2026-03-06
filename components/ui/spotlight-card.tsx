@@ -16,7 +16,7 @@ const glowColorMap = {
   blue:   { base: 220, spread: 200, saturation: 100, lightness: 70 },
   purple: { base: 280, spread: 300, saturation: 100, lightness: 70 },
   green:  { base: 120, spread: 200, saturation: 100, lightness: 70 },
-  red:    { base: 2,   spread: 0,   saturation: 99,  lightness: 45 },
+  red:    { base: 16,  spread: 0,   saturation: 59,  lightness: 53 },
   orange: { base: 30,  spread: 200, saturation: 100, lightness: 70 },
   white:  { base: 0,   spread: 0,   saturation: 0,   lightness: 70 },
 }
