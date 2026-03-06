@@ -64,8 +64,8 @@ function Feature({
     <div
       className={cn(
         'flex flex-col py-10 relative group/feature border-r',
-        (index === 0 || index === 4) && 'lg:border-l',
-        index < 4 && 'border-b lg:border-b-0',
+        (index === 0 || index === 3) && 'border-l',
+        index < 3 && 'border-b',
       )}
       style={{ borderColor: '#1a1a1a' }}
     >
@@ -123,7 +123,7 @@ export default function WhatIDo() {
   return (
     <section className="px-8 pb-24">
       <div className="max-w-5xl mx-auto border-t border-b" style={{ borderColor: '#1a1a1a' }}>
-        <div className="grid grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-2 md:grid-cols-3">
           {features.map((f, i) => (
             <Feature key={f.title} {...f} index={i} />
           ))}
