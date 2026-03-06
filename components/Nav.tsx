@@ -78,44 +78,39 @@ export default function Nav() {
             paddingRight:'20px',
           }}
         >
-          {/* Logo — fills the closed pill size exactly so it's always centered */}
+          {/* Logo button — same size as closed pill, img absolutely centered */}
           <button
             onClick={() => setOpen(o => !o)}
-            className="flex items-center justify-center flex-shrink-0"
-            style={{ width: `${CLOSED_SIZE}px`, height: `${CLOSED_SIZE}px` }}
             aria-label="Toggle navigation"
+            style={{
+              position:   'relative',
+              width:      `${CLOSED_SIZE}px`,
+              height:     `${CLOSED_SIZE}px`,
+              flexShrink: 0,
+              background: 'none',
+              border:     'none',
+              outline:    'none',
+              padding:    0,
+              cursor:     'pointer',
+            }}
           >
-            <span
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="kulaire"
               style={{
-                position:     'relative',
-                width:        '34px',
-                height:       '34px',
-                borderRadius: '50%',
-                display:      'block',
-                background:   open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
-                border:       `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
-                transition:   'background 0.3s ease, border-color 0.3s ease',
-                flexShrink:   0,
+                position:  'absolute',
+                top:       '50%',
+                left:      '50%',
+                transform: 'translate(-50%, -50%)',
+                width:     '22px',
+                height:    '22px',
+                objectFit: 'contain',
+                display:   'block',
+                border:    'none',
+                outline:   'none',
               }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.png"
-                alt="kulaire"
-                style={{
-                  position:  'absolute',
-                  top:       '50%',
-                  left:      '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width:     '20px',
-                  height:    '20px',
-                  objectFit: 'contain',
-                  display:   'block',
-                  border:    'none',
-                  outline:   'none',
-                }}
-              />
-            </span>
+            />
           </button>
 
           {/* Links — always rendered, revealed by pill expansion */}
