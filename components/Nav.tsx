@@ -11,7 +11,7 @@ const LINKS = [
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 320
+const OPEN_WIDTH  = 338
 const CLOSED_SIZE = 44
 
 export default function Nav() {
@@ -103,7 +103,7 @@ export default function Nav() {
               outline:     'none',
               padding:     0,
               cursor:      'pointer',
-              marginRight: '10px',
+              marginRight: '28px',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
