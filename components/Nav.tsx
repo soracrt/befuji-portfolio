@@ -148,7 +148,7 @@ export default function Nav() {
                   e.currentTarget.style.textShadow = '0 0 16px rgba(207,92,54,0.9), 0 0 32px rgba(207,92,54,0.5)'
                 } else {
                   e.currentTarget.style.color = '#ffffff'
-                  e.currentTarget.style.textShadow = '0 0 12px rgba(255,255,255,0.6), 0 0 24px rgba(255,255,255,0.2)'
+                  e.currentTarget.style.textShadow = 'none'
                 }
               }}
               onMouseLeave={e => {
