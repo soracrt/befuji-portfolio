@@ -87,20 +87,32 @@ export default function Nav() {
           >
             <span
               style={{
-                width:          '34px',
-                height:         '34px',
-                borderRadius:   '50%',
-                display:        'flex',
-                alignItems:     'center',
-                justifyContent: 'center',
-                background:     open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
-                border:         `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
-                transition:     'background 0.3s ease, border-color 0.3s ease',
-                flexShrink:     0,
+                position:     'relative',
+                width:        '34px',
+                height:       '34px',
+                borderRadius: '50%',
+                display:      'block',
+                background:   open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
+                border:       `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
+                transition:   'background 0.3s ease, border-color 0.3s ease',
+                flexShrink:   0,
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="kulaire" style={{ width: '20px', height: '20px', objectFit: 'contain', display: 'block' }} />
+              <img
+                src="/logo.png"
+                alt="kulaire"
+                style={{
+                  position:  'absolute',
+                  top:       '50%',
+                  left:      '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width:     '20px',
+                  height:    '20px',
+                  objectFit: 'contain',
+                  display:   'block',
+                }}
+              />
             </span>
           </button>
 
