@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 
 const LINKS = [
   { label: 'Work',     href: '/work' },
@@ -87,15 +86,21 @@ export default function Nav() {
             aria-label="Toggle navigation"
           >
             <span
-              className="flex items-center justify-center rounded-full transition-all duration-300"
               style={{
-                width:      '34px',
-                height:     '34px',
-                background: open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
-                border:     `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
+                width:          '34px',
+                height:         '34px',
+                borderRadius:   '50%',
+                display:        'flex',
+                alignItems:     'center',
+                justifyContent: 'center',
+                background:     open ? 'rgba(207,92,54,0.12)' : 'rgba(238,229,233,0.06)',
+                border:         `1px solid ${open ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.12)'}`,
+                transition:     'background 0.3s ease, border-color 0.3s ease',
+                flexShrink:     0,
               }}
             >
-              <Image src="/logo.png" alt="kulaire" width={16} height={16} className="w-4 h-auto" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="kulaire" style={{ width: '20px', height: '20px', objectFit: 'contain', display: 'block' }} />
             </span>
           </button>
 
