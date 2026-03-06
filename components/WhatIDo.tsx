@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils'
 import {
-  IconBolt,
-  IconWaveSine,
   IconFeather,
-  IconPalette,
   IconMovie,
   IconDeviceLaptop,
+  IconLayout,
+  IconBrandDiscord,
+  IconUsers,
 } from '@tabler/icons-react'
 
 const features = [
@@ -22,28 +22,28 @@ const features = [
     icon: <IconMovie size={20} />,
   },
   {
-    title: 'SaaS Videos',
-    tagline: 'Make the product feel alive.',
-    description: 'Product explainers and demos that communicate value within seconds.',
-    icon: <IconBolt size={20} />,
-  },
-  {
-    title: 'Sound Design',
-    tagline: 'Every frame has a pulse.',
-    description: 'Audio mixed and timed to the motion. Not an afterthought.',
-    icon: <IconWaveSine size={20} />,
-  },
-  {
     title: 'Web Development',
     tagline: 'Clean, fast, intentional.',
     description: 'Minimal sites built with precision — performant and visually sharp.',
     icon: <IconDeviceLaptop size={20} />,
   },
   {
-    title: 'Creative Direction',
-    tagline: 'The vision behind the work.',
-    description: 'End-to-end creative strategy — from concept to final delivery.',
-    icon: <IconPalette size={20} />,
+    title: 'Landing Pages',
+    tagline: 'First impressions that convert.',
+    description: 'High-impact pages designed to communicate value and drive action.',
+    icon: <IconLayout size={20} />,
+  },
+  {
+    title: 'Discord Management',
+    tagline: 'Build something people stay for.',
+    description: 'Server setup, moderation systems, and community growth from the ground up.',
+    icon: <IconBrandDiscord size={20} />,
+  },
+  {
+    title: 'Community Growth',
+    tagline: 'Engaged, not just big.',
+    description: 'Content strategy and engagement systems that turn members into advocates.',
+    icon: <IconUsers size={20} />,
   },
 ]
 
