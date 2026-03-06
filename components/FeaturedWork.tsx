@@ -121,7 +121,7 @@ export default function FeaturedWork() {
       .catch(() => {})
   }, [])
 
-  if (projects.length === 0) return null
+  if (projects.length === 0) return <section className="px-8 pb-32" style={{ minHeight: '400px' }} />
 
   return (
     <section className="px-8 pb-32">

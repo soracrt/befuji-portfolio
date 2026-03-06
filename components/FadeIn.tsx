@@ -27,7 +27,7 @@ export default function FadeIn({ children, delay = 0, className = '' }: FadeInPr
           observer.unobserve(el)
         }
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.01, rootMargin: '0px 0px 80px 0px' }
     )
 
     observer.observe(el)
