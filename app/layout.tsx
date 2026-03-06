@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Cormorant_Garamond, Inter } from 'next/font/google'
 import './globals.css'
 import ScrollToTop from '@/components/ScrollToTop'
+import Nav from '@/components/Nav'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
     <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
       <body className="font-sans bg-bg text-ink">
         <ScrollToTop />
+        <Nav />
         {children}
       </body>
     </html>

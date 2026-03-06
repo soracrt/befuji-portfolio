@@ -1,11 +1,8 @@
-import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
 export default function ContactPage() {
   return (
     <main>
-      <Nav />
-
       <div className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
         <h1
           className="font-display"

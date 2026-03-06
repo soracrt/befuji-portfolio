@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 import { FaqSection } from '@/components/ui/faq-section'
 
@@ -51,8 +50,6 @@ export default function FaqPage() {
 
   return (
     <main>
-      <Nav />
-
       <div className="pt-32 pb-24 px-8">
         <div className="max-w-5xl mx-auto">
 

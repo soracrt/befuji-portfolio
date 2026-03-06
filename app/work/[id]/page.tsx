@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 
 // ─── Project data — keep in sync with app/work/page.tsx ──────────────────────
@@ -98,7 +97,6 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
 
   return (
     <main>
-      <Nav />
 
       <div className="pt-28 pb-24 px-8">
         <div className="max-w-7xl mx-auto">

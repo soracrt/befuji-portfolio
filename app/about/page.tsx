@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Nav from '@/components/Nav'
 import { Timeline } from '@/components/ui/timeline'
 
 export const metadata: Metadata = {
@@ -91,8 +90,6 @@ const timelineData = [
 export default function AboutPage() {
   return (
     <main>
-      <Nav />
-
       {/* Page heading */}
       <div className="pt-36 pb-4 px-8">
         <div className="max-w-[580px] mx-auto mb-4">

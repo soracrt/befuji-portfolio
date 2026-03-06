@@ -1,4 +1,3 @@
-import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import StatsBar from '@/components/StatsBar'
 import WhatIDo from '@/components/WhatIDo'
@@ -8,7 +7,6 @@ import Footer from '@/components/Footer'
 export default function Home() {
   return (
     <main>
-      <Nav />
       <Hero />
       <StatsBar />
       <WhatIDo />

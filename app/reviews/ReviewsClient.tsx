@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 import ReviewCard from '@/components/ReviewCard'
 
@@ -132,7 +131,6 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
   return (
     <main>
-      <Nav />
 
       <div className="pt-32 pb-24 px-8">
         <div className="max-w-6xl mx-auto">

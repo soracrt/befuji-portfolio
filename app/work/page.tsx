@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import Nav from '@/components/Nav'
 import FadeIn from '@/components/FadeIn'
 
 type Project = {
@@ -239,7 +238,6 @@ export default function WorkPage() {
 
   return (
     <main>
-      <Nav />
 
       <div className="pt-32 pb-16 px-8">
         <div className="max-w-5xl mx-auto">
