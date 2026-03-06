@@ -37,7 +37,9 @@ type ClientLog = {
   notes: string
 }
 
-type Section = 'overview' | 'projects' | 'recent' | 'reviews' | 'clients' | 'finance'
+type Section = 'overview' | 'projects' | 'recent' | 'reviews' | 'clients' | 'finance' | 'stats'
+
+type StatsData = { projects: number; members: number; brands: number }
 type EditKey = 'title' | 'category' | 'client'
 type DisplayCurrency = 'USD' | 'IDR'
 
@@ -180,6 +182,16 @@ function IconClose() {
   )
 }
 
+function IconStats() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
+    </svg>
+  )
+}
+
 function IconExternalLink() {
   return (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -295,6 +307,7 @@ const NAV: { id: Section; label: string; icon: React.ReactNode; shortcut: string
   { id: 'reviews',  label: 'Reviews',  icon: <IconMessage />, shortcut: '4' },
   { id: 'clients',  label: 'Clients',  icon: <IconPerson />,  shortcut: '5' },
   { id: 'finance',  label: 'Finance',  icon: <IconDollar />,  shortcut: '6' },
+  { id: 'stats',    label: 'Stats',    icon: <IconStats />,   shortcut: '7' },
 ]
 
 function DockItem({
@@ -2150,6 +2163,77 @@ function FinanceSection({
   )
 }
 
+// ─── Stats Admin Section ──────────────────────────────────────────────────────
+
+function StatsAdminSection({ stats, setStats }: { stats: StatsData; setStats: React.Dispatch<React.SetStateAction<StatsData>> }) {
+  const [form, setForm] = useState({ ...stats })
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault()
+    setSaving(true)
+    try {
+      const res = await fetch('/api/admin/stats', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        setStats(updated)
+        setSaved(true)
+        setTimeout(() => setSaved(false), 2500)
+      }
+    } catch {}
+    setSaving(false)
+  }
+
+  const fields: { key: keyof StatsData; label: string }[] = [
+    { key: 'projects', label: 'Projects Delivered' },
+    { key: 'members',  label: 'Community Members'  },
+    { key: 'brands',   label: 'Brands Worked With' },
+  ]
+
+  return (
+    <div className="p-8 w-full max-w-xl mx-auto">
+      <p className="font-sans mb-8" style={{ fontSize: '16px', color: '#c0c0c0', letterSpacing: '-0.01em' }}>
+        These numbers appear on the homepage stats section.
+      </p>
+      <form onSubmit={handleSave} className="flex flex-col gap-5">
+        {fields.map(({ key, label }) => (
+          <div key={key} className="flex flex-col gap-2">
+            <label className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.12em', color: '#686868', textTransform: 'uppercase' }}>
+              {label}
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={form[key]}
+              onChange={e => setForm(f => ({ ...f, [key]: parseInt(e.target.value) || 0 }))}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+            />
+          </div>
+        ))}
+        <div className="flex items-center gap-4 mt-3">
+          <button
+            type="submit"
+            disabled={saving}
+            className="font-sans font-medium py-3 px-6 rounded-xl transition-all disabled:opacity-40"
+            style={{ background: '#fff', color: '#0a0a0a', fontSize: '15px', letterSpacing: '-0.01em' }}
+          >
+            {saving ? '···' : 'Save'}
+          </button>
+          {saved && (
+            <span className="font-sans" style={{ fontSize: '14px', color: '#4ade80' }}>Saved.</span>
+          )}
+        </div>
+      </form>
+    </div>
+  )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 function Dashboard() {
@@ -2157,6 +2241,7 @@ function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([])
   const [reviews, setReviews] = useState<Review[]>([])
   const [clients, setClients] = useState<ClientLog[]>([])
+  const [stats, setStats] = useState<StatsData>({ projects: 25, members: 2600, brands: 4 })
   const [loading, setLoading] = useState(true)
   const [currency, setCurrency] = useState<DisplayCurrency>('USD')
 
@@ -2165,16 +2250,18 @@ function Dashboard() {
       fetch('/api/admin/projects', { cache: 'no-store' }).then(r => r.json()),
       fetch('/api/reviews', { cache: 'no-store' }).then(r => r.json()),
       fetch('/api/admin/clients', { cache: 'no-store' }).then(r => r.json()),
-    ]).then(([projectData, reviewData, clientData]) => {
+      fetch('/api/admin/stats', { cache: 'no-store' }).then(r => r.json()),
+    ]).then(([projectData, reviewData, clientData, statsData]) => {
       setProjects(Array.isArray(projectData) ? projectData : [])
       setReviews(Array.isArray(reviewData) ? reviewData : [])
       setClients(Array.isArray(clientData) ? clientData : [])
+      if (statsData && typeof statsData === 'object') setStats(s => ({ ...s, ...statsData }))
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [])
 
   useEffect(() => {
-    const order: Section[] = ['overview', 'projects', 'recent', 'reviews', 'clients', 'finance']
+    const order: Section[] = ['overview', 'projects', 'recent', 'reviews', 'clients', 'finance', 'stats']
     function onKey(e: KeyboardEvent) {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       const idx = parseInt(e.key) - 1
@@ -2207,6 +2294,8 @@ function Dashboard() {
           <ReviewsAdminSection reviews={reviews} setReviews={setReviews} />
         ) : section === 'clients' ? (
           <ClientsSection clients={clients} setClients={setClients} />
+        ) : section === 'stats' ? (
+          <StatsAdminSection stats={stats} setStats={setStats} />
         ) : (
           <FinanceSection clients={clients} currency={currency} setCurrency={setCurrency} />
         )}

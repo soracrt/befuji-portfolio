@@ -1,31 +1,66 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import FadeIn from './FadeIn'
 
-const stats = [
-  '25+ projects delivered',
-  '2,600+ community members',
-  '4 brands worked with',
+type StatsData = { projects: number; members: number; brands: number }
+
+const BLOCKS: { key: keyof StatsData; label: string }[] = [
+  { key: 'projects', label: 'Projects Delivered' },
+  { key: 'members',  label: 'Community Members' },
+  { key: 'brands',   label: 'Brands Worked With' },
 ]
 
+function formatNum(n: number): string {
+  return n.toLocaleString('en-US')
+}
+
 export default function StatsBar() {
+  const [stats, setStats] = useState<StatsData>({ projects: 25, members: 2600, brands: 4 })
+
+  useEffect(() => {
+    fetch('/api/admin/stats', { cache: 'no-store' })
+      .then(r => r.json())
+      .then((data: Partial<StatsData>) => {
+        setStats(s => ({ ...s, ...data }))
+      })
+      .catch(() => {})
+  }, [])
+
   return (
-    <FadeIn delay={100}>
-      <div
-        className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 px-8 pb-24"
-      >
-        {stats.map((stat, i) => (
-          <span key={i} className="flex items-center gap-8">
-            <span
-              className="font-sans text-xs tracking-[0.08em]"
-              style={{ color: 'rgba(238,229,233,0.35)' }}
-            >
-              {stat}
-            </span>
-            {i < stats.length - 1 && (
-              <span style={{ color: 'rgba(238,229,233,0.15)', fontSize: '10px' }}>·</span>
-            )}
-          </span>
-        ))}
+    <div className="px-8 pb-28">
+      <div className="max-w-5xl mx-auto">
+        <FadeIn delay={100}>
+          <div className="grid grid-cols-3 gap-8">
+            {BLOCKS.map(({ key, label }, i) => (
+              <div key={key} className="flex flex-col gap-2">
+                {/* Label */}
+                <span
+                  className="font-sans text-[10px] tracking-[0.18em] uppercase"
+                  style={{ color: 'rgba(238,229,233,0.3)' }}
+                >
+                  {label}
+                </span>
+
+                {/* Number */}
+                <FadeIn delay={i * 80}>
+                  <span
+                    className="font-display leading-none"
+                    style={{
+                      fontSize:     'clamp(3rem, 6vw, 5.5rem)',
+                      color:        '#CF5C36',
+                      fontWeight:   400,
+                      letterSpacing: '-0.04em',
+                    }}
+                  >
+                    {formatNum(stats[key])}
+                  </span>
+                </FadeIn>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </div>
-    </FadeIn>
+    </div>
   )
 }
