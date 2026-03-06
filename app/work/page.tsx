@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
-import Footer from '@/components/Footer'
 import FadeIn from '@/components/FadeIn'
 
 type Project = {
@@ -317,8 +316,6 @@ export default function WorkPage() {
 
         </div>
       </div>
-
-      <Footer />
     </main>
   )
 }
