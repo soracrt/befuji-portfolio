@@ -1,7 +1,38 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { AnimatePresence, motion } from 'motion/react'
 import { InstagramIcon } from 'lucide-react'
+
+const WORDS = ['boring.', 'average.', 'forgettable.', 'ordinary.', 'predictable.']
+
+function CyclingWord() {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % WORDS.length), 2200)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <span className="block relative" style={{ minHeight: '1.05em' }}>
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={index}
+          initial={{ y: '60%', opacity: 0, filter: 'blur(8px)' }}
+          animate={{ y: '0%', opacity: 1, filter: 'blur(0px)' }}
+          exit={{ y: '-60%', opacity: 0, filter: 'blur(8px)' }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="block"
+          style={{ color: '#CF5C36' }}
+        >
+          {WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  )
+}
 
 export function FooterSection() {
   const year = new Date().getFullYear()
@@ -30,13 +61,14 @@ export function FooterSection() {
             </a>
           </div>
 
-          {/* Right: tagline + service blurbs */}
+          {/* Right: animated tagline */}
           <div className="flex flex-col justify-between items-end text-right">
             <h2
               className="font-display font-bold leading-[1.0]"
               style={{ fontSize: 'clamp(2.5rem, 4.5vw, 5rem)', color: '#EEE5E9', letterSpacing: '-0.03em' }}
             >
-              Don&apos;t<br />be boring.
+              <span className="block">Don&apos;t be</span>
+              <CyclingWord />
             </h2>
             <div className="flex gap-12 mt-8">
               <div className="text-right">
