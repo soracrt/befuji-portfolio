@@ -27,7 +27,13 @@ export default function Nav() {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY
-      setVisible(y < lastY.current || y < 80)
+      const scrollingDown = y > lastY.current && y > 80
+      if (scrollingDown) {
+        setOpen(false)
+        setVisible(false)
+      } else {
+        setVisible(true)
+      }
       lastY.current = y
     }
     window.addEventListener('scroll', onScroll, { passive: true })
