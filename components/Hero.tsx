@@ -20,8 +20,12 @@ export default function Hero() {
           style={{ background: '#CF5C36', animation: 'pulse-dot 2s ease-in-out infinite' }}
         />
         <span
-          className="font-sans text-xs"
-          style={{ color: 'rgba(238,229,233,0.45)', letterSpacing: '0.04em' }}
+          className="font-sans text-sm"
+          style={{
+            color: '#EEE5E9',
+            letterSpacing: '0.04em',
+            textShadow: '0 0 12px rgba(238,229,233,0.4), 0 0 28px rgba(238,229,233,0.15)',
+          }}
         >
           Limited spots left in March
         </span>
