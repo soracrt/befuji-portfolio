@@ -5,19 +5,15 @@ import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
 import { FaqSection } from '@/components/ui/faq-section'
 
-type Category = 'General' | 'Website'
+type Category = 'General' | 'Motion' | 'Website'
 
-const CATEGORIES: Category[] = ['General', 'Website']
+const CATEGORIES: Category[] = ['General', 'Motion', 'Website']
 
 const FAQS: Record<Category, { question: string; answer: string }[]> = {
   General: [
     {
       question: "What's your typical turnaround time?",
       answer:   "Depends on the project. Usually 1 to 5 days. Simpler edits land faster, more complex ones take longer. If you don't have a script or storyboard ready, that adds time too, so coming prepared helps a lot.",
-    },
-    {
-      question: 'Do you work with early-stage startups?',
-      answer:   "Yeah, absolutely. As long as you know what you're building and who it's for, we can work together.",
     },
     {
       question: 'What do you need to get started?',
@@ -32,20 +28,8 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
       answer:   "Yeah. Retainers start at $250 and go up to $500 a month depending on how much output you need. Reach out and we'll figure out what works.",
     },
     {
-      question: 'What formats do you deliver in?',
-      answer:   "Whatever you need. MP4 is the default, exported in 4K. Just ask if you need something different.",
-    },
-    {
       question: 'Do you offer rush delivery?',
       answer:   "Yeah, rush delivery is available for an extra $50. You get it fast, no corners cut.",
-    },
-    {
-      question: 'Do clients keep the source files?',
-      answer:   "Final exports are always included. Source files are available for an additional fee.",
-    },
-    {
-      question: 'Is there a minimum project budget?',
-      answer:   "Nope. Work is work. Whether you're a solo creator or a growing brand, if you have a vision we can talk.",
     },
     {
       question: 'Do you require a deposit?',
@@ -55,9 +39,27 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
       question: 'Do you work with international clients?',
       answer:   "Anywhere in the world. As long as you have an internet connection, speak a bit of English, and know what you want, we're good.",
     },
+  ],
+  Motion: [
     {
-      question: "What's the best way to reach you?",
-      answer:   "Fill out the contact form on the site, or reach out directly on Discord at soracrt or via email at hello@kulaire.com.",
+      question: 'What software do you use?',
+      answer:   "After Effects for motion graphics, Premiere Pro for cutting and sound design, and Figma for storyboarding.",
+    },
+    {
+      question: 'Do you write scripts?',
+      answer:   "It's better if you come with one ready, but if you need help putting it together, that's something we can work out.",
+    },
+    {
+      question: 'Do you handle voiceovers?',
+      answer:   "Not personally. If you need one, you'll need to source your own talent or provide a recording.",
+    },
+    {
+      question: 'Do you work with existing brand guidelines?',
+      answer:   "Yeah, send them over and we'll build around what you already have.",
+    },
+    {
+      question: 'Is there a video length limit?',
+      answer:   "No hard limit. A minute or two is the sweet spot, but as long as the scope is clear we can make it work.",
     },
   ],
   Website: [
@@ -94,6 +96,7 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
 
 const CATEGORY_LABELS: Record<Category, string> = {
   General: 'General',
+  Motion:  'Motion Graphics',
   Website: 'Website FAQ',
 }
 
