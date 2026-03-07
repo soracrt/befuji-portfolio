@@ -102,7 +102,7 @@ function Feature({
 
       {/* Description */}
       <p
-        className="font-sans text-xs leading-relaxed relative z-10 px-8 max-w-[200px] mb-4"
+        className="font-sans text-xs leading-relaxed relative z-10 px-8 mb-4"
         style={{ color: 'rgba(238,229,233,0.25)' }}
       >
         {description}
