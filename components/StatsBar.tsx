@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 type StatsData = { views: number; likes: number; artists: number }
 
 const BLOCKS: { key: keyof StatsData; label: string }[] = [
-  { key: 'views',   label: 'TikTok Views'      },
+  { key: 'views',   label: 'Total Views'        },
   { key: 'likes',   label: 'Total Likes'        },
   { key: 'artists', label: 'Artists & Brands'   },
 ]
@@ -54,7 +54,7 @@ function StatBlock({
   const count = useCountUp(target, 1400 + delay, started)
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 items-center text-center">
       {/* Label — Inter bold, full white */}
       <span
         className="font-display font-bold text-[11px] tracking-[0.22em] uppercase"
