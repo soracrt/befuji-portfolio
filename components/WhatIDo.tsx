@@ -8,27 +8,27 @@ import {
 
 const features = [
   {
-    title: 'Motion Design',
-    tagline: 'Frame-perfect movement.',
-    description: 'Intentional easing and timing that makes every transition feel effortless.',
+    title: 'Motion Design — for Artists',
+    tagline: 'Your vision, animated.',
+    description: 'Music videos, lyric videos, and visual content built around your sound.',
     icon: <IconFeather size={20} />,
   },
   {
-    title: 'Brand Films',
-    tagline: 'Your story in motion.',
-    description: 'Cinematic visuals built from your identity — no templates, no shortcuts.',
+    title: 'Motion Design — for Brands',
+    tagline: 'Movement that sells.',
+    description: 'Product ads, SaaS demos, and launch content that actually converts.',
     icon: <IconMovie size={20} />,
   },
   {
-    title: 'Web Development',
+    title: 'Web Development — for Businesses',
     tagline: 'Clean, fast, intentional.',
-    description: 'Minimal sites built with precision — performant and visually sharp.',
+    description: 'Minimal sites built with precision, performant and visually sharp.',
     icon: <IconDeviceLaptop size={20} />,
   },
   {
-    title: 'Landing Pages',
-    tagline: 'First impressions that convert.',
-    description: 'High-impact pages designed to communicate value and drive action.',
+    title: 'Web Development — for SaaS',
+    tagline: 'Interfaces that just work.',
+    description: 'Fast, scalable web apps built for products that need to grow.',
     icon: <IconLayout size={20} />,
   },
 ]
