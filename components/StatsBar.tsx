@@ -5,9 +5,9 @@ import { useState, useEffect, useRef } from 'react'
 type StatsData = { views: number; likes: number; artists: number }
 
 const BLOCKS: { key: keyof StatsData; label: string }[] = [
+  { key: 'artists', label: 'Artists & Brands'   },
   { key: 'views',   label: 'Total Views'        },
   { key: 'likes',   label: 'Total Likes'        },
-  { key: 'artists', label: 'Artists & Brands'   },
 ]
 
 function useCountUp(target: number, duration: number, started: boolean) {
