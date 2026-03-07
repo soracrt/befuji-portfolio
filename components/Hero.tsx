@@ -33,7 +33,7 @@ export default function Hero() {
 
       <div className="flex items-center gap-3">
         <Link
-          href="/contact"
+          href="/quote"
           className="font-display font-medium px-5 py-2.5 rounded-full transition-colors duration-200 flex items-center gap-2"
           style={{
             fontSize: '14px',
