@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-type StatsData = { projects: number; members: number; brands: number }
+type StatsData = { views: number; likes: number; artists: number }
 
 const BLOCKS: { key: keyof StatsData; label: string }[] = [
-  { key: 'projects', label: 'Projects Delivered' },
-  { key: 'members',  label: 'Community Members'  },
-  { key: 'brands',   label: 'Brands Worked With' },
+  { key: 'views',   label: 'TikTok Views'      },
+  { key: 'likes',   label: 'Total Likes'        },
+  { key: 'artists', label: 'Artists & Brands'   },
 ]
 
 function useCountUp(target: number, duration: number, started: boolean) {
@@ -35,7 +35,9 @@ function useCountUp(target: number, duration: number, started: boolean) {
 }
 
 function formatNum(n: number): string {
-  return n.toLocaleString('en-US')
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (n >= 1_000)     return (n / 1_000).toFixed(0) + 'K'
+  return n.toString()
 }
 
 function StatBlock({
@@ -78,7 +80,7 @@ function StatBlock({
 }
 
 export default function StatsBar() {
-  const [stats, setStats]   = useState<StatsData>({ projects: 25, members: 2600, brands: 4 })
+  const [stats, setStats]   = useState<StatsData>({ views: 2500000, likes: 397000, artists: 17 })
   const [started, setStarted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
