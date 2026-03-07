@@ -28,16 +28,8 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
       answer:   "Yeah. Retainers start at $250 and go up to $500 a month depending on how much output you need. Reach out and we'll figure out what works.",
     },
     {
-      question: 'Do you offer rush delivery?',
-      answer:   "Yeah, rush delivery is available for an extra $50. You get it fast, no corners cut.",
-    },
-    {
       question: 'Do you require a deposit?',
       answer:   "Yes, 50% upfront before work begins. If you want to pay in full, that works too and we can get started immediately.",
-    },
-    {
-      question: 'Do you work with international clients?',
-      answer:   "Anywhere in the world. As long as you have an internet connection, speak a bit of English, and know what you want, we're good.",
     },
   ],
   Motion: [
@@ -72,14 +64,6 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
       answer:   "Vercel, yes. Serverless setups have a 2 user free limit so anything beyond that comes with an extra fee.",
     },
     {
-      question: 'Can you redesign an existing site?',
-      answer:   "Yeah. Redesigns are 50 to 75% of the cost of a full build since we're only touching the front end, not rebuilding the whole thing.",
-    },
-    {
-      question: 'Do you build e-commerce stores?',
-      answer:   "Not currently, but it's something being added soon.",
-    },
-    {
       question: 'How long does a website project take?',
       answer:   "Depends on demand. If things are quiet, 1 to 2 days. If it's a busy period, expect around a week.",
     },
@@ -88,8 +72,8 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
       answer:   "Yeah, monthly maintenance is $30. That covers updates, fixes, and making sure everything keeps running smoothly. It's separate from hosting.",
     },
     {
-      question: 'Do you require a deposit for web projects?',
-      answer:   "Same as everything else, 50% upfront. Pay in full and we start immediately.",
+      question: 'Do you build e-commerce stores?',
+      answer:   "Not currently, but it's something being added soon.",
     },
   ],
 }
