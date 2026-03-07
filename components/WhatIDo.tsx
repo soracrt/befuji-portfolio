@@ -8,25 +8,25 @@ import {
 
 const features = [
   {
-    title: 'Motion Design — for Artists',
+    title: 'Frame by Frame',
     tagline: 'Your vision, animated.',
     description: 'Music videos, lyric videos, and visual content built around your sound.',
     icon: <IconFeather size={20} />,
   },
   {
-    title: 'Motion Design — for Brands',
+    title: 'Ads That Move',
     tagline: 'Movement that sells.',
     description: 'Product ads, SaaS demos, and launch content that actually converts.',
     icon: <IconMovie size={20} />,
   },
   {
-    title: 'Web Development — for Businesses',
+    title: 'Built to Last',
     tagline: 'Clean, fast, intentional.',
     description: 'Minimal sites built with precision, performant and visually sharp.',
     icon: <IconDeviceLaptop size={20} />,
   },
   {
-    title: 'Web Development — for SaaS',
+    title: 'Ship Fast',
     tagline: 'Interfaces that just work.',
     description: 'Fast, scalable web apps built for products that need to grow.',
     icon: <IconLayout size={20} />,
