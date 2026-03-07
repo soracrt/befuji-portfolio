@@ -11,24 +11,28 @@ const features = [
     title: 'Frame by Frame',
     tagline: 'Your vision, animated.',
     description: 'Music videos, lyric videos, and visual content built around your sound.',
+    target: 'Artists',
     icon: <IconFeather size={20} />,
   },
   {
     title: 'Ads That Move',
     tagline: 'Movement that sells.',
     description: 'Product ads, SaaS demos, and launch content that actually converts.',
+    target: 'Brands',
     icon: <IconMovie size={20} />,
   },
   {
     title: 'Built to Last',
     tagline: 'Clean, fast, intentional.',
     description: 'Minimal sites built with precision, performant and visually sharp.',
+    target: 'Businesses',
     icon: <IconDeviceLaptop size={20} />,
   },
   {
     title: 'Ship Fast',
     tagline: 'Interfaces that just work.',
     description: 'Fast, scalable web apps built for products that need to grow.',
+    target: 'SaaS',
     icon: <IconLayout size={20} />,
   },
 ]
@@ -37,12 +41,14 @@ function Feature({
   title,
   tagline,
   description,
+  target,
   icon,
   index,
 }: {
   title: string
   tagline: string
   description: string
+  target: string
   icon: React.ReactNode
   index: number
 }) {
@@ -96,11 +102,25 @@ function Feature({
 
       {/* Description */}
       <p
-        className="font-sans text-xs leading-relaxed relative z-10 px-8 max-w-[200px]"
+        className="font-sans text-xs leading-relaxed relative z-10 px-8 max-w-[200px] mb-4"
         style={{ color: 'rgba(238,229,233,0.25)' }}
       >
         {description}
       </p>
+
+      {/* Target audience */}
+      <div className="relative z-10 px-8">
+        <span
+          className="font-sans text-[10px] tracking-[0.15em] uppercase px-2 py-1 rounded-full"
+          style={{
+            color: 'rgba(207,92,54,0.8)',
+            background: 'rgba(207,92,54,0.08)',
+            border: '1px solid rgba(207,92,54,0.2)',
+          }}
+        >
+          For {target}
+        </span>
+      </div>
     </div>
   )
 }
