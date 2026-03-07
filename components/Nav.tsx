@@ -7,7 +7,7 @@ const LINKS = [
   { label: 'Home',    href: '/' },
   { label: 'Work',    href: '/work' },
   { label: 'FAQ',     href: '/faq' },
-  { label: 'Contact', href: '/quote', accent: true },
+  { label: 'Contact', href: '/contact', accent: true },
 ]
 
 // Full expanded width — must match inner content width

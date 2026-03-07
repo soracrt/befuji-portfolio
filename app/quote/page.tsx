@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 type Answers = {
   service:  string
@@ -44,6 +45,7 @@ const STEPS = [
 ]
 
 export default function QuotePage() {
+  const router = useRouter()
   const [step, setStep]       = useState(1)
   const [answers, setAnswers] = useState<Answers>({
     service: '', who: '', audience: '', ready: '', budget: '',
@@ -126,13 +128,14 @@ export default function QuotePage() {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-12 max-w-xl mx-auto w-full">
-        <Link
-          href="/"
+        <button
+          type="button"
+          onClick={() => router.back()}
           className="font-sans text-xs tracking-[0.1em] uppercase transition-opacity hover:opacity-60"
-          style={{ color: 'rgba(238,229,233,0.3)' }}
+          style={{ color: 'rgba(238,229,233,0.3)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           ← Back
-        </Link>
+        </button>
         <span
           className="font-sans text-xs"
           style={{ color: 'rgba(238,229,233,0.25)', letterSpacing: '0.06em' }}
