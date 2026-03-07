@@ -1,24 +1,7 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import FadeIn from './FadeIn'
 
-function slotLabel(slots: number): string {
-  if (slots === 0) return 'No slots available'
-  if (slots === 1) return '1 slot left this month'
-  return `${slots} slots available this month`
-}
-
 export default function Hero() {
-  const [slots, setSlots] = useState<number | null>(null)
-
-  useEffect(() => {
-    fetch('/api/admin/stats', { cache: 'no-store' })
-      .then(r => r.json())
-      .then(d => { if (typeof d.slots === 'number') setSlots(d.slots) })
-      .catch(() => {})
-  }, [])
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
@@ -32,25 +15,18 @@ export default function Hero() {
         <span className="block">remembered<span style={{ color: '#CF5C36' }}>.</span></span>
       </h1>
 
-      {/* Availability badge — only renders once fetch is done, dot + text together */}
-      <div className="mb-8" style={{ minHeight: '20px' }}>
-        {slots !== null && (
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-              style={{
-                background: slots === 0 ? '#ef4444' : '#CF5C36',
-                animation: 'pulse-dot 2s ease-in-out infinite',
-              }}
-            />
-            <span
-              className="font-sans text-xs"
-              style={{ color: 'rgba(238,229,233,0.45)', letterSpacing: '0.04em' }}
-            >
-              {slotLabel(slots)}
-            </span>
-          </div>
-        )}
+      {/* Availability badge — static */}
+      <div className="flex items-center gap-2 mb-8">
+        <span
+          className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+          style={{ background: '#CF5C36', animation: 'pulse-dot 2s ease-in-out infinite' }}
+        />
+        <span
+          className="font-sans text-xs"
+          style={{ color: 'rgba(238,229,233,0.45)', letterSpacing: '0.04em' }}
+        >
+          Limited spots left in March
+        </span>
       </div>
 
       {/* CTA pills — fade in */}
