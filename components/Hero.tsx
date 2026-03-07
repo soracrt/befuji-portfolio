@@ -32,21 +32,25 @@ export default function Hero() {
         <span className="block">remembered<span style={{ color: '#CF5C36' }}>.</span></span>
       </h1>
 
-      {/* Availability badge — both render together, no stagger */}
-      <div className="flex items-center gap-2 mb-8" style={{ minHeight: '20px' }}>
-        <span
-          className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-          style={{
-            background: slots === 0 ? '#ef4444' : '#CF5C36',
-            animation: 'pulse-dot 2s ease-in-out infinite',
-          }}
-        />
-        <span
-          className="font-sans text-xs"
-          style={{ color: 'rgba(238,229,233,0.45)', letterSpacing: '0.04em' }}
-        >
-          {slots === null ? '\u00a0' : slotLabel(slots)}
-        </span>
+      {/* Availability badge — only renders once fetch is done, dot + text together */}
+      <div className="mb-8" style={{ minHeight: '20px' }}>
+        {slots !== null && (
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+              style={{
+                background: slots === 0 ? '#ef4444' : '#CF5C36',
+                animation: 'pulse-dot 2s ease-in-out infinite',
+              }}
+            />
+            <span
+              className="font-sans text-xs"
+              style={{ color: 'rgba(238,229,233,0.45)', letterSpacing: '0.04em' }}
+            >
+              {slotLabel(slots)}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* CTA pills — fade in */}
