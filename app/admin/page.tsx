@@ -39,7 +39,7 @@ type ClientLog = {
 
 type Section = 'overview' | 'projects' | 'recent' | 'reviews' | 'clients' | 'finance' | 'stats'
 
-type StatsData = { projects: number; members: number; brands: number }
+type StatsData = { views: number; likes: number; artists: number; slots: number }
 type EditKey = 'title' | 'category' | 'client'
 type DisplayCurrency = 'USD' | 'IDR'
 
@@ -2190,9 +2190,10 @@ function StatsAdminSection({ stats, setStats }: { stats: StatsData; setStats: Re
   }
 
   const fields: { key: keyof StatsData; label: string }[] = [
-    { key: 'projects', label: 'Projects Delivered' },
-    { key: 'members',  label: 'Community Members'  },
-    { key: 'brands',   label: 'Brands Worked With' },
+    { key: 'views',   label: 'Total Views'      },
+    { key: 'likes',   label: 'Total Likes'      },
+    { key: 'artists', label: 'Artists & Brands' },
+    { key: 'slots',   label: 'Available Slots'  },
   ]
 
   return (
@@ -2241,7 +2242,7 @@ function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([])
   const [reviews, setReviews] = useState<Review[]>([])
   const [clients, setClients] = useState<ClientLog[]>([])
-  const [stats, setStats] = useState<StatsData>({ projects: 25, members: 2600, brands: 4 })
+  const [stats, setStats] = useState<StatsData>({ views: 2500000, likes: 397000, artists: 17, slots: 2 })
   const [loading, setLoading] = useState(true)
   const [currency, setCurrency] = useState<DisplayCurrency>('USD')
 

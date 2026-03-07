@@ -17,9 +17,9 @@ const s3 = new S3Client({
 const BUCKET   = process.env.R2_BUCKET_NAME ?? ''
 const DATA_KEY = '_stats.json'
 
-type StatsData = { views: number; likes: number; artists: number }
+type StatsData = { views: number; likes: number; artists: number; slots: number }
 
-const defaults: StatsData = { views: 2500000, likes: 397000, artists: 17 }
+const defaults: StatsData = { views: 2500000, likes: 397000, artists: 17, slots: 2 }
 
 async function readStats(): Promise<StatsData> {
   try {
@@ -66,6 +66,7 @@ export async function PUT(req: Request) {
       views:   typeof body.views   === 'number' ? body.views   : current.views,
       likes:   typeof body.likes   === 'number' ? body.likes   : current.likes,
       artists: typeof body.artists === 'number' ? body.artists : current.artists,
+      slots:   typeof body.slots   === 'number' ? body.slots   : current.slots,
     }
     await writeStats(updated)
     return NextResponse.json(updated)
