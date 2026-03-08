@@ -171,22 +171,44 @@ export default function Nav() {
       </div>
     </nav>
 
-    {/* Kulaire wordmark — fixed top-left, symmetric to the CTA on the right */}
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img
-      src="/kulaire.png"
-      alt="kulaire"
+    {/* Email pill — fixed top-left, symmetric to the CTA on the right */}
+    <a
+      href="mailto:hello@kulaire.com"
+      className="fixed z-50 font-sans text-xs tracking-[0.1em]"
       style={{
-        position:  'fixed',
-        top:       '28px',
-        right:     'calc(50% + 200px)',
-        height:    '16px',
-        width:     'auto',
-        zIndex:    50,
-        filter:    'invert(1)',
-        opacity:   0.7,
+        top:                  '20px',
+        right:                'calc(50% + 200px)',
+        height:               '44px',
+        display:              'flex',
+        alignItems:           'center',
+        gap:                  '8px',
+        paddingLeft:          '18px',
+        paddingRight:         '18px',
+        borderRadius:         '9999px',
+        backdropFilter:       'blur(28px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+        background:           'rgba(12,12,12,0.65)',
+        border:               '1px solid rgba(238,229,233,0.1)',
+        boxShadow:            '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)',
+        color:                'rgba(238,229,233,0.65)',
+        whiteSpace:           'nowrap',
+        transition:           'color 0.2s ease, border-color 0.2s ease',
       }}
-    />
+      onMouseEnter={e => {
+        e.currentTarget.style.color       = '#ffffff'
+        e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)'
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.color       = 'rgba(238,229,233,0.65)'
+        e.currentTarget.style.borderColor = 'rgba(238,229,233,0.1)'
+      }}
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}>
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <polyline points="2,4 12,13 22,4" />
+      </svg>
+      hello@kulaire.com
+    </a>
 
     {/* Get a quote CTA — fixed top-right, hidden on /quote */}
     {pathname !== '/quote' && (
