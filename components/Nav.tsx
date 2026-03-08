@@ -171,6 +171,23 @@ export default function Nav() {
       </div>
     </nav>
 
+    {/* Kulaire wordmark — fixed top-left, symmetric to the CTA on the right */}
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src="/kulaire.png"
+      alt="kulaire"
+      style={{
+        position:  'fixed',
+        top:       '28px',
+        right:     'calc(50% + 200px)',
+        height:    '16px',
+        width:     'auto',
+        zIndex:    50,
+        filter:    'invert(1)',
+        opacity:   0.7,
+      }}
+    />
+
     {/* Get a quote CTA — fixed top-right, hidden on /quote */}
     {pathname !== '/quote' && (
       <Link
