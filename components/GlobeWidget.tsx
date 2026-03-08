@@ -61,10 +61,14 @@ export default function GlobeWidget() {
     let g: any = null
 
     ;(async () => {
-      const [{ default: Globe }, THREE] = await Promise.all([
+      const [{ default: GlobeClass }, THREE] = await Promise.all([
         import('globe.gl'),
         import('three'),
       ])
+      // globe.gl's TS types declare a constructor but the runtime API is a
+      // factory function: Globe(config)(domElement). Cast through any.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const Globe = GlobeClass as any
       if (!alive || !el) return
 
       // Shared dot geometry + material (one draw call per mesh, shared geo)
