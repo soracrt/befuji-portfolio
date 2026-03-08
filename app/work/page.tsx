@@ -799,8 +799,9 @@ export default function WorkPage() {
   return (
     <main>
       <style>{`
-        @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
-        @keyframes marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+        @keyframes shimmer        { 0%   { background-position: 200% 0 }    100% { background-position: -200% 0 } }
+        @keyframes marquee        { 0%   { transform: translateX(0) }        100% { transform: translateX(-50%) } }
+        @keyframes liquid-shimmer { 0%   { transform: translateX(-100%) }    100% { transform: translateX(100%) } }
       `}</style>
 
       <div className="pt-32 pb-16 px-8">
@@ -875,26 +876,52 @@ export default function WorkPage() {
       {/* ── Process timeline ── */}
       <ProcessTimeline tab={activeTab} />
 
-      {/* ── CTA pill ── */}
+      {/* ── CTA pill — liquid glass ── */}
       <div className="flex justify-center pb-20">
         <Link
           href="/quote"
-          className="font-sans text-xs tracking-[0.12em] uppercase px-7 py-3 rounded-full transition-all duration-200"
+          className="relative overflow-hidden font-sans text-xs tracking-[0.12em] uppercase px-8 py-3.5 rounded-full"
           style={{
-            background:  '#CF5C36',
-            color:       '#fff',
-            boxShadow:   '0 0 24px rgba(207,92,54,0.35)',
+            backdropFilter:       'blur(12px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+            background:           'rgba(255,255,255,0.06)',
+            border:               '1px solid rgba(255,255,255,0.13)',
+            boxShadow:            '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)',
+            color:                'rgba(255,255,255,0.9)',
+            transition:           'backdrop-filter 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.background = '#d96b42'
-            e.currentTarget.style.boxShadow  = '0 0 36px rgba(207,92,54,0.55)'
+            const el = e.currentTarget
+            el.style.backdropFilter       = 'blur(20px) saturate(220%)'
+            el.style.WebkitBackdropFilter = 'blur(20px) saturate(220%)'
+            el.style.background           = 'rgba(255,255,255,0.11)'
+            el.style.borderColor          = 'rgba(255,255,255,0.22)'
+            el.style.boxShadow            = '0 4px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.04)'
+            el.style.color                = '#ffffff'
+            const shimmer = el.querySelector('.lg-shimmer') as HTMLElement | null
+            if (shimmer) shimmer.style.animation = 'liquid-shimmer 0.75s ease forwards'
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.background = '#CF5C36'
-            e.currentTarget.style.boxShadow  = '0 0 24px rgba(207,92,54,0.35)'
+            const el = e.currentTarget
+            el.style.backdropFilter       = 'blur(12px) saturate(180%)'
+            el.style.WebkitBackdropFilter = 'blur(12px) saturate(180%)'
+            el.style.background           = 'rgba(255,255,255,0.06)'
+            el.style.borderColor          = 'rgba(255,255,255,0.13)'
+            el.style.boxShadow            = '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)'
+            el.style.color                = 'rgba(255,255,255,0.9)'
+            const shimmer = el.querySelector('.lg-shimmer') as HTMLElement | null
+            if (shimmer) shimmer.style.animation = 'none'
           }}
         >
-          Start your project
+          {/* Light refraction shimmer sweep */}
+          <span
+            className="lg-shimmer pointer-events-none absolute inset-0"
+            style={{
+              background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)',
+              animation:  'none',
+            }}
+          />
+          <span className="relative">get a quote →</span>
         </Link>
       </div>
 
