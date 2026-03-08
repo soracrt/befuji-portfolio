@@ -550,21 +550,153 @@ function ReviewForm({ category }: { category: string }) {
 
 // ─── Process timeline ─────────────────────────────────────────────────────────
 
-const PROCESS_STEPS = [
-  { side: 'client',  title: 'Share your brief',     desc: 'Tell us about the project, goals, and timeline.' },
-  { side: 'kulaire', title: 'Concept & storyboard',  desc: 'We map out the creative direction and get your sign-off.' },
-  { side: 'client',  title: 'Review the concept',    desc: 'Give feedback before we dive into production.' },
-  { side: 'kulaire', title: 'Production',             desc: 'We build it — motion, visuals, whatever the project calls for.' },
-  { side: 'client',  title: 'Final review',           desc: 'One last look before we wrap.' },
-  { side: 'kulaire', title: 'Delivery',               desc: 'Final files, optimized for every platform you need.' },
-]
+type Step = { side: 'client' | 'kulaire'; title: string; desc: string }
 
-function ProcessTimeline() {
+const PROCESS_STEPS_BY_TAB: Record<string, Step[]> = {
+  Commercial: [
+    { side: 'client',  title: 'Brand quiz & identity intake', desc: 'Complete our brand quiz so we know exactly who we\'re making this for.' },
+    { side: 'kulaire', title: 'Storyboard & concept',          desc: 'We build the creative direction based on your script and brand details.' },
+    { side: 'client',  title: 'Storyboard review',             desc: 'Unlimited revisions here until the concept is locked.' },
+    { side: 'kulaire', title: 'Production',                    desc: 'We build the full video once you\'ve signed off.' },
+    { side: 'client',  title: 'Final review',                  desc: 'Last look before we wrap. Revisions accepted here too.' },
+    { side: 'kulaire', title: 'Delivery',                      desc: 'Final files, formatted for every platform you need.' },
+  ],
+  Artists: [
+    { side: 'client',  title: 'Song selection',    desc: 'Drop the track and timestamp. We\'ll take it from there.' },
+    { side: 'kulaire', title: 'Quote + invoice',   desc: 'We send the quote. You cover 50% to lock it in.' },
+    { side: 'client',  title: 'Deposit confirmed', desc: 'Once the deposit clears, we start immediately.' },
+    { side: 'kulaire', title: 'Production',        desc: 'Same-day delivery for most projects.' },
+    { side: 'client',  title: 'Revisions',         desc: 'Up to 2 revision rounds included.' },
+    { side: 'kulaire', title: 'Final delivery',    desc: 'Project is yours. Posting available as an add-on.' },
+  ],
+  Websites: [
+    { side: 'client',  title: 'Brand details & references', desc: 'Send everything — colors, fonts, inspo, the works.' },
+    { side: 'kulaire', title: 'Design direction',           desc: 'We confirm whether we\'re building from your design or starting fresh.' },
+    { side: 'kulaire', title: 'Wireframe & concept',        desc: 'We map the structure and get your sign-off before building.' },
+    { side: 'kulaire', title: 'Build',                      desc: 'Full development begins once concept is approved.' },
+    { side: 'client',  title: 'Revisions',                  desc: 'Test it, break it, tell us what\'s off.' },
+    { side: 'kulaire', title: 'Launch',                     desc: 'We hand it off live and ready.' },
+  ],
+}
+
+function TimelineContent({ steps }: { steps: Step[] }) {
+  return (
+    <>
+      {/* Desktop */}
+      <div className="hidden md:block relative">
+        <div className="relative" style={{ paddingBottom: '8px' }}>
+
+          {/* Top row — client steps */}
+          <div className="flex">
+            {steps.map((step, i) => (
+              <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
+                {step.side === 'client' && (
+                  <div className="text-center flex flex-col items-center" style={{ width: '100%' }}>
+                    <div className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }}>
+                      You
+                    </div>
+                    <p className="font-display font-bold text-sm mb-2" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                    <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Center line with step dots */}
+          <div className="relative flex items-center" style={{ height: '32px' }}>
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2" style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(238,229,233,0.12) 8%, rgba(238,229,233,0.12) 92%, transparent)' }} />
+            <div className="relative flex w-full">
+              {steps.map((step, i) => (
+                <div key={i} className="flex-1 flex justify-center items-center" style={{ height: '32px' }}>
+                  <div className="relative z-10 flex items-center justify-center rounded-full font-mono text-[10px] font-bold"
+                    style={{
+                      width: '26px', height: '26px',
+                      background: step.side === 'kulaire' ? 'rgba(207,92,54,0.15)' : 'rgba(238,229,233,0.06)',
+                      border: `1px solid ${step.side === 'kulaire' ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.15)'}`,
+                      color: step.side === 'kulaire' ? '#CF5C36' : 'rgba(238,229,233,0.45)',
+                    }}>
+                    {i + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom row — kulaire steps */}
+          <div className="flex">
+            {steps.map((step, i) => (
+              <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingTop: '20px' }}>
+                {step.side === 'kulaire' && (
+                  <div className="text-center flex flex-col items-center" style={{ width: '100%' }}>
+                    <div className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }}>
+                      kulaire
+                    </div>
+                    <p className="font-display font-bold text-sm mb-2" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                    <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+
+      {/* Mobile — vertical stacked */}
+      <div className="flex flex-col gap-0 md:hidden relative">
+        <div className="absolute left-[18px] top-0 bottom-0 w-px" style={{ background: 'linear-gradient(to bottom, transparent, rgba(238,229,233,0.1) 5%, rgba(238,229,233,0.1) 95%, transparent)' }} />
+        {steps.map((step, i) => (
+          <div key={i} className="flex gap-5 pb-8 relative">
+            <div className="relative z-10 flex-shrink-0 flex items-center justify-center rounded-full font-mono text-[10px] font-bold"
+              style={{
+                width: '36px', height: '36px',
+                background: step.side === 'kulaire' ? 'rgba(207,92,54,0.15)' : 'rgba(238,229,233,0.06)',
+                border: `1px solid ${step.side === 'kulaire' ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.15)'}`,
+                color: step.side === 'kulaire' ? '#CF5C36' : 'rgba(238,229,233,0.45)',
+                marginTop: '2px',
+              }}>
+              {i + 1}
+            </div>
+            <div className="pt-1">
+              <div className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-1.5 px-2 py-0.5 rounded-full"
+                style={step.side === 'kulaire'
+                  ? { background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }
+                  : { background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }
+                }>
+                {step.side === 'kulaire' ? 'kulaire' : 'You'}
+              </div>
+              <p className="font-display font-bold text-sm mb-1" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+              <p className="font-sans text-xs leading-[1.65]" style={{ color: 'rgba(238,229,233,0.35)' }}>{step.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+function ProcessTimeline({ tab }: { tab: string }) {
+  const [visibleTab, setVisibleTab] = useState(tab)
+  const [opacity, setOpacity]       = useState(1)
+
+  useEffect(() => {
+    setOpacity(0)
+    const t = setTimeout(() => {
+      setVisibleTab(tab)
+      setOpacity(1)
+    }, 180)
+    return () => clearTimeout(t)
+  }, [tab])
+
+  const steps = PROCESS_STEPS_BY_TAB[visibleTab] ?? PROCESS_STEPS_BY_TAB['Commercial']
+
   return (
     <div className="px-8 py-20">
       <div className="max-w-5xl mx-auto">
 
-        {/* Header */}
         <FadeIn>
           <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
             How it works
@@ -574,117 +706,9 @@ function ProcessTimeline() {
           </h2>
         </FadeIn>
 
-        {/* Timeline — desktop horizontal, mobile vertical */}
-        <FadeIn>
-          {/* Desktop */}
-          <div className="hidden md:block relative">
-            {/* Row layout: top (client) + line + bottom (kulaire) */}
-            <div className="relative" style={{ paddingBottom: '8px' }}>
-              {/* Top row — client steps */}
-              <div className="flex" style={{ marginBottom: '0' }}>
-                {PROCESS_STEPS.map((step, i) => (
-                  <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingTop: '0px' }}>
-                    {step.side === 'client' && (
-                      <div className="text-center flex flex-col items-center" style={{ width: '100%' }}>
-                        <div
-                          className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }}
-                        >
-                          You
-                        </div>
-                        <p className="font-display font-bold text-sm mb-2" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
-                        <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Center line with step dots */}
-              <div className="relative flex items-center" style={{ height: '32px' }}>
-                {/* Line */}
-                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2" style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(238,229,233,0.12) 8%, rgba(238,229,233,0.12) 92%, transparent)' }} />
-                {/* Dots */}
-                <div className="relative flex w-full">
-                  {PROCESS_STEPS.map((step, i) => (
-                    <div key={i} className="flex-1 flex justify-center items-center relative" style={{ height: '32px' }}>
-                      <div
-                        className="relative z-10 flex items-center justify-center rounded-full font-mono text-[10px] font-bold"
-                        style={{
-                          width: '26px',
-                          height: '26px',
-                          background: step.side === 'kulaire' ? 'rgba(207,92,54,0.15)' : 'rgba(238,229,233,0.06)',
-                          border: `1px solid ${step.side === 'kulaire' ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.15)'}`,
-                          color: step.side === 'kulaire' ? '#CF5C36' : 'rgba(238,229,233,0.45)',
-                        }}
-                      >
-                        {i + 1}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom row — kulaire steps */}
-              <div className="flex" style={{ marginTop: '0' }}>
-                {PROCESS_STEPS.map((step, i) => (
-                  <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingTop: '20px' }}>
-                    {step.side === 'kulaire' && (
-                      <div className="text-center flex flex-col items-center" style={{ width: '100%' }}>
-                        <div
-                          className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
-                          style={{ background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }}
-                        >
-                          kulaire
-                        </div>
-                        <p className="font-display font-bold text-sm mb-2" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
-                        <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile — vertical stacked */}
-          <div className="flex flex-col gap-0 md:hidden relative">
-            {/* Vertical line */}
-            <div className="absolute left-[18px] top-0 bottom-0 w-px" style={{ background: 'linear-gradient(to bottom, transparent, rgba(238,229,233,0.1) 5%, rgba(238,229,233,0.1) 95%, transparent)' }} />
-            {PROCESS_STEPS.map((step, i) => (
-              <div key={i} className="flex gap-5 pb-8 relative">
-                {/* Dot */}
-                <div
-                  className="relative z-10 flex-shrink-0 flex items-center justify-center rounded-full font-mono text-[10px] font-bold"
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    background: step.side === 'kulaire' ? 'rgba(207,92,54,0.15)' : 'rgba(238,229,233,0.06)',
-                    border: `1px solid ${step.side === 'kulaire' ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.15)'}`,
-                    color: step.side === 'kulaire' ? '#CF5C36' : 'rgba(238,229,233,0.45)',
-                    marginTop: '2px',
-                  }}
-                >
-                  {i + 1}
-                </div>
-                {/* Content */}
-                <div className="pt-1">
-                  <div
-                    className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-1.5 px-2 py-0.5 rounded-full"
-                    style={step.side === 'kulaire'
-                      ? { background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }
-                      : { background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }
-                    }
-                  >
-                    {step.side === 'kulaire' ? 'kulaire' : 'You'}
-                  </div>
-                  <p className="font-display font-bold text-sm mb-1" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
-                  <p className="font-sans text-xs leading-[1.65]" style={{ color: 'rgba(238,229,233,0.35)' }}>{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
+        <div style={{ opacity, transition: 'opacity 0.18s ease' }}>
+          <TimelineContent steps={steps} />
+        </div>
 
       </div>
     </div>
@@ -856,7 +880,7 @@ export default function WorkPage() {
       </div>
 
       {/* ── Process timeline ── */}
-      <ProcessTimeline />
+      <ProcessTimeline tab={activeTab} />
 
       {/* ── Reviews ── */}
       <div className="px-8 py-20">
