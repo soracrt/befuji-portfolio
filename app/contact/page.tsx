@@ -197,13 +197,13 @@ export default function ContactPage() {
                       className="font-display"
                       style={{
                         position:      'absolute',
-                        bottom:        '18px',
+                        top:           0,
                         left:          0,
                         right:         0,
+                        paddingTop:    '4px',
                         fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
                         fontWeight:    500,
                         letterSpacing: '-0.02em',
-                        lineHeight:    1,
                         pointerEvents: 'none',
                         whiteSpace:    'nowrap',
                         overflow:      'hidden',
