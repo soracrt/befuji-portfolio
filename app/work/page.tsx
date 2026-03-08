@@ -213,20 +213,19 @@ function VideoCard({ project }: { project: Project }) {
   )
 }
 
-const TABS = ['All', 'Motion', 'Web', 'Community']
+const TABS = ['For Businesses', 'For Artists', 'For Web']
 
 function matchesTab(category: string | null, tab: string) {
-  if (tab === 'All') return true
   const cat = (category || '').toLowerCase()
-  if (tab === 'Motion')    return ['ads', 'ad', 'film', 'saas', 'motion'].some(m => cat.includes(m))
-  if (tab === 'Web')       return cat === 'web'
-  if (tab === 'Community') return cat === 'community'
+  if (tab === 'For Businesses') return ['ads', 'ad', 'film', 'saas', 'business', 'motion'].some(m => cat.includes(m))
+  if (tab === 'For Artists')    return ['artist', 'music', 'community'].some(m => cat.includes(m))
+  if (tab === 'For Web')        return ['web', 'website'].some(m => cat.includes(m))
   return false
 }
 
 export default function WorkPage() {
   const [projects, setProjects]         = useState<Project[]>([])
-  const [activeTab, setActiveTab]       = useState('All')
+  const [activeTab, setActiveTab]       = useState('For Businesses')
 
   useEffect(() => {
     fetch('/api/admin/projects')
