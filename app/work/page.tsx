@@ -387,7 +387,7 @@ function ReviewForm({ category }: { category: string }) {
 
   const SERVICE_BY_CAT: Record<string, string[]> = {
     Commercial: ['Ads', 'SaaS', 'Motion Graphics'],
-    Artists:    ['Artist Promo', 'Music Video', 'Film', 'Other'],
+    Artists:    ['Artist Promo', 'Music Video', 'Other'],
     Digital:    ['Front-end', 'Back-end', 'Full Website'],
   }
   const services = SERVICE_BY_CAT[category] ?? SERVICE_BY_CAT['Commercial']
