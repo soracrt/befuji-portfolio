@@ -178,7 +178,7 @@ export default function Nav() {
         className="fixed z-50 font-sans text-xs tracking-[0.1em] uppercase"
         style={{
           top:                  '20px',
-          right:                '32px',
+          right:                'calc(50% - 300px)',
           height:               '44px',
           display:              'flex',
           alignItems:           'center',
