@@ -75,16 +75,7 @@ export default function ContactPage() {
   }
 
   function handleKey(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      if (showSuggestions && suggestions.length > 0) {
-        // Pick first suggestion on Enter if dropdown is open
-        setValues(v => ({ ...v, purpose: suggestions[0] }))
-        setShowSuggestions(false)
-        return
-      }
-      handleNext()
-    }
-    if (e.key === 'Escape') setShowSuggestions(false)
+    if (e.key === 'Enter') handleNext()
   }
 
   async function handleSubmit() {
