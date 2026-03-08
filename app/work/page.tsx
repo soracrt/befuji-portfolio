@@ -268,10 +268,119 @@ function WorkReviewCard({ review }: { review: Review }) {
   )
 }
 
+// ─── Custom dropdown ──────────────────────────────────────────────────────────
+
+function ServiceDropdown({ value, options, onChange }: { value: string; options: string[]; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between font-sans transition-all duration-150"
+        style={{
+          height: '46px',
+          padding: '0 14px',
+          background: 'rgba(238,229,233,0.04)',
+          border: `1px solid ${open ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.1)'}`,
+          borderRadius: '12px',
+          color: value ? '#EEE5E9' : 'rgba(238,229,233,0.3)',
+          fontSize: '14px',
+          cursor: 'pointer',
+        }}
+      >
+        <span>{value || 'Select service'}</span>
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ opacity: 0.4, flexShrink: 0, transition: 'transform 0.2s ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 w-full mt-1.5 overflow-hidden"
+          style={{
+            background: '#141414',
+            border: '1px solid rgba(238,229,233,0.1)',
+            borderRadius: '12px',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
+          }}
+        >
+          {options.map(opt => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => { onChange(opt); setOpen(false) }}
+              className="w-full text-left font-sans transition-colors duration-100"
+              style={{
+                padding: '11px 14px',
+                fontSize: '14px',
+                color: opt === value ? '#EEE5E9' : 'rgba(238,229,233,0.5)',
+                background: opt === value ? 'rgba(207,92,54,0.1)' : 'transparent',
+                borderBottom: '1px solid rgba(238,229,233,0.05)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+              onMouseEnter={e => { if (opt !== value) e.currentTarget.style.background = 'rgba(238,229,233,0.04)' }}
+              onMouseLeave={e => { if (opt !== value) e.currentTarget.style.background = 'transparent' }}
+            >
+              {opt}
+              {opt === value && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#CF5C36" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Submit review form ───────────────────────────────────────────────────────
 
+const LABEL_STYLE: React.CSSProperties = {
+  fontSize: '11px',
+  color: 'rgba(238,229,233,0.35)',
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase',
+  fontFamily: 'inherit',
+  marginBottom: '6px',
+  display: 'block',
+}
+
+const INPUT_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '46px',
+  padding: '0 14px',
+  background: 'rgba(238,229,233,0.04)',
+  border: '1px solid rgba(238,229,233,0.1)',
+  borderRadius: '12px',
+  color: '#EEE5E9',
+  fontSize: '14px',
+  outline: 'none',
+  fontFamily: 'inherit',
+  transition: 'border-color 0.15s ease',
+}
+
 function ReviewForm({ category }: { category: string }) {
-  const [form, setForm]       = useState({ name: '', service: '', company: '', text: '' })
+  const EMPTY = { name: '', service: '', company: '', text: '' }
+  const [form, setForm]             = useState(EMPTY)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone]             = useState(false)
   const [error, setError]           = useState('')
@@ -282,6 +391,14 @@ function ReviewForm({ category }: { category: string }) {
     Digital:    ['Web Development', 'SaaS', 'Other'],
   }
   const services = SERVICE_BY_CAT[category] ?? SERVICE_BY_CAT['Commercial']
+
+  // Reset service if category changes and current service isn't valid
+  useEffect(() => {
+    if (form.service && !services.includes(form.service)) {
+      setForm(f => ({ ...f, service: '' }))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category])
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -299,70 +416,132 @@ function ReviewForm({ category }: { category: string }) {
     setSubmitting(false)
   }
 
-  const inputStyle = {
-    background: 'rgba(238,229,233,0.03)',
-    border: '1px solid rgba(238,229,233,0.08)',
-    color: '#EEE5E9',
-    borderRadius: '12px',
-    padding: '10px 14px',
-    fontSize: '14px',
-    outline: 'none',
-    width: '100%',
-  }
+  const canSubmit = !!form.name && !!form.service && !!form.text
 
+  // ── Success state ──
   if (done) return (
-    <div className="flex flex-col items-center justify-center py-10 text-center gap-3">
-      <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(207,92,54,0.12)', border: '1px solid rgba(207,92,54,0.3)' }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CF5C36" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+    <div
+      className="rounded-2xl p-8 flex flex-col items-center text-center gap-5"
+      style={{ background: 'rgba(207,92,54,0.05)', border: '1px solid rgba(207,92,54,0.15)' }}
+    >
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center"
+        style={{ background: 'rgba(207,92,54,0.12)', border: '1px solid rgba(207,92,54,0.3)' }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CF5C36" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
       </div>
-      <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.5)' }}>
-        Review submitted — pending approval.
-      </p>
+      <div>
+        <p className="font-display font-bold mb-1" style={{ fontSize: '1.1rem', color: '#EEE5E9', letterSpacing: '-0.02em' }}>
+          Review sent.
+        </p>
+        <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.4)' }}>
+          It&apos;ll go live once approved. Thanks for the kind words.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => { setForm(EMPTY); setDone(false) }}
+        className="font-sans text-xs tracking-[0.1em] uppercase px-5 py-2 rounded-full transition-all duration-200"
+        style={{
+          background: 'rgba(238,229,233,0.06)',
+          border: '1px solid rgba(238,229,233,0.12)',
+          color: 'rgba(238,229,233,0.55)',
+          cursor: 'pointer',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)' }}
+        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.55)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.12)' }}
+      >
+        Add another review
+      </button>
     </div>
   )
 
+  // ── Form ──
   return (
-    <form onSubmit={submit} className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="font-sans" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Name *</label>
-          <input style={inputStyle} placeholder="Your name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-            onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
-            onBlur={e => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }} />
+    <form onSubmit={submit} className="flex flex-col gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        {/* Name */}
+        <div>
+          <label style={LABEL_STYLE}>Name <span style={{ color: '#CF5C36' }}>*</span></label>
+          <input
+            style={INPUT_STYLE}
+            placeholder="Your name"
+            value={form.name}
+            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+            onFocus={e => { e.currentTarget.style.borderColor = 'rgba(207,92,54,0.4)' }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(238,229,233,0.1)' }}
+          />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="font-sans" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Service *</label>
-          <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))}
-            onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
-            onBlur={e => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }}>
-            <option value="" disabled>Select service</option>
-            {services.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
+
+        {/* Service — custom dropdown */}
+        <div>
+          <label style={LABEL_STYLE}>Service <span style={{ color: '#CF5C36' }}>*</span></label>
+          <ServiceDropdown
+            value={form.service}
+            options={services}
+            onChange={v => setForm(f => ({ ...f, service: v }))}
+          />
         </div>
       </div>
-      <div className="flex flex-col gap-1.5">
-        <label className="font-sans" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Company / Brand <span style={{ opacity: 0.4 }}>(optional)</span></label>
-        <input style={inputStyle} placeholder="Where you're from" value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
-          onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
-          onBlur={e => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }} />
+
+      {/* Company */}
+      <div>
+        <label style={LABEL_STYLE}>
+          Company / Brand&nbsp;
+          <span style={{ color: 'rgba(238,229,233,0.25)', textTransform: 'none', letterSpacing: 0, fontSize: '11px' }}>(optional)</span>
+        </label>
+        <input
+          style={INPUT_STYLE}
+          placeholder="Where you're from"
+          value={form.company}
+          onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
+          onFocus={e => { e.currentTarget.style.borderColor = 'rgba(207,92,54,0.4)' }}
+          onBlur={e => { e.currentTarget.style.borderColor = 'rgba(238,229,233,0.1)' }}
+        />
       </div>
-      <div className="flex flex-col gap-1.5">
-        <label className="font-sans" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Your review *</label>
-        <textarea rows={3} style={{ ...inputStyle, resize: 'none', lineHeight: '1.6' }} placeholder="What was working with kulaire like?" value={form.text}
+
+      {/* Review text */}
+      <div>
+        <label style={LABEL_STYLE}>Your review <span style={{ color: '#CF5C36' }}>*</span></label>
+        <textarea
+          rows={4}
+          placeholder="What was it like working with kulaire?"
+          value={form.text}
           onChange={e => setForm(f => ({ ...f, text: e.target.value }))}
-          onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
-          onBlur={e => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }} />
-      </div>
-      {error && <p className="font-sans text-xs" style={{ color: '#f87171' }}>{error}</p>}
-      <div className="flex justify-end">
-        <button type="submit" disabled={submitting || !form.name || !form.service || !form.text}
-          className="font-sans text-xs tracking-[0.1em] uppercase px-6 py-2.5 rounded-full transition-all duration-200"
+          onFocus={e => { e.currentTarget.style.borderColor = 'rgba(207,92,54,0.4)' }}
+          onBlur={e => { e.currentTarget.style.borderColor = 'rgba(238,229,233,0.1)' }}
           style={{
-            background: (!form.name || !form.service || !form.text) ? 'rgba(238,229,233,0.06)' : '#CF5C36',
-            color:      (!form.name || !form.service || !form.text) ? 'rgba(238,229,233,0.2)' : '#fff',
-            cursor:     (!form.name || !form.service || !form.text) ? 'not-allowed' : 'pointer',
-          }}>
-          {submitting ? '···' : 'Submit review'}
+            ...INPUT_STYLE,
+            height: 'auto',
+            padding: '12px 14px',
+            resize: 'none',
+            lineHeight: '1.65',
+          }}
+        />
+      </div>
+
+      {error && (
+        <p className="font-sans text-xs" style={{ color: '#f87171' }}>{error}</p>
+      )}
+
+      <div className="flex items-center justify-between gap-4">
+        <p className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.2)' }}>
+          Reviews are approved before going live.
+        </p>
+        <button
+          type="submit"
+          disabled={submitting || !canSubmit}
+          className="font-sans text-xs tracking-[0.1em] uppercase px-7 py-3 rounded-full transition-all duration-200 shrink-0"
+          style={{
+            background: canSubmit ? '#CF5C36' : 'rgba(238,229,233,0.06)',
+            color:      canSubmit ? '#fff'    : 'rgba(238,229,233,0.2)',
+            cursor:     canSubmit && !submitting ? 'pointer' : 'not-allowed',
+            boxShadow:  canSubmit ? '0 0 20px rgba(207,92,54,0.35)' : 'none',
+          }}
+        >
+          {submitting ? '···' : 'Submit'}
         </button>
       </div>
     </form>
