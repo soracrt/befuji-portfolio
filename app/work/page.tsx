@@ -33,9 +33,8 @@ function fmt(t: number) {
   return `${m}:${s}`
 }
 
-function VideoCard({ project, priority = false, glow = false }: { project: Project; priority?: boolean; glow?: boolean }) {
+function VideoCard({ project, priority = false }: { project: Project; priority?: boolean }) {
   const videoRef       = useRef<HTMLVideoElement>(null)
-  const glowVideoRef   = useRef<HTMLVideoElement>(null)
   const containerRef   = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
   const fillRef        = useRef<HTMLDivElement>(null)
@@ -50,34 +49,27 @@ function VideoCard({ project, priority = false, glow = false }: { project: Proje
 
   useEffect(() => {
     const video = videoRef.current
-    const gv    = glowVideoRef.current
     if (!video) return
 
-    function loadBoth() {
-      video!.src = project.video
-      video!.load()
-      if (gv) { gv.src = project.video; gv.load() }
-      video!.addEventListener('canplay', () => setLoaded(true), { once: true })
-    }
-
     if (priority) {
-      loadBoth()
+      video.src = project.video
+      video.load()
+      video.addEventListener('canplay', () => setLoaded(true), { once: true })
     } else {
       const loadObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) { loadBoth(); loadObserver.disconnect() }
+        if (entries[0].isIntersecting) {
+          video.src = project.video
+          video.load()
+          video.addEventListener('canplay', () => setLoaded(true), { once: true })
+          loadObserver.disconnect()
+        }
       }, { rootMargin: '50px' })
       loadObserver.observe(video)
     }
 
-    // Pause/play both videos together when entering/leaving viewport
     const playObserver = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        video.play().catch(() => {})
-        gv?.play().catch(() => {})
-      } else {
-        video.pause()
-        gv?.pause()
-      }
+      if (entries[0].isIntersecting) { video.play().catch(() => {}) }
+      else { video.pause() }
     }, { rootMargin: '0px', threshold: 0.1 })
 
     playObserver.observe(video)
@@ -86,11 +78,9 @@ function VideoCard({ project, priority = false, glow = false }: { project: Proje
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation()
-    const v  = videoRef.current
-    const gv = glowVideoRef.current
+    const v = videoRef.current
     if (!v) return
-    if (v.paused) { v.play(); gv?.play().catch(() => {}) }
-    else          { v.pause(); gv?.pause() }
+    if (v.paused) { v.play() } else { v.pause() }
   }
 
   const toggleMute = (e: React.MouseEvent) => {
@@ -137,9 +127,7 @@ function VideoCard({ project, priority = false, glow = false }: { project: Proje
     cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(() => {
       if (!videoRef.current) return
-      const t = pct * videoRef.current.duration
-      videoRef.current.currentTime = t
-      if (glowVideoRef.current) glowVideoRef.current.currentTime = t
+      videoRef.current.currentTime = pct * videoRef.current.duration
     })
   }, [])
 
@@ -159,31 +147,13 @@ function VideoCard({ project, priority = false, glow = false }: { project: Proje
   return (
     <div>
       <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#0a0a0a] group">
-
-        {/* Glow layer — blurred duplicate, parented to main video */}
-        {glow && (
-          <video
-            ref={glowVideoRef}
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            style={{
-              filter:     'blur(48px) saturate(2.2) brightness(0.9)',
-              transform:  'scale(1.25)',
-              opacity:    loaded ? 0.7 : 0,
-              transition: 'opacity 0.5s ease',
-              zIndex:     0,
-            }}
-            autoPlay muted loop playsInline preload="none"
-          />
-        )}
-
         {!loaded && (
           <div className="absolute inset-0 z-10" style={{
             background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)',
             backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite',
           }} />
         )}
-        <div className="relative w-full" style={{ paddingBottom: '56.25%', zIndex: 1 }}>
+        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover cursor-pointer"
@@ -880,7 +850,7 @@ export default function WorkPage() {
               : [
                   ...paginated.map((project, i) => (
                     <FadeIn key={project.id} delay={i * 60}>
-                      <VideoCard project={project} priority={i < 2} glow={activeTab === 'Commercial' || activeTab === 'Artists'} />
+                      <VideoCard project={project} priority={i < 2} />
                     </FadeIn>
                   )),
                   ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
@@ -904,6 +874,73 @@ export default function WorkPage() {
 
       {/* ── Process timeline ── */}
       <ProcessTimeline tab={activeTab} />
+
+      {/* ── CTA ── */}
+      {(() => {
+        const CTA_COPY: Record<string, { heading: string; sub: string }> = {
+          Commercial: {
+            heading: 'Ready to make something people actually stop for?',
+            sub:     'Tell us about your brand and we\'ll put together a direction that sells.',
+          },
+          Artists: {
+            heading: 'Got a track that deserves a visual?',
+            sub:     'Drop the details and we\'ll turn it around fast — same-day for most projects.',
+          },
+          Websites: {
+            heading: 'Time to build something you\'re proud to send people to.',
+            sub:     'Share your references and we\'ll get the right direction locked in from day one.',
+          },
+        }
+        const copy = CTA_COPY[activeTab] ?? CTA_COPY['Commercial']
+        return (
+          <div className="px-8 pb-20">
+            <div className="max-w-5xl mx-auto">
+              <FadeIn>
+                <div
+                  className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-8 px-10 py-12"
+                  style={{
+                    background:   'rgba(207,92,54,0.06)',
+                    border:       '1px solid rgba(207,92,54,0.18)',
+                  }}
+                >
+                  {/* Subtle radial glow in corner */}
+                  <div className="absolute -top-16 -right-16 w-64 h-64 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(207,92,54,0.12) 0%, transparent 70%)' }} />
+
+                  <div className="relative flex-1">
+                    <p className="font-display font-bold mb-3" style={{ fontSize: 'clamp(1.3rem,2.5vw,1.9rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
+                      {copy.heading}
+                    </p>
+                    <p className="font-sans text-sm leading-[1.7]" style={{ color: 'rgba(238,229,233,0.45)', maxWidth: '480px' }}>
+                      {copy.sub}
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/quote"
+                    className="relative shrink-0 font-sans text-xs tracking-[0.12em] uppercase px-8 py-4 rounded-full transition-all duration-200"
+                    style={{
+                      background:  '#CF5C36',
+                      color:       '#fff',
+                      boxShadow:   '0 0 28px rgba(207,92,54,0.4)',
+                      whiteSpace:  'nowrap',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background  = '#d96b42'
+                      e.currentTarget.style.boxShadow   = '0 0 40px rgba(207,92,54,0.6)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background  = '#CF5C36'
+                      e.currentTarget.style.boxShadow   = '0 0 28px rgba(207,92,54,0.4)'
+                    }}
+                  >
+                    Get a quote
+                  </Link>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* ── Reviews ── */}
       <div className="px-8 py-20">
