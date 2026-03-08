@@ -819,21 +819,22 @@ export default function WorkPage() {
             </div>
           </FadeIn>
 
-          {/* Grid — always reserves 4-cell height to prevent layout shift */}
+          {/* Grid — always exactly PER_PAGE cells to prevent layout shift */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
             {projectsLoading
               ? Array.from({ length: PER_PAGE }).map((_, i) => (
                   <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
                 ))
-              : paginated.length > 0
-                ? paginated.map((project, i) => (
+              : [
+                  ...paginated.map((project, i) => (
                     <FadeIn key={project.id} delay={i * 60}>
                       <VideoCard project={project} priority={i < 2} />
                     </FadeIn>
-                  ))
-                : Array.from({ length: PER_PAGE }).map((_, i) => (
-                    <div key={i} style={{ aspectRatio: '16/9' }} />
-                  ))
+                  )),
+                  ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
+                    <div key={`ph-${i}`} style={{ aspectRatio: '16/9' }} />
+                  )),
+                ]
             }
           </div>
 
