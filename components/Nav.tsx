@@ -29,9 +29,7 @@ export default function Nav() {
       const y = window.scrollY
       const scrollingDown = y > lastY.current && y > 80
       if (scrollingDown) {
-        // Slide up first
         setVisible(false)
-        // Contract to circle only after slide-up finishes
         collapseTimer = setTimeout(() => setOpen(false), 420)
       } else {
         if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null }
@@ -56,15 +54,57 @@ export default function Nav() {
   }, [open])
 
   return (
-    <>
-    <nav
-      className="fixed top-5 left-0 right-0 z-50 flex justify-center px-8"
+    <div
+      className="fixed top-5 left-0 right-0 z-50 flex items-center px-8"
       style={{
+        gap:        '20px',
         transform:  visible ? 'translateY(0)' : 'translateY(-200%)',
         transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
+        pointerEvents: 'none',
       }}
     >
-      {/* Outer pill — width animates, overflow hidden reveals content */}
+
+      {/* Left column — flex-1, email pill right-aligned */}
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+        <a
+          href="mailto:hello@kulaire.com"
+          className="font-sans text-xs tracking-[0.1em]"
+          style={{
+            height:               `${CLOSED_SIZE}px`,
+            display:              'flex',
+            alignItems:           'center',
+            gap:                  '8px',
+            paddingLeft:          '18px',
+            paddingRight:         '18px',
+            borderRadius:         '9999px',
+            backdropFilter:       'blur(28px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+            background:           'rgba(12,12,12,0.65)',
+            border:               '1px solid rgba(238,229,233,0.1)',
+            boxShadow:            '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)',
+            color:                'rgba(238,229,233,0.65)',
+            whiteSpace:           'nowrap',
+            pointerEvents:        'auto',
+            transition:           'color 0.2s ease, border-color 0.2s ease',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color       = '#ffffff'
+            e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color       = 'rgba(238,229,233,0.65)'
+            e.currentTarget.style.borderColor = 'rgba(238,229,233,0.1)'
+          }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}>
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <polyline points="2,4 12,13 22,4" />
+          </svg>
+          hello@kulaire.com
+        </a>
+      </div>
+
+      {/* Center — nav pill */}
       <div
         ref={navRef}
         style={{
@@ -78,6 +118,8 @@ export default function Nav() {
           border:               '1px solid rgba(238,229,233,0.1)',
           boxShadow:            '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)',
           transition:           'width 0.5s cubic-bezier(0.16,1,0.3,1)',
+          flexShrink:           0,
+          pointerEvents:        'auto',
         }}
       >
         {/* Inner row — fixed full width so content doesn't reflow */}
@@ -93,7 +135,7 @@ export default function Nav() {
             paddingRight:   '20px',
           }}
         >
-          {/* Logo button — same size as closed pill, img absolutely centered */}
+          {/* Logo button */}
           <button
             onClick={() => setOpen(o => !o)}
             aria-label="Toggle navigation"
@@ -107,7 +149,6 @@ export default function Nav() {
               outline:     'none',
               padding:     0,
               cursor:      'pointer',
-              marginRight: '0px',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -123,13 +164,11 @@ export default function Nav() {
                 height:    '22px',
                 objectFit: 'contain',
                 display:   'block',
-                border:    'none',
-                outline:   'none',
               }}
             />
           </button>
 
-          {/* Links — always rendered, revealed by pill expansion */}
+          {/* Links */}
           {LINKS.map(({ label, href, accent }, i) => (
             <Link
               key={label}
@@ -169,83 +208,45 @@ export default function Nav() {
           ))}
         </div>
       </div>
-    </nav>
 
-    {/* Email pill — fixed top-left, symmetric to the CTA on the right */}
-    <a
-      href="mailto:hello@kulaire.com"
-      className="fixed z-50 font-sans text-xs tracking-[0.1em]"
-      style={{
-        top:                  '20px',
-        right:                'calc(50% + 200px)',
-        height:               '44px',
-        display:              'flex',
-        alignItems:           'center',
-        gap:                  '8px',
-        paddingLeft:          '18px',
-        paddingRight:         '18px',
-        borderRadius:         '9999px',
-        backdropFilter:       'blur(28px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-        background:           'rgba(12,12,12,0.65)',
-        border:               '1px solid rgba(238,229,233,0.1)',
-        boxShadow:            '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)',
-        color:                'rgba(238,229,233,0.65)',
-        whiteSpace:           'nowrap',
-        transition:           'color 0.2s ease, border-color 0.2s ease',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.color       = '#ffffff'
-        e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)'
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.color       = 'rgba(238,229,233,0.65)'
-        e.currentTarget.style.borderColor = 'rgba(238,229,233,0.1)'
-      }}
-    >
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}>
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <polyline points="2,4 12,13 22,4" />
-      </svg>
-      hello@kulaire.com
-    </a>
+      {/* Right column — flex-1, CTA left-aligned (hidden on /quote) */}
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+        {pathname !== '/quote' && (
+          <Link
+            href="/quote"
+            className="font-sans text-xs tracking-[0.1em] uppercase"
+            style={{
+              height:               `${CLOSED_SIZE}px`,
+              display:              'flex',
+              alignItems:           'center',
+              paddingLeft:          '18px',
+              paddingRight:         '18px',
+              borderRadius:         '9999px',
+              backdropFilter:       'blur(28px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+              background:           'rgba(207,92,54,0.12)',
+              border:               '1px solid rgba(207,92,54,0.3)',
+              color:                '#CF5C36',
+              whiteSpace:           'nowrap',
+              pointerEvents:        'auto',
+              transition:           'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background  = 'rgba(207,92,54,0.2)'
+              e.currentTarget.style.borderColor = 'rgba(207,92,54,0.55)'
+              e.currentTarget.style.color       = '#ff7f47'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background  = 'rgba(207,92,54,0.12)'
+              e.currentTarget.style.borderColor = 'rgba(207,92,54,0.3)'
+              e.currentTarget.style.color       = '#CF5C36'
+            }}
+          >
+            Get a quote
+          </Link>
+        )}
+      </div>
 
-    {/* Get a quote CTA — fixed top-right, hidden on /quote */}
-    {pathname !== '/quote' && (
-      <Link
-        href="/quote"
-        className="fixed z-50 font-sans text-xs tracking-[0.1em] uppercase"
-        style={{
-          top:                  '20px',
-          right:                'calc(50% - 300px)',
-          height:               '44px',
-          display:              'flex',
-          alignItems:           'center',
-          paddingLeft:          '18px',
-          paddingRight:         '18px',
-          borderRadius:         '9999px',
-          backdropFilter:       'blur(28px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-          background:           'rgba(207,92,54,0.12)',
-          border:               '1px solid rgba(207,92,54,0.3)',
-          color:                '#CF5C36',
-          whiteSpace:           'nowrap',
-          transition:           'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background    = 'rgba(207,92,54,0.2)'
-          e.currentTarget.style.borderColor   = 'rgba(207,92,54,0.55)'
-          e.currentTarget.style.color         = '#ff7f47'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background    = 'rgba(207,92,54,0.12)'
-          e.currentTarget.style.borderColor   = 'rgba(207,92,54,0.3)'
-          e.currentTarget.style.color         = '#CF5C36'
-        }}
-      >
-        Get a quote
-      </Link>
-    )}
-  </>
+    </div>
   )
 }
