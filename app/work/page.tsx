@@ -892,23 +892,25 @@ export default function WorkPage() {
           }}
           onMouseEnter={e => {
             const el = e.currentTarget
-            el.style.backdropFilter       = 'blur(20px) saturate(220%)'
-            (el.style as unknown as Record<string,string>)['WebkitBackdropFilter'] = 'blur(20px) saturate(220%)'
-            el.style.background           = 'rgba(255,255,255,0.11)'
-            el.style.borderColor          = 'rgba(255,255,255,0.22)'
-            el.style.boxShadow            = '0 4px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.04)'
-            el.style.color                = '#ffffff'
+            const s = el.style as unknown as Record<string, string>
+            s['backdropFilter']       = 'blur(20px) saturate(220%)'
+            s['WebkitBackdropFilter'] = 'blur(20px) saturate(220%)'
+            s['background']           = 'rgba(255,255,255,0.11)'
+            s['borderColor']          = 'rgba(255,255,255,0.22)'
+            s['boxShadow']            = '0 4px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.04)'
+            s['color']                = '#ffffff'
             const shimmer = el.querySelector('.lg-shimmer') as HTMLElement | null
             if (shimmer) shimmer.style.animation = 'liquid-shimmer 0.75s ease forwards'
           }}
           onMouseLeave={e => {
             const el = e.currentTarget
-            el.style.backdropFilter       = 'blur(12px) saturate(180%)'
-            (el.style as unknown as Record<string,string>)['WebkitBackdropFilter'] = 'blur(12px) saturate(180%)'
-            el.style.background           = 'rgba(255,255,255,0.06)'
-            el.style.borderColor          = 'rgba(255,255,255,0.13)'
-            el.style.boxShadow            = '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)'
-            el.style.color                = 'rgba(255,255,255,0.9)'
+            const s = el.style as unknown as Record<string, string>
+            s['backdropFilter']       = 'blur(12px) saturate(180%)'
+            s['WebkitBackdropFilter'] = 'blur(12px) saturate(180%)'
+            s['background']           = 'rgba(255,255,255,0.06)'
+            s['borderColor']          = 'rgba(255,255,255,0.13)'
+            s['boxShadow']            = '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)'
+            s['color']                = 'rgba(255,255,255,0.9)'
             const shimmer = el.querySelector('.lg-shimmer') as HTMLElement | null
             if (shimmer) shimmer.style.animation = 'none'
           }}
