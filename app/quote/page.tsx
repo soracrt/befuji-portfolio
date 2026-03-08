@@ -124,18 +124,17 @@ export default function QuotePage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col px-8 py-12">
+    <main className="min-h-screen flex flex-col px-8 pt-28 pb-12">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-12 max-w-xl mx-auto w-full">
-        <button
-          type="button"
-          onClick={() => router.back()}
+        <Link
+          href="/"
           className="font-sans text-xs tracking-[0.1em] uppercase transition-opacity hover:opacity-60"
-          style={{ color: 'rgba(238,229,233,0.3)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          style={{ color: 'rgba(238,229,233,0.3)' }}
         >
           ← Back
-        </button>
+        </Link>
         <span
           className="font-sans text-xs"
           style={{ color: 'rgba(238,229,233,0.25)', letterSpacing: '0.06em' }}

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const LINKS = [
   { label: 'Home',    href: '/' },
@@ -17,8 +18,9 @@ const CLOSED_SIZE = 44
 export default function Nav() {
   const [open, setOpen]       = useState(false)
   const [visible, setVisible] = useState(true)
-  const lastY  = useRef(0)
-  const navRef = useRef<HTMLDivElement>(null)
+  const lastY    = useRef(0)
+  const navRef   = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     let collapseTimer: ReturnType<typeof setTimeout> | null = null
@@ -54,6 +56,7 @@ export default function Nav() {
   }, [open])
 
   return (
+    <>
     <nav
       className="fixed top-5 left-0 right-0 z-50 flex justify-center px-8"
       style={{
@@ -167,5 +170,43 @@ export default function Nav() {
         </div>
       </div>
     </nav>
+
+    {/* Get a quote CTA — fixed top-right, hidden on /quote */}
+    {pathname !== '/quote' && (
+      <Link
+        href="/quote"
+        className="fixed z-50 font-sans text-xs tracking-[0.1em] uppercase"
+        style={{
+          top:                  '20px',
+          right:                '32px',
+          height:               '44px',
+          display:              'flex',
+          alignItems:           'center',
+          paddingLeft:          '18px',
+          paddingRight:         '18px',
+          borderRadius:         '9999px',
+          backdropFilter:       'blur(28px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+          background:           'rgba(207,92,54,0.12)',
+          border:               '1px solid rgba(207,92,54,0.3)',
+          color:                '#CF5C36',
+          whiteSpace:           'nowrap',
+          transition:           'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background    = 'rgba(207,92,54,0.2)'
+          e.currentTarget.style.borderColor   = 'rgba(207,92,54,0.55)'
+          e.currentTarget.style.color         = '#ff7f47'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background    = 'rgba(207,92,54,0.12)'
+          e.currentTarget.style.borderColor   = 'rgba(207,92,54,0.3)'
+          e.currentTarget.style.color         = '#CF5C36'
+        }}
+      >
+        Get a quote
+      </Link>
+    )}
+  </>
   )
 }
