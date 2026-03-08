@@ -33,8 +33,9 @@ function fmt(t: number) {
   return `${m}:${s}`
 }
 
-function VideoCard({ project, priority = false }: { project: Project; priority?: boolean }) {
+function VideoCard({ project, priority = false, glow = false }: { project: Project; priority?: boolean; glow?: boolean }) {
   const videoRef       = useRef<HTMLVideoElement>(null)
+  const glowVideoRef   = useRef<HTMLVideoElement>(null)
   const containerRef   = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
   const fillRef        = useRef<HTMLDivElement>(null)
@@ -49,29 +50,34 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
 
   useEffect(() => {
     const video = videoRef.current
+    const gv    = glowVideoRef.current
     if (!video) return
 
-    // Priority cards: load immediately on mount — no waiting for viewport
+    function loadBoth() {
+      video!.src = project.video
+      video!.load()
+      if (gv) { gv.src = project.video; gv.load() }
+      video!.addEventListener('canplay', () => setLoaded(true), { once: true })
+    }
+
     if (priority) {
-      video.src = project.video
-      video.load()
-      video.addEventListener('canplay', () => setLoaded(true), { once: true })
+      loadBoth()
     } else {
       const loadObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          video.src = project.video
-          video.load()
-          video.addEventListener('canplay', () => setLoaded(true), { once: true })
-          loadObserver.disconnect()
-        }
+        if (entries[0].isIntersecting) { loadBoth(); loadObserver.disconnect() }
       }, { rootMargin: '50px' })
       loadObserver.observe(video)
     }
 
-    // Pause when off-screen, play when back in view
+    // Pause/play both videos together when entering/leaving viewport
     const playObserver = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { video.play().catch(() => {}) }
-      else { video.pause() }
+      if (entries[0].isIntersecting) {
+        video.play().catch(() => {})
+        gv?.play().catch(() => {})
+      } else {
+        video.pause()
+        gv?.pause()
+      }
     }, { rootMargin: '0px', threshold: 0.1 })
 
     playObserver.observe(video)
@@ -80,9 +86,11 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation()
-    const v = videoRef.current
+    const v  = videoRef.current
+    const gv = glowVideoRef.current
     if (!v) return
-    if (v.paused) { v.play() } else { v.pause() }
+    if (v.paused) { v.play(); gv?.play().catch(() => {}) }
+    else          { v.pause(); gv?.pause() }
   }
 
   const toggleMute = (e: React.MouseEvent) => {
@@ -129,7 +137,9 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
     cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(() => {
       if (!videoRef.current) return
-      videoRef.current.currentTime = pct * videoRef.current.duration
+      const t = pct * videoRef.current.duration
+      videoRef.current.currentTime = t
+      if (glowVideoRef.current) glowVideoRef.current.currentTime = t
     })
   }, [])
 
@@ -149,13 +159,31 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
   return (
     <div>
       <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#0a0a0a] group">
+
+        {/* Glow layer — blurred duplicate, parented to main video */}
+        {glow && (
+          <video
+            ref={glowVideoRef}
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{
+              filter:     'blur(48px) saturate(2.2) brightness(0.9)',
+              transform:  'scale(1.25)',
+              opacity:    loaded ? 0.7 : 0,
+              transition: 'opacity 0.5s ease',
+              zIndex:     0,
+            }}
+            autoPlay muted loop playsInline preload="none"
+          />
+        )}
+
         {!loaded && (
           <div className="absolute inset-0 z-10" style={{
             background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)',
             backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite',
           }} />
         )}
-        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+        <div className="relative w-full" style={{ paddingBottom: '56.25%', zIndex: 1 }}>
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover cursor-pointer"
@@ -852,7 +880,7 @@ export default function WorkPage() {
               : [
                   ...paginated.map((project, i) => (
                     <FadeIn key={project.id} delay={i * 60}>
-                      <VideoCard project={project} priority={i < 2} />
+                      <VideoCard project={project} priority={i < 2} glow={activeTab === 'Commercial' || activeTab === 'Artists'} />
                     </FadeIn>
                   )),
                   ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
