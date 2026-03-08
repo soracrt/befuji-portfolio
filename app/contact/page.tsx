@@ -11,7 +11,7 @@ const STEPS = [
   { key: 'description', placeholder: "What's the description?",  hint: 'Brief overview of your project', type: 'text'  },
 ]
 
-const SERVICES = ['Ads', 'Film', 'SaaS', 'Web', 'Artist Promo', 'Motion Graphics']
+const SERVICES = ['Ads', 'Film', 'SaaS', 'Website Development', 'Artist Promo', 'Motion Graphics']
 
 type FormValues = { [key: string]: string }
 type Dir = 'fwd' | 'back'
