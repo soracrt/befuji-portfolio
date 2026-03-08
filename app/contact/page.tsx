@@ -1,7 +1,13 @@
 'use client'
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react'
+import dynamic from 'next/dynamic'
 import Footer from '@/components/Footer'
+
+const GlobeWidget = dynamic(() => import('@/components/GlobeWidget'), {
+  ssr:     false,
+  loading: () => <div style={{ width: '100%', aspectRatio: '1 / 1' }} />,
+})
 
 // ── form steps ────────────────────────────────────────────────────────────────
 const STEPS = [
@@ -68,10 +74,14 @@ export default function ContactPage() {
           from { opacity: 0; transform: translateX(28px); }
           to   { opacity: 1; transform: translateX(0);    }
         }
-        .contact-input::placeholder {
-          color: rgba(238,229,233,0.2);
+        .contact-input::placeholder { color: rgba(238,229,233,0.2); }
+        .contact-link:hover         { color: #EEE5E9 !important;    }
+        @media (max-width: 768px) {
+          .contact-layout { flex-direction: column !important; }
         }
-        .contact-link:hover { color: #EEE5E9 !important; }
+        @media (max-width: 560px) {
+          .contact-globe  { display: none !important; }
+        }
       `}</style>
 
       {/* ── header ── */}
@@ -146,28 +156,35 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── get in touch ── */}
-      <section style={{ padding: '0 clamp(24px, 6vw, 80px) clamp(80px, 10vw, 140px)', maxWidth: '860px' }}>
-
-        <p
-          className="font-sans"
-          style={{
-            fontSize:      '11px',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color:         'rgba(238,229,233,0.4)',
-            marginBottom:  '48px',
-            display:       'flex',
-            alignItems:    'center',
-            gap:           '10px',
-          }}
+      {/* ── get in touch + globe ── */}
+      <section style={{ padding: '0 clamp(24px, 6vw, 80px) clamp(80px, 10vw, 140px)' }}>
+        <div
+          className="contact-layout"
+          style={{ display: 'flex', gap: 'clamp(48px, 6vw, 96px)', alignItems: 'flex-start' }}
         >
-          <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
-          Get in touch
-        </p>
 
-        {/* form area */}
-        <div style={{ minHeight: '180px' }}>
+          {/* left: form */}
+          <div style={{ flex: '1 1 0', minWidth: 0 }}>
+
+            <p
+              className="font-sans"
+              style={{
+                fontSize:      '11px',
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color:         'rgba(238,229,233,0.4)',
+                marginBottom:  '48px',
+                display:       'flex',
+                alignItems:    'center',
+                gap:           '10px',
+              }}
+            >
+              <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
+              Get in touch
+            </p>
+
+            {/* form area */}
+            <div style={{ minHeight: '180px' }}>
 
           {/* ── success ── */}
           {submitted ? (
@@ -317,6 +334,17 @@ export default function ContactPage() {
             </div>
           )}
         </div>
+          </div>{/* end left column */}
+
+          {/* right: globe */}
+          <div
+            className="contact-globe"
+            style={{ flex: '0 0 clamp(240px, 36vw, 460px)', marginTop: '0' }}
+          >
+            <GlobeWidget />
+          </div>
+
+        </div>{/* end contact-layout */}
       </section>
 
       <Footer />
