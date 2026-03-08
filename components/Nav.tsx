@@ -209,42 +209,40 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* Right column — flex-1, CTA left-aligned (hidden on /quote) */}
+      {/* Right column — flex-1, CTA left-aligned */}
       <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
-        {pathname !== '/quote' && (
-          <Link
-            href="/quote"
-            className="font-sans text-xs tracking-[0.1em] uppercase"
-            style={{
-              height:               `${CLOSED_SIZE}px`,
-              display:              'flex',
-              alignItems:           'center',
-              paddingLeft:          '18px',
-              paddingRight:         '18px',
-              borderRadius:         '9999px',
-              backdropFilter:       'blur(28px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-              background:           'rgba(207,92,54,0.12)',
-              border:               '1px solid rgba(207,92,54,0.3)',
-              color:                '#CF5C36',
-              whiteSpace:           'nowrap',
-              pointerEvents:        'auto',
-              transition:           'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background  = 'rgba(207,92,54,0.2)'
-              e.currentTarget.style.borderColor = 'rgba(207,92,54,0.55)'
-              e.currentTarget.style.color       = '#ff7f47'
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background  = 'rgba(207,92,54,0.12)'
-              e.currentTarget.style.borderColor = 'rgba(207,92,54,0.3)'
-              e.currentTarget.style.color       = '#CF5C36'
-            }}
-          >
-            Get a quote
-          </Link>
-        )}
+        <Link
+          href={pathname === '/quote' ? '/contact' : '/quote'}
+          className="font-sans text-xs tracking-[0.1em] uppercase"
+          style={{
+            height:               `${CLOSED_SIZE}px`,
+            display:              'flex',
+            alignItems:           'center',
+            paddingLeft:          '18px',
+            paddingRight:         '18px',
+            borderRadius:         '9999px',
+            backdropFilter:       'blur(28px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+            background:           'rgba(207,92,54,0.12)',
+            border:               '1px solid rgba(207,92,54,0.3)',
+            color:                '#CF5C36',
+            whiteSpace:           'nowrap',
+            pointerEvents:        'auto',
+            transition:           'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background  = 'rgba(207,92,54,0.2)'
+            e.currentTarget.style.borderColor = 'rgba(207,92,54,0.55)'
+            e.currentTarget.style.color       = '#ff7f47'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background  = 'rgba(207,92,54,0.12)'
+            e.currentTarget.style.borderColor = 'rgba(207,92,54,0.3)'
+            e.currentTarget.style.color       = '#CF5C36'
+          }}
+        >
+          {pathname === '/quote' ? 'Contact us' : 'Get a quote'}
+        </Link>
       </div>
 
     </div>
