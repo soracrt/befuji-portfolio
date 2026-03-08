@@ -385,16 +385,18 @@ function matchesTab(category: string | null, tab: string) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function WorkPage() {
-  const [projects, setProjects]   = useState<Project[]>([])
-  const [reviews, setReviews]     = useState<Review[]>([])
-  const [activeTab, setActiveTab] = useState('Commercial')
-  const [page, setPage]           = useState(0)
+  const [projects, setProjects]         = useState<Project[]>([])
+  const [projectsLoading, setProjectsLoading] = useState(true)
+  const [reviews, setReviews]           = useState<Review[]>([])
+  const [activeTab, setActiveTab]       = useState('Commercial')
+  const [page, setPage]                 = useState(0)
 
   useEffect(() => {
     fetch('/api/admin/projects')
       .then(r => r.json())
       .then((data: Project[]) => { if (Array.isArray(data)) setProjects(data) })
       .catch(() => {})
+      .finally(() => setProjectsLoading(false))
   }, [])
 
   // Reload approved reviews whenever tab changes
@@ -457,21 +459,24 @@ export default function WorkPage() {
             </div>
           </FadeIn>
 
-          {/* Grid — 2×2 */}
+          {/* Grid — always 2×2 space reserved */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
-            {paginated.map((project, i) => (
-              <FadeIn key={project.id} delay={i * 60}>
-                <VideoCard project={project} priority={i < 2} />
-              </FadeIn>
-            ))}
+            {projectsLoading
+              ? Array.from({ length: PER_PAGE }).map((_, i) => (
+                  <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                ))
+              : paginated.map((project, i) => (
+                  <FadeIn key={project.id} delay={i * 60}>
+                    <VideoCard project={project} priority={i < 2} />
+                  </FadeIn>
+                ))
+            }
           </div>
 
-          {filtered.length === 0 && projects.length > 0 && (
-            <FadeIn>
-              <p className="font-sans text-sm text-center py-20" style={{ color: 'rgba(238,229,233,0.2)' }}>
-                No {activeTab.toLowerCase()} projects yet.
-              </p>
-            </FadeIn>
+          {!projectsLoading && filtered.length === 0 && (
+            <p className="font-sans text-sm text-center pt-6" style={{ color: 'rgba(238,229,233,0.2)' }}>
+              No {activeTab.toLowerCase()} projects yet.
+            </p>
           )}
 
           {/* Segmented pagination line */}
