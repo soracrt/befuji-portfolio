@@ -563,12 +563,32 @@ function matchesTab(category: string | null, tab: string) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+const TAB_ICONS: Record<string, React.ReactNode> = {
+  Commercial: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+    </svg>
+  ),
+  Artists: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+    </svg>
+  ),
+  Digital: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
+    </svg>
+  ),
+}
+
 export default function WorkPage() {
-  const [projects, setProjects]         = useState<Project[]>([])
+  const [projects, setProjects]               = useState<Project[]>([])
   const [projectsLoading, setProjectsLoading] = useState(true)
-  const [reviews, setReviews]           = useState<Review[]>([])
-  const [activeTab, setActiveTab]       = useState('Commercial')
-  const [page, setPage]                 = useState(0)
+  const [reviews, setReviews]                 = useState<Review[]>([])
+  const [activeTab, setActiveTab]             = useState('Commercial')
+  const [page, setPage]                       = useState(0)
+  const [showHotbar, setShowHotbar]           = useState(false)
+  const tabsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetch('/api/admin/projects')
@@ -588,6 +608,18 @@ export default function WorkPage() {
 
   // Reset to page 0 when tab changes
   useEffect(() => { setPage(0) }, [activeTab])
+
+  // Show hotbar once tabs section scrolls out of view
+  useEffect(() => {
+    const el = tabsRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowHotbar(!entry.isIntersecting),
+      { threshold: 0, rootMargin: '0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const filtered    = projects.filter(p => matchesTab(p.category, activeTab))
   const totalPages  = Math.ceil(filtered.length / PER_PAGE)
@@ -612,7 +644,7 @@ export default function WorkPage() {
 
           {/* Heading + tabs */}
           <FadeIn>
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
+            <div ref={tabsRef} className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
               <h1 className="font-display font-bold" style={{ fontSize: 'clamp(3rem,7vw,6rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                 Selected<br />
                 <span style={{ color: '#CF5C36', fontWeight: 400 }}>work</span>
@@ -713,6 +745,53 @@ export default function WorkPage() {
             <ReviewForm category={activeTab} />
           </FadeIn>
 
+        </div>
+      </div>
+
+      {/* ── Floating category hotbar ── */}
+      <div
+        className="fixed bottom-6 left-0 right-0 z-50 flex justify-center pointer-events-none"
+        style={{
+          transform:  showHotbar ? 'translateY(0)' : 'translateY(calc(100% + 24px))',
+          transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
+        }}
+      >
+        <div
+          className="flex items-center gap-1 pointer-events-auto"
+          style={{
+            padding:              '6px',
+            borderRadius:         '9999px',
+            backdropFilter:       'blur(28px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+            background:           'rgba(12,12,12,0.75)',
+            border:               '1px solid rgba(238,229,233,0.1)',
+            boxShadow:            '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
+          }}
+        >
+          {TABS.map(tab => {
+            const active = activeTab === tab
+            return (
+              <button
+                key={tab}
+                onClick={() => { setActiveTab(tab); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase transition-all duration-200"
+                style={{
+                  height:       '36px',
+                  paddingLeft:  '14px',
+                  paddingRight: '14px',
+                  borderRadius: '9999px',
+                  background:   active ? '#CF5C36' : 'transparent',
+                  color:        active ? '#fff' : 'rgba(238,229,233,0.45)',
+                  border:       'none',
+                  cursor:       'pointer',
+                  whiteSpace:   'nowrap',
+                }}
+              >
+                <span style={{ opacity: active ? 1 : 0.7 }}>{TAB_ICONS[tab]}</span>
+                {tab}
+              </button>
+            )
+          })}
         </div>
       </div>
 
