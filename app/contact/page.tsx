@@ -13,54 +13,6 @@ const STEPS = [
 
 type FormValues = { [key: string]: string }
 
-// ── contact links ─────────────────────────────────────────────────────────────
-const LINKS = [
-  {
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
-      </svg>
-    ),
-    label: 'Email',
-    value: 'hello@kulaire.com',
-    href: 'mailto:hello@kulaire.com',
-  },
-  {
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-        <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-      </svg>
-    ),
-    label: 'LinkedIn',
-    value: 'linkedin.com/company/kulaire',
-    href: 'https://linkedin.com/company/kulaire',
-  },
-  {
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5"/>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-      </svg>
-    ),
-    label: 'Instagram',
-    value: '@kulaire',
-    href: 'https://instagram.com/kulaire',
-  },
-  {
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-        <line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-    ),
-    label: 'Support',
-    value: 'support@kulaire.com',
-    href: 'mailto:support@kulaire.com',
-  },
-]
 
 // ── component ─────────────────────────────────────────────────────────────────
 export default function ContactPage() {
@@ -157,52 +109,40 @@ export default function ContactPage() {
 
       </section>
 
-      {/* ── contact info row ── */}
-      <section style={{ padding: 'clamp(48px, 6vw, 72px) clamp(24px, 6vw, 80px)' }}>
-        <div
-          style={{
-            display:               'grid',
-            gridTemplateColumns:   'repeat(auto-fit, minmax(180px, 1fr))',
-            gap:                   '32px 40px',
-            borderTop:             '1px solid #1a1a1a',
-            paddingTop:            '40px',
-          }}
-        >
-          {LINKS.map(link => (
-            <div key={link.label}>
-              <p
-                className="font-sans"
-                style={{
-                  fontSize:      '10px',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color:         'rgba(238,229,233,0.3)',
-                  marginBottom:  '10px',
-                  display:       'flex',
-                  alignItems:    'center',
-                  gap:           '6px',
-                }}
-              >
-                <span style={{ color: 'rgba(238,229,233,0.3)', display: 'flex' }}>{link.icon}</span>
-                {link.label}
-              </p>
-              <a
-                href={link.href}
-                target={link.href.startsWith('http') ? '_blank' : undefined}
-                rel="noopener noreferrer"
-                className="contact-link font-sans"
-                style={{
-                  fontSize:   '14px',
-                  color:      'rgba(238,229,233,0.55)',
-                  letterSpacing: '-0.01em',
-                  transition: 'color 0.15s ease',
-                  display:    'block',
-                }}
-              >
-                {link.value}
-              </a>
-            </div>
-          ))}
+      {/* ── email ── */}
+      <section style={{ padding: 'clamp(40px, 5vw, 60px) clamp(24px, 6vw, 80px)' }}>
+        <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: '36px' }}>
+          <p
+            className="font-sans"
+            style={{
+              fontSize:      '10px',
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color:         'rgba(238,229,233,0.3)',
+              marginBottom:  '10px',
+              display:       'flex',
+              alignItems:    'center',
+              gap:           '6px',
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgba(238,229,233,0.3)', flexShrink: 0 }}>
+              <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
+            </svg>
+            Email
+          </p>
+          <a
+            href="mailto:hello@kulaire.com"
+            className="contact-link font-sans"
+            style={{
+              fontSize:      '14px',
+              color:         'rgba(238,229,233,0.55)',
+              letterSpacing: '-0.01em',
+              transition:    'color 0.15s ease',
+              display:       'inline-block',
+            }}
+          >
+            hello@kulaire.com
+          </a>
         </div>
       </section>
 
