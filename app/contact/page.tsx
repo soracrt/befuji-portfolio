@@ -339,7 +339,7 @@ export default function ContactPage() {
           {/* right: globe */}
           <div
             className="contact-globe"
-            style={{ flex: '0 0 clamp(240px, 36vw, 460px)', marginTop: '0' }}
+            style={{ flex: '0 0 clamp(300px, 44vw, 560px)', marginTop: '0' }}
           >
             <GlobeWidget />
           </div>
