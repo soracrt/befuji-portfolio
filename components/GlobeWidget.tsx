@@ -2,44 +2,69 @@
 
 import { useEffect, useRef } from 'react'
 
-type LandPt    = { lat: number; lng: number }
-type RingDatum = { lat: number; lng: number; maxR: number; propagationSpeed: number; repeatPeriod: number }
-
+// ── constants ─────────────────────────────────────────────────────────────────
+const GLOBE_R       = 100
 const INDONESIA_LAT = -2.5489
 const INDONESIA_LNG = 118.0149
 
-const RING_DATA: RingDatum[] = [
-  { lat: INDONESIA_LAT, lng: INDONESIA_LNG, maxR: 4, propagationSpeed: 2, repeatPeriod: 1800 },
-]
-const POINT_DATA = [{ lat: INDONESIA_LAT, lng: INDONESIA_LNG }]
+// ── helpers ───────────────────────────────────────────────────────────────────
 
-// Sample the three-globe topology image. Land pixels are bright; ocean is dark.
-function sampleLandmass(step = 2): Promise<LandPt[]> {
+/** Convert lat/lng to a 3D point on a sphere of radius r. */
+function ll2xyz(lat: number, lng: number, r: number) {
+  const phi   = (90 - lat) * (Math.PI / 180)
+  const theta = (lng + 180) * (Math.PI / 180)
+  return {
+    x: -r * Math.sin(phi) * Math.cos(theta),
+    y:  r * Math.cos(phi),
+    z:  r * Math.sin(phi) * Math.sin(theta),
+  }
+}
+
+/** Create a circular sprite texture so dots render as circles, not squares. */
+function makeCircleTex(): HTMLCanvasElement {
+  const c = document.createElement('canvas')
+  c.width = c.height = 64
+  const ctx = c.getContext('2d')!
+  ctx.beginPath()
+  ctx.arc(32, 32, 30, 0, Math.PI * 2)
+  ctx.fillStyle = '#ffffff'
+  ctx.fill()
+  return c
+}
+
+/** Load topology image, sample land pixels, return packed Float32Array of xyz. */
+function buildLandPositions(): Promise<Float32Array> {
   return new Promise(resolve => {
     const img = new Image()
     img.crossOrigin = 'anonymous'
     img.src = 'https://unpkg.com/three-globe@2.31.1/example/img/earth-topology.png'
     img.onload = () => {
-      const W = 360, H = 180
+      const W = 360, H = 180, STEP = 2
       const canvas = document.createElement('canvas')
       canvas.width = W; canvas.height = H
       const ctx = canvas.getContext('2d')!
       ctx.drawImage(img, 0, 0, W, H)
       const { data } = ctx.getImageData(0, 0, W, H)
-      const pts: LandPt[] = []
-      for (let y = 0; y < H; y += step) {
-        for (let x = 0; x < W; x += step) {
+      const pos: number[] = []
+      for (let y = 0; y < H; y += STEP) {
+        for (let x = 0; x < W; x += STEP) {
           if (data[(y * W + x) * 4] > 60) {
-            pts.push({ lat: 90 - (y / H) * 180, lng: (x / W) * 360 - 180 })
+            const { x: vx, y: vy, z: vz } = ll2xyz(
+              90 - (y / H) * 180,
+              (x / W) * 360 - 180,
+              GLOBE_R * 1.001,  // fractionally above sphere surface
+            )
+            pos.push(vx, vy, vz)
           }
         }
       }
-      resolve(pts)
+      resolve(new Float32Array(pos))
     }
-    img.onerror = () => resolve([])
+    img.onerror = () => resolve(new Float32Array())
   })
 }
 
+// ── component ─────────────────────────────────────────────────────────────────
 export default function GlobeWidget() {
   const mountRef = useRef<HTMLDivElement>(null)
 
@@ -48,92 +73,126 @@ export default function GlobeWidget() {
     if (!el) return
 
     let alive = true
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let g: any = null
+    let rafId = 0
 
     ;(async () => {
-      const [{ default: GlobeClass }, THREE] = await Promise.all([
-        import('globe.gl'),
+      const [THREE, { OrbitControls }] = await Promise.all([
         import('three'),
+        import('three/examples/jsm/controls/OrbitControls.js'),
       ])
-      // globe.gl TS types declare a constructor; the JS runtime API is a factory.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const Globe = GlobeClass as any
-      if (!alive || !el) return
+      if (!alive) return
 
-      const dim = el.offsetWidth
+      const size = el.offsetWidth
 
-      g = Globe({ rendererConfig: { alpha: true, antialias: true } })(el)
-        .width(dim)
-        .height(dim)
-        .backgroundColor('rgba(0,0,0,0)')
-        .showAtmosphere(true)
-        .atmosphereColor('#1a0a06')
-        .atmosphereAltitude(0.14)
-        .globeMaterial(new THREE.MeshBasicMaterial({ color: new THREE.Color(0x060606) }))
-        // Indonesia pulse point
-        .pointsData(POINT_DATA)
-        .pointColor(() => '#CF5C36')
-        .pointAltitude(0.02)
-        .pointRadius(1.0)
-        // Indonesia expanding rings
-        .ringsData(RING_DATA)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .ringColor(() => (t: number) => `rgba(207,92,54,${((1 - t) * 0.9).toFixed(3)})`)
-        .ringMaxRadius('maxR')
-        .ringPropagationSpeed('propagationSpeed')
-        .ringRepeatPeriod('repeatPeriod')
+      // ── renderer ────────────────────────────────────────────────────────────
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      renderer.setSize(size, size)
+      renderer.setClearColor(0x000000, 0)
+      el.appendChild(renderer.domElement)
 
-      // Controls — slow rotation, no zoom/pan
-      const ctrl = g.controls()
-      ctrl.autoRotate      = true
-      ctrl.autoRotateSpeed = 0.45
-      ctrl.enableZoom      = false
-      ctrl.enablePan       = false
-      ctrl.enableDamping   = true
-      ctrl.dampingFactor   = 0.06
+      // ── scene / camera ───────────────────────────────────────────────────────
+      const scene  = new THREE.Scene()
+      const camera = new THREE.PerspectiveCamera(42, 1, 1, 2000)
 
-      // Zoom in and center on Indonesia
-      g.pointOfView({ lat: INDONESIA_LAT, lng: INDONESIA_LNG, altitude: 1.5 }, 0)
+      // Position camera so Indonesia is front-and-center on load
+      const idDir = ll2xyz(INDONESIA_LAT, INDONESIA_LNG, 1)
+      camera.position.set(
+        idDir.x * GLOBE_R * 2.5,
+        idDir.y * GLOBE_R * 2.5,
+        idDir.z * GLOBE_R * 2.5,
+      )
+      camera.lookAt(0, 0, 0)
 
-      // ── landmass dots ──────────────────────────────────────────────────────
-      // Use a single THREE.Points object (one draw call) instead of individual
-      // meshes — far more performant and lets us use bigger, cleaner dot sizes.
-      sampleLandmass(2).then(pts => {
-        if (!alive) return
+      // ── globe sphere (dark, almost black) ───────────────────────────────────
+      scene.add(new THREE.Mesh(
+        new THREE.SphereGeometry(GLOBE_R, 64, 64),
+        new THREE.MeshBasicMaterial({ color: 0x060606 }),
+      ))
 
-        const positions = new Float32Array(pts.length * 3)
-        pts.forEach(({ lat, lng }, i) => {
-          // Use globe.gl's own converter so coordinates match exactly
-          const { x, y, z } = g.getCoords(lat, lng, 0)
-          positions[i * 3]     = x
-          positions[i * 3 + 1] = y
-          positions[i * 3 + 2] = z
-        })
-
-        const geo = new THREE.BufferGeometry()
-        geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-
-        const mat = new THREE.PointsMaterial({
-          color:           new THREE.Color(0xeee5e9),
-          size:            2.8,
-          sizeAttenuation: true,   // dots shrink with distance (perspective)
-          transparent:     true,
-          opacity:         0.65,
-        })
-
-        g.scene().add(new THREE.Points(geo, mat))
+      // ── land dots ────────────────────────────────────────────────────────────
+      // Start with empty geometry; filled async once the topology image loads.
+      const dotTex = new THREE.CanvasTexture(makeCircleTex())
+      const dotGeo = new THREE.BufferGeometry()
+      const dotMat = new THREE.PointsMaterial({
+        map:             dotTex,
+        alphaTest:       0.4,
+        color:           new THREE.Color(0xeee5e9),
+        size:            2.6,
+        sizeAttenuation: true,
+        transparent:     true,
+        opacity:         0.65,
       })
+      scene.add(new THREE.Points(dotGeo, dotMat))
+
+      buildLandPositions().then(positions => {
+        if (!alive) return
+        dotGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
+      })
+
+      // ── Indonesia pin ────────────────────────────────────────────────────────
+      const idPos = ll2xyz(INDONESIA_LAT, INDONESIA_LNG, GLOBE_R * 1.015)
+      const idVec = new THREE.Vector3(idPos.x, idPos.y, idPos.z)
+
+      const pin = new THREE.Mesh(
+        new THREE.SphereGeometry(1.3, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xcf5c36 }),
+      )
+      pin.position.copy(idVec)
+      scene.add(pin)
+
+      // ── pulse rings (3 staggered) ────────────────────────────────────────────
+      const idNormal  = idVec.clone().normalize()
+      const MAX_RING  = 8
+      const NUM_RINGS = 3
+
+      const rings = Array.from({ length: NUM_RINGS }, (_, i) => {
+        const mat = new THREE.MeshBasicMaterial({
+          color:       0xcf5c36,
+          transparent: true,
+          opacity:     0,
+          side:        THREE.DoubleSide,
+        })
+        const mesh = new THREE.Mesh(new THREE.RingGeometry(0.82, 1, 48), mat)
+        mesh.position.copy(idVec)
+        // Orient ring so its normal faces outward from the sphere at Indonesia
+        mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), idNormal)
+        scene.add(mesh)
+        return { mesh, mat, phase: i / NUM_RINGS }
+      })
+
+      // ── controls ─────────────────────────────────────────────────────────────
+      const controls = new OrbitControls(camera, renderer.domElement)
+      controls.enableZoom      = false
+      controls.enablePan       = false
+      controls.autoRotate      = true
+      controls.autoRotateSpeed = 0.5
+      controls.enableDamping   = true
+      controls.dampingFactor   = 0.06
+      controls.update()
+
+      // ── render loop ──────────────────────────────────────────────────────────
+      let frame = 0
+      function tick() {
+        if (!alive) return
+        rafId = requestAnimationFrame(tick)
+        frame++
+
+        rings.forEach(({ mesh, mat, phase }) => {
+          const t = ((frame * 0.007 + phase) % 1)
+          mesh.scale.setScalar(t * MAX_RING)
+          mat.opacity = (1 - t) * 0.9
+        })
+
+        controls.update()
+        renderer.render(scene, camera)
+      }
+      tick()
     })()
 
     return () => {
       alive = false
-      try {
-        if (g) {
-          g.pauseAnimation()
-          g.renderer()?.dispose()
-        }
-      } catch { /* ignore disposal errors */ }
+      cancelAnimationFrame(rafId)
       el.innerHTML = ''
     }
   }, [])
