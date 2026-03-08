@@ -220,7 +220,10 @@ export default function ContactPage() {
                     ref={inputRef}
                     type="text"
                     value={typed}
-                    onChange={e => setValues(v => ({ ...v, purpose: e.target.value }))}
+                    onChange={e => {
+                      const v = e.target.value
+                      setValues(prev => ({ ...prev, purpose: v.length > 0 ? v[0].toUpperCase() + v.slice(1) : v }))
+                    }}
                     onKeyDown={e => {
                       if ((e.key === 'Tab' || e.key === 'ArrowRight') && ghost) {
                         e.preventDefault()
