@@ -876,54 +876,58 @@ export default function WorkPage() {
       {/* ── Process timeline ── */}
       <ProcessTimeline tab={activeTab} />
 
-      {/* ── CTA pill — liquid glass ── */}
+      {/* ── CTA pill — 3D glass ── */}
       <div className="flex justify-center pb-20">
         <Link
           href="/quote"
-          className="relative overflow-hidden font-sans text-xs tracking-[0.12em] uppercase px-8 py-3.5 rounded-full"
+          className="relative overflow-hidden font-sans uppercase"
           style={{
-            backdropFilter:       'blur(12px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(12px) saturate(180%)',
-            background:           'rgba(255,255,255,0.06)',
-            border:               '1px solid rgba(255,255,255,0.13)',
-            boxShadow:            '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)',
-            color:                'rgba(255,255,255,0.9)',
-            transition:           'backdrop-filter 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+            fontSize:             '13px',
+            fontWeight:           500,
+            letterSpacing:        '0.07em',
+            padding:              '14px 40px',
+            borderRadius:         '9999px',
+            backdropFilter:       'blur(16px) saturate(180%)',
+            background:           'linear-gradient(180deg, rgba(238,229,233,0.13) 0%, rgba(238,229,233,0.05) 55%, rgba(207,92,54,0.07) 100%)',
+            border:               '1px solid rgba(238,229,233,0.16)',
+            boxShadow:            [
+              'inset 0 2px 0 rgba(255,255,255,0.22)',
+              'inset 0 -1px 0 rgba(207,92,54,0.4)',
+              '0 1px 0 rgba(207,92,54,0.25)',
+              '0 8px 24px rgba(0,0,0,0.55)',
+              '0 20px 48px rgba(207,92,54,0.14)',
+            ].join(', '),
+            color:                'rgba(238,229,233,0.92)',
+            transition:           'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease',
           }}
           onMouseEnter={e => {
-            const el = e.currentTarget
-            const s = el.style as unknown as Record<string, string>
-            s['backdropFilter']       = 'blur(20px) saturate(220%)'
-            s['WebkitBackdropFilter'] = 'blur(20px) saturate(220%)'
-            s['background']           = 'rgba(255,255,255,0.11)'
-            s['borderColor']          = 'rgba(255,255,255,0.22)'
-            s['boxShadow']            = '0 4px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.04)'
-            s['color']                = '#ffffff'
-            const shimmer = el.querySelector('.lg-shimmer') as HTMLElement | null
-            if (shimmer) shimmer.style.animation = 'liquid-shimmer 0.75s ease forwards'
+            const s = e.currentTarget.style as unknown as Record<string, string>
+            s['background']  = 'linear-gradient(180deg, rgba(238,229,233,0.18) 0%, rgba(238,229,233,0.08) 55%, rgba(207,92,54,0.11) 100%)'
+            s['boxShadow']   = [
+              'inset 0 2px 0 rgba(255,255,255,0.32)',
+              'inset 0 -1px 0 rgba(207,92,54,0.55)',
+              '0 1px 0 rgba(207,92,54,0.35)',
+              '0 12px 32px rgba(0,0,0,0.6)',
+              '0 28px 56px rgba(207,92,54,0.22)',
+            ].join(', ')
+            s['transform']   = 'translateY(-1px)'
+            s['color']       = '#EEE5E9'
           }}
           onMouseLeave={e => {
-            const el = e.currentTarget
-            const s = el.style as unknown as Record<string, string>
-            s['backdropFilter']       = 'blur(12px) saturate(180%)'
-            s['WebkitBackdropFilter'] = 'blur(12px) saturate(180%)'
-            s['background']           = 'rgba(255,255,255,0.06)'
-            s['borderColor']          = 'rgba(255,255,255,0.13)'
-            s['boxShadow']            = '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)'
-            s['color']                = 'rgba(255,255,255,0.9)'
-            const shimmer = el.querySelector('.lg-shimmer') as HTMLElement | null
-            if (shimmer) shimmer.style.animation = 'none'
+            const s = e.currentTarget.style as unknown as Record<string, string>
+            s['background']  = 'linear-gradient(180deg, rgba(238,229,233,0.13) 0%, rgba(238,229,233,0.05) 55%, rgba(207,92,54,0.07) 100%)'
+            s['boxShadow']   = [
+              'inset 0 2px 0 rgba(255,255,255,0.22)',
+              'inset 0 -1px 0 rgba(207,92,54,0.4)',
+              '0 1px 0 rgba(207,92,54,0.25)',
+              '0 8px 24px rgba(0,0,0,0.55)',
+              '0 20px 48px rgba(207,92,54,0.14)',
+            ].join(', ')
+            s['transform']   = 'translateY(0)'
+            s['color']       = 'rgba(238,229,233,0.92)'
           }}
         >
-          {/* Light refraction shimmer sweep */}
-          <span
-            className="lg-shimmer pointer-events-none absolute inset-0"
-            style={{
-              background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)',
-              animation:  'none',
-            }}
-          />
-          <span className="relative">get a quote →</span>
+          get a quote →
         </Link>
       </div>
 
