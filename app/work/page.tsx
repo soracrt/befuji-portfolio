@@ -227,7 +227,7 @@ function PaginationLine({ total, current, onChange }: { total: number; current: 
 const MARQUEE_BRANDS: Record<string, string[]> = {
   Commercial: ['Apex Motors', 'Loopkit', 'Volta Brand', 'Frameshifts', 'Kura Studio', 'Stackline'],
   Artists:    ['Nocturne Visuals', 'Independent Artists', 'Film Collective', 'Visual Studio', 'Sound & Vision'],
-  Digital:    ['Stackline', 'Frameshifts', 'Loopkit', 'Web Studio', 'Digital Co'],
+  Websites:   ['Stackline', 'Frameshifts', 'Loopkit', 'Web Studio', 'Digital Co'],
 }
 
 function Marquee({ tab }: { tab: string }) {
@@ -388,7 +388,7 @@ function ReviewForm({ category }: { category: string }) {
   const SERVICE_BY_CAT: Record<string, string[]> = {
     Commercial: ['Ads', 'SaaS', 'Motion Graphics'],
     Artists:    ['Artist Promo', 'Music Video', 'Other'],
-    Digital:    ['Front-end', 'Back-end', 'Full Website'],
+    Websites:   ['Front-end', 'Back-end', 'Full Website'],
   }
   const services = SERVICE_BY_CAT[category] ?? SERVICE_BY_CAT['Commercial']
 
@@ -409,7 +409,7 @@ function ReviewForm({ category }: { category: string }) {
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, category: category.toLowerCase() }),
+        body: JSON.stringify({ ...form, category: tabToCategory(category) }),
       })
       if (res.ok) { setDone(true) } else { setError('Something went wrong. Try again.') }
     } catch { setError('Something went wrong. Try again.') }
@@ -693,15 +693,21 @@ function ProcessTimeline() {
 
 // ─── Tabs + routing ───────────────────────────────────────────────────────────
 
-const TABS = ['Commercial', 'Artists', 'Digital']
+const TABS = ['Commercial', 'Artists', 'Websites']
 const PER_PAGE = 4
 
 function matchesTab(category: string | null, tab: string) {
   const cat = (category || '').toLowerCase()
   if (tab === 'Commercial') return ['ads', 'ad', 'film', 'saas', 'business', 'motion'].some(m => cat.includes(m))
   if (tab === 'Artists')    return ['artist', 'music', 'community'].some(m => cat.includes(m))
-  if (tab === 'Digital')    return ['web', 'website', 'digital'].some(m => cat.includes(m))
+  if (tab === 'Websites')   return ['web', 'website', 'digital'].some(m => cat.includes(m))
   return false
+}
+
+// Map tab label to API category string
+function tabToCategory(tab: string) {
+  if (tab === 'Websites') return 'digital'
+  return tab.toLowerCase()
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -717,7 +723,7 @@ const TAB_ICONS: Record<string, React.ReactNode> = {
       <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
     </svg>
   ),
-  Digital: (
+  Websites: (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
     </svg>
@@ -743,7 +749,7 @@ export default function WorkPage() {
 
   // Reload approved reviews whenever tab changes
   useEffect(() => {
-    fetch(`/api/reviews?category=${activeTab.toLowerCase()}&approved=true`)
+    fetch(`/api/reviews?category=${tabToCategory(activeTab)}&approved=true`)
       .then(r => r.json())
       .then((data: Review[]) => { if (Array.isArray(data)) setReviews(data) })
       .catch(() => setReviews([]))
@@ -813,17 +819,21 @@ export default function WorkPage() {
             </div>
           </FadeIn>
 
-          {/* Grid — always 2×2 space reserved */}
+          {/* Grid — always reserves 4-cell height to prevent layout shift */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
             {projectsLoading
               ? Array.from({ length: PER_PAGE }).map((_, i) => (
                   <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
                 ))
-              : paginated.map((project, i) => (
-                  <FadeIn key={project.id} delay={i * 60}>
-                    <VideoCard project={project} priority={i < 2} />
-                  </FadeIn>
-                ))
+              : paginated.length > 0
+                ? paginated.map((project, i) => (
+                    <FadeIn key={project.id} delay={i * 60}>
+                      <VideoCard project={project} priority={i < 2} />
+                    </FadeIn>
+                  ))
+                : Array.from({ length: PER_PAGE }).map((_, i) => (
+                    <div key={i} style={{ aspectRatio: '16/9' }} />
+                  ))
             }
           </div>
 
@@ -857,7 +867,7 @@ export default function WorkPage() {
                 What they say
               </p>
               <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                From {activeTab.toLowerCase()} clients.
+                From {activeTab === 'Websites' ? 'web' : activeTab.toLowerCase()} clients.
               </h2>
             </div>
           </FadeIn>
@@ -885,7 +895,7 @@ export default function WorkPage() {
                 Add your review
               </p>
               <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>
-                Worked with kulaire on a {activeTab.toLowerCase()} project? Leave a note.
+                Worked with kulaire on a {activeTab === 'Websites' ? 'web' : activeTab.toLowerCase()} project? Leave a note.
               </p>
             </div>
             <ReviewForm category={activeTab} />
