@@ -583,19 +583,17 @@ function ProcessTimeline() {
               {/* Top row — client steps */}
               <div className="flex" style={{ marginBottom: '0' }}>
                 {PROCESS_STEPS.map((step, i) => (
-                  <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', paddingBottom: '20px' }}>
+                  <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingTop: '0px' }}>
                     {step.side === 'client' && (
                       <div className="text-center flex flex-col items-center" style={{ width: '100%' }}>
-                        {/* desc floats above — does NOT affect title y position */}
-                        <p className="font-sans text-xs leading-[1.6] mb-3" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
-                        {/* badge + title always at the same y (last in flex-end) */}
                         <div
                           className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
                           style={{ background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }}
                         >
                           You
                         </div>
-                        <p className="font-display font-bold text-sm" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                        <p className="font-display font-bold text-sm mb-2" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                        <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
                       </div>
                     )}
                   </div>
@@ -633,15 +631,13 @@ function ProcessTimeline() {
                   <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingTop: '20px' }}>
                     {step.side === 'kulaire' && (
                       <div className="text-center flex flex-col items-center" style={{ width: '100%' }}>
-                        {/* badge + title always at the same y (first in flex-start) */}
                         <div
                           className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
                           style={{ background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }}
                         >
                           kulaire
                         </div>
-                        <p className="font-display font-bold text-sm mb-3" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
-                        {/* desc extends downward — does NOT affect title y position */}
+                        <p className="font-display font-bold text-sm mb-2" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
                         <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px' }}>{step.desc}</p>
                       </div>
                     )}
