@@ -548,6 +548,149 @@ function ReviewForm({ category }: { category: string }) {
   )
 }
 
+// ─── Process timeline ─────────────────────────────────────────────────────────
+
+const PROCESS_STEPS = [
+  { side: 'client',  title: 'Share your brief',     desc: 'Tell us about the project, goals, and timeline.' },
+  { side: 'kulaire', title: 'Concept & storyboard',  desc: 'We map out the creative direction and get your sign-off.' },
+  { side: 'client',  title: 'Review the concept',    desc: 'Give feedback before we dive into production.' },
+  { side: 'kulaire', title: 'Production',             desc: 'We build it — motion, visuals, whatever the project calls for.' },
+  { side: 'client',  title: 'Final review',           desc: 'One last look before we wrap.' },
+  { side: 'kulaire', title: 'Delivery',               desc: 'Final files, optimized for every platform you need.' },
+]
+
+function ProcessTimeline() {
+  return (
+    <div className="px-8 py-20">
+      <div className="max-w-5xl mx-auto">
+
+        {/* Header */}
+        <FadeIn>
+          <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
+            How it works
+          </p>
+          <h2 className="font-display font-bold mb-14" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+            The process.
+          </h2>
+        </FadeIn>
+
+        {/* Timeline — desktop horizontal, mobile vertical */}
+        <FadeIn>
+          {/* Desktop */}
+          <div className="hidden md:block relative">
+            {/* Row layout: top (client) + line + bottom (kulaire) */}
+            <div className="relative" style={{ paddingBottom: '8px' }}>
+              {/* Top row — client steps */}
+              <div className="flex" style={{ marginBottom: '0' }}>
+                {PROCESS_STEPS.map((step, i) => (
+                  <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', paddingBottom: '20px' }}>
+                    {step.side === 'client' && (
+                      <div className="text-center">
+                        <div
+                          className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }}
+                        >
+                          You
+                        </div>
+                        <p className="font-display font-bold text-sm mb-1" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                        <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px', margin: '0 auto' }}>{step.desc}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Center line with step dots */}
+              <div className="relative flex items-center" style={{ height: '32px' }}>
+                {/* Line */}
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2" style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(238,229,233,0.12) 8%, rgba(238,229,233,0.12) 92%, transparent)' }} />
+                {/* Dots */}
+                <div className="relative flex w-full">
+                  {PROCESS_STEPS.map((step, i) => (
+                    <div key={i} className="flex-1 flex justify-center items-center relative" style={{ height: '32px' }}>
+                      <div
+                        className="relative z-10 flex items-center justify-center rounded-full font-mono text-[10px] font-bold"
+                        style={{
+                          width: '26px',
+                          height: '26px',
+                          background: step.side === 'kulaire' ? 'rgba(207,92,54,0.15)' : 'rgba(238,229,233,0.06)',
+                          border: `1px solid ${step.side === 'kulaire' ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.15)'}`,
+                          color: step.side === 'kulaire' ? '#CF5C36' : 'rgba(238,229,233,0.45)',
+                        }}
+                      >
+                        {i + 1}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom row — kulaire steps */}
+              <div className="flex" style={{ marginTop: '0' }}>
+                {PROCESS_STEPS.map((step, i) => (
+                  <div key={i} className="flex-1 px-2" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingTop: '20px' }}>
+                    {step.side === 'kulaire' && (
+                      <div className="text-center">
+                        <div
+                          className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-2 px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }}
+                        >
+                          kulaire
+                        </div>
+                        <p className="font-display font-bold text-sm mb-1" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                        <p className="font-sans text-xs leading-[1.6]" style={{ color: 'rgba(238,229,233,0.35)', maxWidth: '130px', margin: '0 auto' }}>{step.desc}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile — vertical stacked */}
+          <div className="flex flex-col gap-0 md:hidden relative">
+            {/* Vertical line */}
+            <div className="absolute left-[18px] top-0 bottom-0 w-px" style={{ background: 'linear-gradient(to bottom, transparent, rgba(238,229,233,0.1) 5%, rgba(238,229,233,0.1) 95%, transparent)' }} />
+            {PROCESS_STEPS.map((step, i) => (
+              <div key={i} className="flex gap-5 pb-8 relative">
+                {/* Dot */}
+                <div
+                  className="relative z-10 flex-shrink-0 flex items-center justify-center rounded-full font-mono text-[10px] font-bold"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    background: step.side === 'kulaire' ? 'rgba(207,92,54,0.15)' : 'rgba(238,229,233,0.06)',
+                    border: `1px solid ${step.side === 'kulaire' ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.15)'}`,
+                    color: step.side === 'kulaire' ? '#CF5C36' : 'rgba(238,229,233,0.45)',
+                    marginTop: '2px',
+                  }}
+                >
+                  {i + 1}
+                </div>
+                {/* Content */}
+                <div className="pt-1">
+                  <div
+                    className="inline-block font-sans text-[10px] tracking-[0.12em] uppercase mb-1.5 px-2 py-0.5 rounded-full"
+                    style={step.side === 'kulaire'
+                      ? { background: 'rgba(207,92,54,0.08)', border: '1px solid rgba(207,92,54,0.25)', color: 'rgba(207,92,54,0.7)' }
+                      : { background: 'rgba(238,229,233,0.05)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.35)' }
+                    }
+                  >
+                    {step.side === 'kulaire' ? 'kulaire' : 'You'}
+                  </div>
+                  <p className="font-display font-bold text-sm mb-1" style={{ color: '#EEE5E9', letterSpacing: '-0.02em' }}>{step.title}</p>
+                  <p className="font-sans text-xs leading-[1.65]" style={{ color: 'rgba(238,229,233,0.35)' }}>{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+
+      </div>
+    </div>
+  )
+}
+
 // ─── Tabs + routing ───────────────────────────────────────────────────────────
 
 const TABS = ['Commercial', 'Artists', 'Digital']
@@ -701,6 +844,9 @@ export default function WorkPage() {
         <Marquee tab={activeTab} />
       </div>
 
+      {/* ── Process timeline ── */}
+      <ProcessTimeline />
+
       {/* ── Reviews ── */}
       <div className="px-8 py-20">
         <div className="max-w-5xl mx-auto">
@@ -773,7 +919,7 @@ export default function WorkPage() {
             return (
               <button
                 key={tab}
-                onClick={() => { setActiveTab(tab); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                onClick={() => setActiveTab(tab)}
                 className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase transition-all duration-200"
                 style={{
                   height:       '36px',
