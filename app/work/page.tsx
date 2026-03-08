@@ -874,11 +874,6 @@ export default function WorkPage() {
         </div>
       </div>
 
-      {/* ── Marquee ── */}
-      <div className="max-w-5xl mx-auto px-0 overflow-hidden">
-        <Marquee tab={activeTab} />
-      </div>
-
       {/* ── Process timeline ── */}
       <ProcessTimeline tab={activeTab} />
 
