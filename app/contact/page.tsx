@@ -7,7 +7,7 @@ import Footer from '@/components/Footer'
 const STEPS = [
   { key: 'name',        placeholder: 'Enter your name',          hint: 'Your full name',                 type: 'text'  },
   { key: 'email',       placeholder: 'Enter your email',         hint: 'Your email address',             type: 'email' },
-  { key: 'purpose',     placeholder: 'What is it for?',          hint: 'Select or type a service',       type: 'text'  },
+  { key: 'purpose',     placeholder: 'What is it for?',          hint: 'Tab or → to complete',           type: 'text'  },
   { key: 'description', placeholder: "What's the description?",  hint: 'Brief overview of your project', type: 'text'  },
 ]
 
@@ -28,32 +28,23 @@ export default function ContactPage() {
   const [values,          setValues]         = useState<FormValues>({ name: '', email: '', purpose: '', description: '' })
   const [submitted,       setSubmitted]      = useState(false)
   const [sending,         setSending]        = useState(false)
-  const [error,           setError]          = useState('')
-  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const current = STEPS[step]
   const isLast  = step === STEPS.length - 1
   const filled  = !!values[current?.key]?.trim()
 
-  const suggestions = SERVICES.filter(s =>
-    s.toLowerCase().includes((values.purpose || '').toLowerCase())
-  )
+  // Ghost autocomplete for the purpose field
+  const typed      = values.purpose ?? ''
+  const ghostMatch = typed.length > 0
+    ? SERVICES.find(s => s.toLowerCase().startsWith(typed.toLowerCase())) ?? null
+    : null
+  const ghost = ghostMatch ? ghostMatch.slice(typed.length) : ''
 
   useEffect(() => {
     if (!submitted) setTimeout(() => inputRef.current?.focus(), 260)
   }, [step, submitted])
-
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    if (!showSuggestions) return
-    const handler = (e: MouseEvent) => {
-      const t = e.target as HTMLElement
-      if (!t.closest('.purpose-wrap')) setShowSuggestions(false)
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [showSuggestions])
 
   function transition(fn: () => void) {
     setExiting(true)
@@ -64,7 +55,6 @@ export default function ContactPage() {
     if (exiting) return
     setDir(d)
     setError('')
-    setShowSuggestions(false)
     transition(() => setStep(target))
   }
 
@@ -129,7 +119,6 @@ export default function ContactPage() {
         }
         .contact-input::placeholder { color: rgba(238,229,233,0.2); }
         .contact-link:hover         { color: #EEE5E9 !important;    }
-        .suggestion-item:hover      { background: rgba(238,229,233,0.06) !important; color: #EEE5E9 !important; }
         .dot-btn:hover              { background: rgba(207,92,54,0.5) !important; }
       `}</style>
 
@@ -207,113 +196,69 @@ export default function ContactPage() {
               }}
             >
 
-              {/* ── purpose step: combobox ── */}
+              {/* ── purpose step: ghost inline autocomplete ── */}
               {current.key === 'purpose' ? (
-                <div className="purpose-wrap" style={{ position: 'relative', marginBottom: '20px' }}>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      value={values.purpose ?? ''}
-                      onChange={e => {
-                        setValues(v => ({ ...v, purpose: e.target.value }))
-                        setShowSuggestions(true)
-                      }}
-                      onFocus={() => setShowSuggestions(true)}
-                      onKeyDown={handleKey}
-                      placeholder="What is it for?"
-                      className="contact-input font-display"
+                <div style={{ position: 'relative', marginBottom: '20px' }}>
+                  {/* ghost overlay — typed portion invisible (holds width), completion faint */}
+                  {ghost && (
+                    <div
+                      aria-hidden
+                      className="font-display"
                       style={{
-                        width:         '100%',
-                        background:    'transparent',
-                        border:        'none',
-                        borderBottom:  `1px solid ${showSuggestions ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.12)'}`,
-                        outline:       'none',
+                        position:      'absolute',
+                        top:           0,
+                        left:          0,
+                        right:         0,
+                        paddingTop:    '4px',
                         fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
                         fontWeight:    500,
                         letterSpacing: '-0.02em',
-                        color:         '#EEE5E9',
-                        paddingBottom: '18px',
-                        paddingTop:    '4px',
-                        paddingRight:  '48px',
-                        caretColor:    '#CF5C36',
-                        display:       'block',
-                        transition:    'border-color 0.15s ease',
-                      }}
-                    />
-                    {/* dropdown toggle */}
-                    <button
-                      tabIndex={-1}
-                      onMouseDown={e => {
-                        e.preventDefault()
-                        setShowSuggestions(s => !s)
-                        inputRef.current?.focus()
-                      }}
-                      style={{
-                        position:       'absolute',
-                        right:          0,
-                        bottom:         '18px',
-                        background:     'none',
-                        border:         'none',
-                        cursor:         'pointer',
-                        padding:        '4px',
-                        color:          showSuggestions ? '#CF5C36' : 'rgba(238,229,233,0.3)',
-                        transition:     'color 0.15s ease, transform 0.2s ease',
-                        transform:      showSuggestions ? 'rotate(180deg)' : 'rotate(0deg)',
+                        lineHeight:    1,
+                        pointerEvents: 'none',
+                        whiteSpace:    'nowrap',
+                        overflow:      'hidden',
+                        userSelect:    'none',
                       }}
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3,6 8,11 13,6"/>
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* suggestions dropdown */}
-                  {showSuggestions && suggestions.length > 0 && (
-                    <div
-                      style={{
-                        position:        'absolute',
-                        top:             'calc(100% + 4px)',
-                        left:            0,
-                        right:           0,
-                        background:      'rgba(10,10,10,0.97)',
-                        border:          '1px solid rgba(238,229,233,0.08)',
-                        borderRadius:    '12px',
-                        overflow:        'hidden',
-                        zIndex:          50,
-                        boxShadow:       '0 16px 40px rgba(0,0,0,0.6)',
-                      }}
-                    >
-                      {suggestions.map(s => (
-                        <button
-                          key={s}
-                          tabIndex={-1}
-                          className="suggestion-item font-sans"
-                          onMouseDown={e => {
-                            e.preventDefault()
-                            setValues(v => ({ ...v, purpose: s }))
-                            setShowSuggestions(false)
-                            setTimeout(() => inputRef.current?.focus(), 50)
-                          }}
-                          style={{
-                            display:       'block',
-                            width:         '100%',
-                            textAlign:     'left',
-                            padding:       '14px 20px',
-                            background:    'none',
-                            border:        'none',
-                            cursor:        'pointer',
-                            fontSize:      '14px',
-                            letterSpacing: '0.01em',
-                            color:         'rgba(238,229,233,0.55)',
-                            transition:    'background 0.12s, color 0.12s',
-                          }}
-                        >
-                          {s}
-                        </button>
-                      ))}
+                      {/* invisible spacer matching typed text */}
+                      <span style={{ visibility: 'hidden' }}>{typed}</span>
+                      {/* ghost completion */}
+                      <span style={{ color: 'rgba(238,229,233,0.28)' }}>{ghost}</span>
                     </div>
                   )}
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={typed}
+                    onChange={e => setValues(v => ({ ...v, purpose: e.target.value }))}
+                    onKeyDown={e => {
+                      if ((e.key === 'Tab' || e.key === 'ArrowRight') && ghost) {
+                        e.preventDefault()
+                        setValues(v => ({ ...v, purpose: ghostMatch! }))
+                      } else {
+                        handleKey(e)
+                      }
+                    }}
+                    placeholder="What is it for?"
+                    className="contact-input font-display"
+                    style={{
+                      position:      'relative',
+                      width:         '100%',
+                      background:    'transparent',
+                      border:        'none',
+                      borderBottom:  '1px solid rgba(238,229,233,0.12)',
+                      outline:       'none',
+                      fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
+                      fontWeight:    500,
+                      letterSpacing: '-0.02em',
+                      color:         '#EEE5E9',
+                      paddingBottom: '18px',
+                      paddingTop:    '4px',
+                      paddingLeft:   '0',
+                      caretColor:    '#CF5C36',
+                      display:       'block',
+                    }}
+                  />
                 </div>
 
               ) : (
