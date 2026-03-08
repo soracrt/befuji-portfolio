@@ -7,44 +7,94 @@ import Footer from '@/components/Footer'
 const STEPS = [
   { key: 'name',        placeholder: 'Enter your name',          hint: 'Your full name',                 type: 'text'  },
   { key: 'email',       placeholder: 'Enter your email',         hint: 'Your email address',             type: 'email' },
-  { key: 'purpose',     placeholder: 'What is it for?',          hint: 'e.g. Ads, Film, SaaS, Web',      type: 'text'  },
+  { key: 'purpose',     placeholder: 'What is it for?',          hint: 'Select or type a service',       type: 'text'  },
   { key: 'description', placeholder: "What's the description?",  hint: 'Brief overview of your project', type: 'text'  },
 ]
 
-type FormValues = { [key: string]: string }
+const SERVICES = ['Ads', 'Film', 'SaaS', 'Web', 'Artist Promo', 'Motion Graphics']
 
+type FormValues = { [key: string]: string }
+type Dir = 'fwd' | 'back'
+
+function isValidEmail(v: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())
+}
 
 // ── component ─────────────────────────────────────────────────────────────────
 export default function ContactPage() {
-  const [step,      setStep]      = useState(0)
-  const [exiting,   setExiting]   = useState(false)
-  const [values,    setValues]    = useState<FormValues>({ name: '', email: '', purpose: '', description: '' })
-  const [submitted, setSubmitted] = useState(false)
-  const [sending,   setSending]   = useState(false)
+  const [step,            setStep]           = useState(0)
+  const [exiting,         setExiting]        = useState(false)
+  const [dir,             setDir]            = useState<Dir>('fwd')
+  const [values,          setValues]         = useState<FormValues>({ name: '', email: '', purpose: '', description: '' })
+  const [submitted,       setSubmitted]      = useState(false)
+  const [sending,         setSending]        = useState(false)
+  const [error,           setError]          = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const current = STEPS[step]
   const isLast  = step === STEPS.length - 1
   const filled  = !!values[current?.key]?.trim()
 
-  // Focus input when step changes
+  const suggestions = SERVICES.filter(s =>
+    s.toLowerCase().includes((values.purpose || '').toLowerCase())
+  )
+
   useEffect(() => {
     if (!submitted) setTimeout(() => inputRef.current?.focus(), 260)
   }, [step, submitted])
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    if (!showSuggestions) return
+    const handler = (e: MouseEvent) => {
+      const t = e.target as HTMLElement
+      if (!t.closest('.purpose-wrap')) setShowSuggestions(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showSuggestions])
 
   function transition(fn: () => void) {
     setExiting(true)
     setTimeout(() => { fn(); setExiting(false) }, 220)
   }
 
+  function goTo(target: number, d: Dir) {
+    if (exiting) return
+    setDir(d)
+    setError('')
+    setShowSuggestions(false)
+    transition(() => setStep(target))
+  }
+
   function handleNext() {
     if (!filled || exiting || sending) return
+    if (current.key === 'email' && !isValidEmail(values.email)) {
+      setError('Enter a valid email address')
+      return
+    }
+    setError('')
     if (isLast) { handleSubmit(); return }
-    transition(() => setStep(s => s + 1))
+    goTo(step + 1, 'fwd')
+  }
+
+  function handleBack() {
+    if (step === 0) return
+    goTo(step - 1, 'back')
   }
 
   function handleKey(e: KeyboardEvent) {
-    if (e.key === 'Enter') handleNext()
+    if (e.key === 'Enter') {
+      if (showSuggestions && suggestions.length > 0) {
+        // Pick first suggestion on Enter if dropdown is open
+        setValues(v => ({ ...v, purpose: suggestions[0] }))
+        setShowSuggestions(false)
+        return
+      }
+      handleNext()
+    }
+    if (e.key === 'Escape') setShowSuggestions(false)
   }
 
   async function handleSubmit() {
@@ -57,56 +107,47 @@ export default function ContactPage() {
       })
     } catch { /* silent */ }
     setSending(false)
+    setDir('fwd')
     transition(() => setSubmitted(true))
   }
+
+  // ── slide animation vars ──────────────────────────────────────────────────
+  const enterAnim  = dir === 'fwd' ? 'slide-in-fwd 0.25s ease forwards' : 'slide-in-back 0.25s ease forwards'
+  const exitOffset = dir === 'fwd' ? 'translateX(-24px)' : 'translateX(24px)'
 
   return (
     <main style={{ background: '#000', minHeight: '100vh' }}>
 
       <style>{`
-        @keyframes slide-in {
+        @keyframes slide-in-fwd {
           from { opacity: 0; transform: translateX(28px); }
           to   { opacity: 1; transform: translateX(0);    }
         }
-        .contact-input::placeholder {
-          color: rgba(238,229,233,0.2);
+        @keyframes slide-in-back {
+          from { opacity: 0; transform: translateX(-28px); }
+          to   { opacity: 1; transform: translateX(0);     }
         }
-        .contact-link:hover { color: #EEE5E9 !important; }
+        .contact-input::placeholder { color: rgba(238,229,233,0.2); }
+        .contact-link:hover         { color: #EEE5E9 !important;    }
+        .suggestion-item:hover      { background: rgba(238,229,233,0.06) !important; color: #EEE5E9 !important; }
+        .dot-btn:hover              { background: rgba(207,92,54,0.5) !important; }
       `}</style>
 
       {/* ── header ── */}
       <section style={{ padding: 'clamp(120px, 14vw, 180px) clamp(24px, 6vw, 80px) 0' }}>
-
         <p
           className="font-sans"
-          style={{
-            fontSize:      '11px',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color:         'rgba(238,229,233,0.4)',
-            marginBottom:  '14px',
-            display:       'flex',
-            alignItems:    'center',
-            gap:           '10px',
-          }}
+          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '10px' }}
         >
           <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
           How to contact us
         </p>
-
         <h1
           className="font-display"
-          style={{
-            fontSize:      'clamp(3rem, 7vw, 7rem)',
-            fontWeight:    700,
-            letterSpacing: '-0.03em',
-            lineHeight:    0.95,
-            color:         '#EEE5E9',
-          }}
+          style={{ fontSize: 'clamp(3rem, 7vw, 7rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#EEE5E9' }}
         >
           Contact us<span style={{ color: '#CF5C36' }}>.</span>
         </h1>
-
       </section>
 
       {/* ── email ── */}
@@ -114,33 +155,14 @@ export default function ContactPage() {
         <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: '36px' }}>
           <p
             className="font-sans"
-            style={{
-              fontSize:      '10px',
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color:         'rgba(238,229,233,0.3)',
-              marginBottom:  '10px',
-              display:       'flex',
-              alignItems:    'center',
-              gap:           '6px',
-            }}
+            style={{ fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.3)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgba(238,229,233,0.3)', flexShrink: 0 }}>
               <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
             </svg>
             Email
           </p>
-          <a
-            href="mailto:hello@kulaire.com"
-            className="contact-link font-sans"
-            style={{
-              fontSize:      '14px',
-              color:         'rgba(238,229,233,0.55)',
-              letterSpacing: '-0.01em',
-              transition:    'color 0.15s ease',
-              display:       'inline-block',
-            }}
-          >
+          <a href="mailto:hello@kulaire.com" className="contact-link font-sans" style={{ fontSize: '14px', color: 'rgba(238,229,233,0.55)', letterSpacing: '-0.01em', transition: 'color 0.15s ease', display: 'inline-block' }}>
             hello@kulaire.com
           </a>
         </div>
@@ -151,101 +173,239 @@ export default function ContactPage() {
 
         <p
           className="font-sans"
-          style={{
-            fontSize:      '11px',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color:         'rgba(238,229,233,0.4)',
-            marginBottom:  '48px',
-            display:       'flex',
-            alignItems:    'center',
-            gap:           '10px',
-          }}
+          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '48px', display: 'flex', alignItems: 'center', gap: '10px' }}
         >
           <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
           Get in touch
         </p>
 
-        {/* form area */}
-        <div style={{ minHeight: '180px' }}>
+        <div style={{ minHeight: '200px' }}>
 
           {/* ── success ── */}
           {submitted ? (
-            <div style={{ animation: 'slide-in 0.3s ease forwards' }}>
+            <div style={{ animation: 'slide-in-fwd 0.3s ease forwards' }}>
               <p
                 className="font-display"
-                style={{
-                  fontSize:      'clamp(2rem, 5vw, 4.5rem)',
-                  fontWeight:    600,
-                  letterSpacing: '-0.03em',
-                  color:         '#EEE5E9',
-                  lineHeight:    1,
-                  marginBottom:  '16px',
-                }}
+                style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', fontWeight: 600, letterSpacing: '-0.03em', color: '#EEE5E9', lineHeight: 1, marginBottom: '16px' }}
               >
                 We'll be in touch<span style={{ color: '#CF5C36' }}>.</span>
               </p>
-              <p
-                className="font-sans"
-                style={{ fontSize: '13px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.01em' }}
-              >
+              <p className="font-sans" style={{ fontSize: '13px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.01em' }}>
                 Expect a reply within 24 hours.
               </p>
             </div>
 
           ) : (
 
-            /* ── step ── */
             <div
               key={step}
               style={{
                 opacity:    exiting ? 0 : 1,
-                transform:  exiting ? 'translateX(-24px)' : 'translateX(0)',
+                transform:  exiting ? exitOffset : 'translateX(0)',
                 transition: exiting ? 'opacity 0.2s ease, transform 0.2s ease' : 'none',
-                animation:  !exiting ? 'slide-in 0.25s ease forwards' : 'none',
+                animation:  !exiting ? enterAnim : 'none',
               }}
             >
-              {/* large input */}
-              <input
-                ref={inputRef}
-                type={current.type}
-                value={values[current.key] ?? ''}
-                onChange={e => setValues(v => ({ ...v, [current.key]: e.target.value }))}
-                onKeyDown={handleKey}
-                placeholder={current.placeholder}
-                className="contact-input font-display"
-                style={{
-                  width:         '100%',
-                  background:    'transparent',
-                  border:        'none',
-                  borderBottom:  '1px solid rgba(238,229,233,0.12)',
-                  outline:       'none',
-                  fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
-                  fontWeight:    500,
-                  letterSpacing: '-0.02em',
-                  color:         '#EEE5E9',
-                  paddingBottom: '18px',
-                  paddingTop:    '4px',
-                  caretColor:    '#CF5C36',
-                  display:       'block',
-                  marginBottom:  '20px',
-                }}
-              />
 
-              {/* hint + next button */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+              {/* ── purpose step: combobox ── */}
+              {current.key === 'purpose' ? (
+                <div className="purpose-wrap" style={{ position: 'relative', marginBottom: '20px' }}>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={values.purpose ?? ''}
+                      onChange={e => {
+                        setValues(v => ({ ...v, purpose: e.target.value }))
+                        setShowSuggestions(true)
+                      }}
+                      onFocus={() => setShowSuggestions(true)}
+                      onKeyDown={handleKey}
+                      placeholder="What is it for?"
+                      className="contact-input font-display"
+                      style={{
+                        width:         '100%',
+                        background:    'transparent',
+                        border:        'none',
+                        borderBottom:  `1px solid ${showSuggestions ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.12)'}`,
+                        outline:       'none',
+                        fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
+                        fontWeight:    500,
+                        letterSpacing: '-0.02em',
+                        color:         '#EEE5E9',
+                        paddingBottom: '18px',
+                        paddingTop:    '4px',
+                        paddingRight:  '48px',
+                        caretColor:    '#CF5C36',
+                        display:       'block',
+                        transition:    'border-color 0.15s ease',
+                      }}
+                    />
+                    {/* dropdown toggle */}
+                    <button
+                      tabIndex={-1}
+                      onMouseDown={e => {
+                        e.preventDefault()
+                        setShowSuggestions(s => !s)
+                        inputRef.current?.focus()
+                      }}
+                      style={{
+                        position:       'absolute',
+                        right:          0,
+                        bottom:         '18px',
+                        background:     'none',
+                        border:         'none',
+                        cursor:         'pointer',
+                        padding:        '4px',
+                        color:          showSuggestions ? '#CF5C36' : 'rgba(238,229,233,0.3)',
+                        transition:     'color 0.15s ease, transform 0.2s ease',
+                        transform:      showSuggestions ? 'rotate(180deg)' : 'rotate(0deg)',
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3,6 8,11 13,6"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* suggestions dropdown */}
+                  {showSuggestions && suggestions.length > 0 && (
+                    <div
+                      style={{
+                        position:        'absolute',
+                        top:             'calc(100% + 4px)',
+                        left:            0,
+                        right:           0,
+                        background:      'rgba(10,10,10,0.97)',
+                        border:          '1px solid rgba(238,229,233,0.08)',
+                        borderRadius:    '12px',
+                        overflow:        'hidden',
+                        zIndex:          50,
+                        boxShadow:       '0 16px 40px rgba(0,0,0,0.6)',
+                      }}
+                    >
+                      {suggestions.map(s => (
+                        <button
+                          key={s}
+                          tabIndex={-1}
+                          className="suggestion-item font-sans"
+                          onMouseDown={e => {
+                            e.preventDefault()
+                            setValues(v => ({ ...v, purpose: s }))
+                            setShowSuggestions(false)
+                            setTimeout(() => inputRef.current?.focus(), 50)
+                          }}
+                          style={{
+                            display:       'block',
+                            width:         '100%',
+                            textAlign:     'left',
+                            padding:       '14px 20px',
+                            background:    'none',
+                            border:        'none',
+                            cursor:        'pointer',
+                            fontSize:      '14px',
+                            letterSpacing: '0.01em',
+                            color:         'rgba(238,229,233,0.55)',
+                            transition:    'background 0.12s, color 0.12s',
+                          }}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+              ) : (
+                /* ── all other steps: plain input ── */
+                <div style={{ position: 'relative', marginBottom: '20px' }}>
+                  <input
+                    ref={inputRef}
+                    type={current.type}
+                    value={values[current.key] ?? ''}
+                    onChange={e => {
+                      setValues(v => ({ ...v, [current.key]: e.target.value }))
+                      if (error) setError('')
+                    }}
+                    onKeyDown={handleKey}
+                    placeholder={current.placeholder}
+                    className="contact-input font-display"
+                    style={{
+                      width:         '100%',
+                      background:    'transparent',
+                      border:        'none',
+                      borderBottom:  `1px solid ${error ? 'rgba(207,92,54,0.5)' : 'rgba(238,229,233,0.12)'}`,
+                      outline:       'none',
+                      fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
+                      fontWeight:    500,
+                      letterSpacing: '-0.02em',
+                      color:         '#EEE5E9',
+                      paddingBottom: '18px',
+                      paddingTop:    '4px',
+                      caretColor:    '#CF5C36',
+                      display:       'block',
+                      transition:    'border-color 0.15s ease',
+                    }}
+                  />
+                  {error && (
+                    <p
+                      className="font-sans"
+                      style={{ fontSize: '11px', color: '#CF5C36', letterSpacing: '0.04em', marginTop: '8px' }}
+                    >
+                      {error}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* hint + back + next row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+
+                {/* back button */}
+                {step > 0 && (
+                  <button
+                    onClick={handleBack}
+                    className="font-sans"
+                    style={{
+                      display:       'flex',
+                      alignItems:    'center',
+                      justifyContent: 'center',
+                      width:         '40px',
+                      height:        '40px',
+                      borderRadius:  '50%',
+                      background:    'rgba(238,229,233,0.04)',
+                      border:        '1px solid rgba(238,229,233,0.08)',
+                      color:         'rgba(238,229,233,0.35)',
+                      cursor:        'pointer',
+                      flexShrink:    0,
+                      transition:    'background 0.15s, border-color 0.15s, color 0.15s',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background    = 'rgba(238,229,233,0.08)'
+                      e.currentTarget.style.borderColor   = 'rgba(238,229,233,0.18)'
+                      e.currentTarget.style.color         = 'rgba(238,229,233,0.7)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background    = 'rgba(238,229,233,0.04)'
+                      e.currentTarget.style.borderColor   = 'rgba(238,229,233,0.08)'
+                      e.currentTarget.style.color         = 'rgba(238,229,233,0.35)'
+                    }}
+                  >
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="10" y1="6" x2="2" y2="6"/><polyline points="5,3 2,6 5,9"/>
+                    </svg>
+                  </button>
+                )}
+
+                {/* hint */}
                 <p
                   className="font-sans"
-                  style={{
-                    fontSize:      '11px',
-                    color:         'rgba(238,229,233,0.22)',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                  }}
+                  style={{ fontSize: '11px', color: 'rgba(238,229,233,0.22)', letterSpacing: '0.06em', textTransform: 'uppercase', flex: 1 }}
                 >
                   {current.hint}
                 </p>
 
+                {/* next / send button */}
                 <button
                   onClick={handleNext}
                   disabled={!filled || sending}
@@ -283,12 +443,7 @@ export default function ContactPage() {
                       transition:     'background 0.2s',
                     }}
                   >
-                    <svg
-                      width="10" height="10" viewBox="0 0 12 12"
-                      fill="none" stroke="currentColor" strokeWidth="1.8"
-                      strokeLinecap="round" strokeLinejoin="round"
-                      style={{ color: filled ? '#fff' : 'rgba(238,229,233,0.18)' }}
-                    >
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: filled ? '#fff' : 'rgba(238,229,233,0.18)' }}>
                       {isLast
                         ? <><path d="M10.5 1.5 5 7M10.5 1.5H7M10.5 1.5V5"/><path d="M5.5 3H2v7h7V6.5"/></>
                         : <><line x1="2" y1="6" x2="10" y2="6"/><polyline points="7,3 10,6 7,9"/></>
@@ -298,17 +453,20 @@ export default function ContactPage() {
                 </button>
               </div>
 
-              {/* step dots */}
-              <div style={{ display: 'flex', gap: '6px', marginTop: '36px' }}>
+              {/* step dots — completed dots are clickable */}
+              <div style={{ display: 'flex', gap: '6px', marginTop: '36px', alignItems: 'center' }}>
                 {STEPS.map((_, i) => (
                   <div
                     key={i}
+                    className={i < step ? 'dot-btn' : ''}
+                    onClick={() => i < step && goTo(i, 'back')}
                     style={{
                       width:        i === step ? '20px' : '5px',
                       height:       '5px',
                       borderRadius: '9999px',
-                      background:   i === step ? '#CF5C36' : i < step ? 'rgba(207,92,54,0.35)' : 'rgba(238,229,233,0.08)',
+                      background:   i === step ? '#CF5C36' : i < step ? 'rgba(207,92,54,0.4)' : 'rgba(238,229,233,0.08)',
                       transition:   'width 0.3s ease, background 0.3s ease',
+                      cursor:       i < step ? 'pointer' : 'default',
                     }}
                   />
                 ))}
