@@ -50,25 +50,32 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    const loadMargin = priority ? '500px' : '50px'
 
-    const loadObserver = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        video.src = project.video
-        video.load()
-        video.addEventListener('canplay', () => setLoaded(true), { once: true })
-        loadObserver.disconnect()
-      }
-    }, { rootMargin: loadMargin })
+    // Priority cards: load immediately on mount — no waiting for viewport
+    if (priority) {
+      video.src = project.video
+      video.load()
+      video.addEventListener('canplay', () => setLoaded(true), { once: true })
+    } else {
+      const loadObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          video.src = project.video
+          video.load()
+          video.addEventListener('canplay', () => setLoaded(true), { once: true })
+          loadObserver.disconnect()
+        }
+      }, { rootMargin: '50px' })
+      loadObserver.observe(video)
+    }
 
+    // Pause when off-screen, play when back in view
     const playObserver = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) { video.play().catch(() => {}) }
       else { video.pause() }
     }, { rootMargin: '0px', threshold: 0.1 })
 
-    loadObserver.observe(video)
     playObserver.observe(video)
-    return () => { loadObserver.disconnect(); playObserver.disconnect() }
+    return () => { playObserver.disconnect() }
   }, [project.video, priority])
 
   const togglePlay = (e: React.MouseEvent) => {
@@ -493,19 +500,18 @@ export default function WorkPage() {
             </div>
           </FadeIn>
 
-          {reviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
-              {reviews.map((r, i) => (
-                <FadeIn key={r.id} delay={i * 50}>
-                  <WorkReviewCard review={r} />
-                </FadeIn>
-              ))}
-            </div>
-          ) : (
-            <p className="font-sans text-sm mb-16" style={{ color: 'rgba(238,229,233,0.2)' }}>
-              No reviews for this category yet — be the first.
-            </p>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16" style={{ minHeight: '220px' }}>
+            {reviews.map((r, i) => (
+              <FadeIn key={r.id} delay={i * 50}>
+                <WorkReviewCard review={r} />
+              </FadeIn>
+            ))}
+            {reviews.length === 0 && (
+              <p className="font-sans text-sm col-span-full self-center" style={{ color: 'rgba(238,229,233,0.18)' }}>
+                No reviews for this category yet — be the first.
+              </p>
+            )}
+          </div>
 
           {/* Divider */}
           <div className="mb-10" style={{ borderTop: '1px solid rgba(238,229,233,0.06)' }} />
