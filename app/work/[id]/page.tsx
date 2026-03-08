@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
+import BackButton from '@/components/BackButton'
 
 // ─── Project data — keep in sync with app/work/page.tsx ──────────────────────
 const projects = [
@@ -103,12 +104,9 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
 
           {/* Back link */}
           <FadeIn>
-            <Link
-              href="/work"
-              className="font-sans text-xs tracking-[0.15em] uppercase text-ink border-b border-ink pb-0.5 hover:opacity-40 transition-opacity duration-200 inline-block mb-14"
-            >
-              ← Work
-            </Link>
+            <div className="mb-14">
+              <BackButton href="/work" label="Work" />
+            </div>
           </FadeIn>
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">

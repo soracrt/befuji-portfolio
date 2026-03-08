@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
+import BackButton from '@/components/BackButton'
 import ReviewCard from '@/components/ReviewCard'
 
 function CustomSelect({ value, options, onChange, placeholder = 'Choose one' }: { value: string; options: string[]; onChange: (v: string) => void; placeholder?: string }) {
@@ -137,15 +138,9 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
           {/* Back arrow */}
           <FadeIn>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.12em] uppercase text-ink/50 hover:text-ink transition-colors duration-200 mb-10"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-              back
-            </Link>
+            <div className="mb-10">
+              <BackButton href="/" />
+            </div>
           </FadeIn>
 
           {/* Heading */}

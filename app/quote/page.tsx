@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import BackButton from '@/components/BackButton'
 
 type Answers = {
   service:  string
@@ -128,13 +129,7 @@ export default function QuotePage() {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-12 max-w-xl mx-auto w-full">
-        <Link
-          href="/"
-          className="font-sans text-xs tracking-[0.1em] uppercase transition-opacity hover:opacity-60"
-          style={{ color: 'rgba(238,229,233,0.3)' }}
-        >
-          ← Back
-        </Link>
+        <BackButton href="/" />
         <span
           className="font-sans text-xs"
           style={{ color: 'rgba(238,229,233,0.25)', letterSpacing: '0.06em' }}

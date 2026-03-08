@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
+import BackButton from '@/components/BackButton'
 import { FaqSection } from '@/components/ui/faq-section'
 
 type Category = 'General' | 'Motion' | 'Website'
@@ -94,16 +95,9 @@ export default function FaqPage() {
 
           {/* Back */}
           <FadeIn>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.1em] uppercase mb-16 transition-opacity hover:opacity-50"
-              style={{ color: 'rgba(238,229,233,0.4)' }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-              Back
-            </Link>
+            <div className="mb-16">
+              <BackButton href="/" />
+            </div>
           </FadeIn>
 
           <FadeIn>
