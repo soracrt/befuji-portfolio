@@ -296,7 +296,7 @@ export default function WorkPage() {
                 }}
               >
                 Selected<br />
-                <span style={{ color: '#CF5C36', fontWeight: 400 }}>Work</span>
+                <span style={{ color: '#CF5C36', fontWeight: 400 }}>work</span>
                 <span style={{ color: '#CF5C36' }}>.</span>
               </h1>
 
