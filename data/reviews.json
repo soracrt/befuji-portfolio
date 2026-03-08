@@ -6,6 +6,8 @@
     "company": "Apex Motors",
     "text": "Insane attention to detail. The ad came out better than we imagined. Will definitely work with kulaire again.",
     "featured": true,
+    "category": "commercial",
+    "approved": true,
     "createdAt": "2025-11-02"
   },
   {
@@ -15,6 +17,8 @@
     "company": "Loopkit",
     "text": "Super clean motion work. Everything was delivered on time and the whole process was zero stress.",
     "featured": true,
+    "category": "commercial",
+    "approved": true,
     "createdAt": "2025-10-18"
   },
   {
@@ -24,6 +28,8 @@
     "company": "",
     "text": "We needed something cinematic but fast — kulaire delivered. Smooth collab from start to finish.",
     "featured": true,
+    "category": "artists",
+    "approved": true,
     "createdAt": "2025-09-30"
   },
   {
@@ -33,6 +39,8 @@
     "company": "Volta Brand",
     "text": "The visual style matched our brand perfectly. Fast revisions and great communication throughout.",
     "featured": false,
+    "category": "commercial",
+    "approved": true,
     "createdAt": "2025-09-05"
   },
   {
@@ -42,15 +50,19 @@
     "company": "Frameshifts",
     "text": "Clean, modern, exactly what a SaaS brand needs. The animation loops are used across all our socials.",
     "featured": false,
+    "category": "commercial",
+    "approved": true,
     "createdAt": "2025-08-22"
   },
   {
     "id": "r6",
     "name": "Priya Menon",
-    "service": "Other",
+    "service": "Artist Promo",
     "company": "",
     "text": "Reached out on short notice and kulaire pulled it off. Honestly surprised by how fast it all came together.",
     "featured": false,
+    "category": "artists",
+    "approved": true,
     "createdAt": "2025-08-10"
   },
   {
@@ -60,6 +72,8 @@
     "company": "Nocturne Visuals",
     "text": "Title sequence felt like a real film production. Brought a level of polish we couldn't get anywhere else.",
     "featured": false,
+    "category": "artists",
+    "approved": true,
     "createdAt": "2025-07-14"
   },
   {
@@ -69,15 +83,19 @@
     "company": "Kura Studio",
     "text": "Our campaign performance improved massively after the refresh. The motion work elevated everything.",
     "featured": false,
+    "category": "commercial",
+    "approved": true,
     "createdAt": "2025-07-01"
   },
   {
     "id": "r9",
     "name": "Elias Marsh",
-    "service": "SaaS",
+    "service": "Web",
     "company": "Stackline",
     "text": "Exactly the aesthetic we wanted for our product launch. Looks incredibly sharp at any size.",
     "featured": false,
+    "category": "digital",
+    "approved": true,
     "createdAt": "2025-06-20"
   }
 ]

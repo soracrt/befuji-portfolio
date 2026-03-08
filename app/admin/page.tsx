@@ -22,6 +22,8 @@ type Review = {
   company?: string
   text: string
   featured: boolean
+  category: string
+  approved: boolean
   createdAt: string
 }
 
@@ -1332,13 +1334,15 @@ function RecentSection({
 
 // ─── Add Review Modal ─────────────────────────────────────────────────────────
 
-const REVIEW_SERVICES = ['Ads', 'SaaS', 'Film', 'Other']
+const REVIEW_SERVICES = ['Ads', 'SaaS', 'Film', 'Artist Promo', 'Music Video', 'Web Development', 'Other']
+const REVIEW_CATEGORIES = ['commercial', 'artists', 'digital']
 
 function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (review: Review) => void }) {
   const [name, setName] = useState('')
   const [service, setService] = useState('Ads')
   const [company, setCompany] = useState('')
   const [text, setText] = useState('')
+  const [category, setCategory] = useState('commercial')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -1350,7 +1354,7 @@ function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
     try {
       const res = await fetch('/api/reviews', {
         method: 'POST',
-        body: JSON.stringify({ name, service, company, text }),
+        body: JSON.stringify({ name, service, company, text, category, approved: true }),
         headers: { 'Content-Type': 'application/json' },
       })
       if (!res.ok) throw new Error('Failed to add review')
@@ -1393,6 +1397,7 @@ function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
             <CategorySelect value={service} onChange={setService} options={REVIEW_SERVICES} />
+            <CategorySelect value={category} onChange={setCategory} options={REVIEW_CATEGORIES} />
             <input
               value={company}
               onChange={e => setCompany(e.target.value)}
@@ -1437,6 +1442,8 @@ function AddReviewModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
 
 // ─── Reviews Section ──────────────────────────────────────────────────────────
 
+const CAT_LABEL: Record<string, string> = { commercial: 'Commercial', artists: 'Artists', digital: 'Digital' }
+
 function ReviewsAdminSection({
   reviews,
   setReviews,
@@ -1444,11 +1451,19 @@ function ReviewsAdminSection({
   reviews: Review[]
   setReviews: React.Dispatch<React.SetStateAction<Review[]>>
 }) {
-  const [showAdd, setShowAdd] = useState(false)
-  const featuredCount = reviews.filter(r => r.featured).length
+  const [showAdd, setShowAdd]       = useState(false)
+  const [activeView, setActiveView] = useState<'approved' | 'pending'>('approved')
+  const [catFilter, setCatFilter]   = useState<string>('all')
+
+  const approved = reviews.filter(r => r.approved)
+  const pending  = reviews.filter(r => !r.approved)
+  const featuredCount = approved.filter(r => r.featured).length
+
+  const displayList = (activeView === 'approved' ? approved : pending)
+    .filter(r => catFilter === 'all' || r.category === catFilter)
 
   function toggleFeatured(id: string) {
-    const review = reviews.find(r => r.id === id)
+    const review = approved.find(r => r.id === id)
     if (!review) return
     const newValue = !review.featured
     if (newValue && featuredCount >= 3) return
@@ -1456,6 +1471,15 @@ function ReviewsAdminSection({
     fetch('/api/reviews', {
       method: 'PUT',
       body: JSON.stringify({ id, featured: newValue }),
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(console.error)
+  }
+
+  function approveReview(id: string) {
+    setReviews(prev => prev.map(r => r.id === id ? { ...r, approved: true } : r))
+    fetch('/api/reviews', {
+      method: 'PUT',
+      body: JSON.stringify({ id, approved: true }),
       headers: { 'Content-Type': 'application/json' },
     }).catch(console.error)
   }
@@ -1482,6 +1506,8 @@ function ReviewsAdminSection({
     }).catch(console.error)
   }
 
+  const approvedIdx = (r: Review) => reviews.indexOf(r)
+
   return (
     <div className="p-8 w-full max-w-5xl mx-auto">
       {showAdd && (
@@ -1491,100 +1517,120 @@ function ReviewsAdminSection({
         />
       )}
 
-      <div className="flex items-center gap-3 mb-6">
-        <p className="font-sans" style={{ fontSize: '16px', color: '#c0c0c0', letterSpacing: '-0.01em' }}>
-          Select up to 3 reviews to feature on the homepage.
-        </p>
-        <span className="font-sans" style={{ fontSize: '15px', color: '#909090' }}>{featuredCount}/3</span>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors ml-4"
-          style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
-        >
-          + Add review
-        </button>
+      {/* Toolbar */}
+      <div className="flex items-center gap-3 mb-6 flex-wrap">
+        {/* View toggle */}
+        <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid #222' }}>
+          {(['approved', 'pending'] as const).map(v => (
+            <button key={v} onClick={() => setActiveView(v)}
+              className="font-sans px-4 py-1.5 transition-colors"
+              style={{ fontSize: '13px', letterSpacing: '-0.01em', background: activeView === v ? '#1e1e1e' : 'transparent', color: activeView === v ? '#e0e0e0' : '#686868' }}>
+              {v === 'approved' ? `Approved (${approved.length})` : `Pending (${pending.length})`}
+              {v === 'pending' && pending.length > 0 && (
+                <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px]" style={{ background: '#CF5C36', color: '#fff' }}>{pending.length}</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Category filter */}
+        <div className="flex gap-1.5">
+          {(['all', 'commercial', 'artists', 'digital'] as const).map(c => (
+            <button key={c} onClick={() => setCatFilter(c)}
+              className="font-sans px-3 py-1 rounded-full transition-colors"
+              style={{ fontSize: '12px', letterSpacing: '0.06em', textTransform: 'uppercase', background: catFilter === c ? '#252525' : 'transparent', color: catFilter === c ? '#c0c0c0' : '#585858', border: '1px solid', borderColor: catFilter === c ? '#333' : 'transparent' }}>
+              {c === 'all' ? 'All' : CAT_LABEL[c]}
+            </button>
+          ))}
+        </div>
+
+        <div className="ml-auto flex items-center gap-3">
+          {activeView === 'approved' && (
+            <span className="font-sans" style={{ fontSize: '13px', color: '#686868' }}>{featuredCount}/3 featured</span>
+          )}
+          <button onClick={() => setShowAdd(true)} className="font-sans text-[#686868] hover:text-[#a0a0a0] transition-colors" style={{ fontSize: '14px' }}>
+            + Add review
+          </button>
+        </div>
       </div>
 
-      {reviews.length === 0 ? (
-        <p className="font-sans text-[#585858] text-sm">No reviews yet.</p>
+      {displayList.length === 0 ? (
+        <p className="font-sans text-[#585858] text-sm">
+          {activeView === 'pending' ? 'No pending reviews.' : 'No reviews yet.'}
+        </p>
       ) : (
         <div className="flex flex-col gap-1.5">
-          <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px' }}>
-            {(['', 'Name', 'Service', 'Review', '', ''] as const).map((col, i) => (
-              <div key={i} className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.11em', color: '#888888' }}>
-                {col}
-              </div>
-            ))}
-          </div>
+          {activeView === 'approved' && (
+            <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '28px 1fr 90px 80px 1fr 60px 28px' }}>
+              {['', 'Name', 'Category', 'Service', 'Review', '', ''].map((col, i) => (
+                <div key={i} className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.1em', color: '#585858', textTransform: 'uppercase' }}>{col}</div>
+              ))}
+            </div>
+          )}
+          {activeView === 'pending' && (
+            <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '1fr 90px 80px 1fr 80px 28px' }}>
+              {['Name', 'Category', 'Service', 'Review', '', ''].map((col, i) => (
+                <div key={i} className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.1em', color: '#585858', textTransform: 'uppercase' }}>{col}</div>
+              ))}
+            </div>
+          )}
 
-          {reviews.map((r, idx) => {
+          {displayList.map((r) => {
+            const idx = approvedIdx(r)
             const maxed = !r.featured && featuredCount >= 3
             return (
               <div
                 key={r.id}
-                className="grid gap-4 items-center px-5 py-4 rounded-xl group"
+                className="grid gap-4 items-center px-5 py-4 rounded-xl"
                 style={{
-                  gridTemplateColumns: '28px 1fr 80px 1fr 60px 28px',
+                  gridTemplateColumns: activeView === 'approved' ? '28px 1fr 90px 80px 1fr 60px 28px' : '1fr 90px 80px 1fr 80px 28px',
                   background: 'linear-gradient(135deg, #1a1a24 0%, #141419 100%)',
                   boxShadow: '0 0 0 1px rgba(255,255,255,0.06)',
                 }}
               >
-                <div className="flex flex-col items-center gap-0.5">
-                  <button
-                    onClick={() => moveReview(idx, -1)}
-                    disabled={idx === 0}
-                    className="text-[#404040] hover:text-[#b0b0b0] disabled:text-[#202020] disabled:cursor-default transition-colors"
-                  >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="18 15 12 9 6 15" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => moveReview(idx, 1)}
-                    disabled={idx === reviews.length - 1}
-                    className="text-[#404040] hover:text-[#b0b0b0] disabled:text-[#202020] disabled:cursor-default transition-colors"
-                  >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </button>
-                </div>
+                {activeView === 'approved' && (
+                  <div className="flex flex-col items-center gap-0.5">
+                    <button onClick={() => moveReview(idx, -1)} disabled={idx === 0} className="text-[#404040] hover:text-[#b0b0b0] disabled:text-[#202020] disabled:cursor-default transition-colors">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15" /></svg>
+                    </button>
+                    <button onClick={() => moveReview(idx, 1)} disabled={idx === reviews.length - 1} className="text-[#404040] hover:text-[#b0b0b0] disabled:text-[#202020] disabled:cursor-default transition-colors">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                  </div>
+                )}
 
                 <div className="min-w-0">
-                  <div className="font-sans text-white/90 truncate" style={{ fontSize: '17px', letterSpacing: '-0.01em' }}>{r.name}</div>
-                  {r.company && (
-                    <div className="font-sans truncate mt-0.5" style={{ fontSize: '15px', color: '#909090' }}>{r.company}</div>
-                  )}
+                  <div className="font-sans text-white/90 truncate" style={{ fontSize: '15px', letterSpacing: '-0.01em' }}>{r.name}</div>
+                  {r.company && <div className="font-sans truncate mt-0.5" style={{ fontSize: '13px', color: '#909090' }}>{r.company}</div>}
                 </div>
 
-                <span className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.1em', color: '#c0c0c0' }}>
-                  {r.service.toUpperCase()}
+                <span className="font-sans capitalize" style={{ fontSize: '12px', letterSpacing: '0.08em', color: '#686868', textTransform: 'uppercase' }}>
+                  {CAT_LABEL[r.category] ?? r.category}
                 </span>
 
-                <span className="font-sans truncate" style={{ fontSize: '15px', color: '#909090', letterSpacing: '-0.01em' }} title={r.text}>
-                  {r.text}
+                <span className="font-sans" style={{ fontSize: '12px', letterSpacing: '0.08em', color: '#c0c0c0', textTransform: 'uppercase' }}>
+                  {r.service}
                 </span>
 
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={() => !maxed && toggleFeatured(r.id)}
-                    disabled={maxed}
-                    title={r.featured ? 'Unfeature' : maxed ? 'Max 3 featured' : 'Feature on homepage'}
-                    className="shrink-0 relative rounded-full transition-colors duration-200 disabled:opacity-30"
-                    style={{ width: '30px', height: '17px', background: r.featured ? '#a10702' : '#252525' }}
-                  >
-                    <div
-                      className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#000000] transition-all duration-200"
-                      style={{ left: r.featured ? '16px' : '3px' }}
-                    />
+                <span className="font-sans truncate" style={{ fontSize: '13px', color: '#909090', letterSpacing: '-0.01em' }} title={r.text}>{r.text}</span>
+
+                {activeView === 'approved' ? (
+                  <div className="flex items-center justify-center">
+                    <button onClick={() => !maxed && toggleFeatured(r.id)} disabled={maxed} title={r.featured ? 'Unfeature' : maxed ? 'Max 3 featured' : 'Feature on homepage'}
+                      className="shrink-0 relative rounded-full transition-colors duration-200 disabled:opacity-30"
+                      style={{ width: '30px', height: '17px', background: r.featured ? '#a10702' : '#252525' }}>
+                      <div className="absolute top-[3px] w-[11px] h-[11px] rounded-full bg-[#000000] transition-all duration-200" style={{ left: r.featured ? '16px' : '3px' }} />
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={() => approveReview(r.id)}
+                    className="font-sans px-3 py-1 rounded-lg transition-colors"
+                    style={{ fontSize: '12px', background: 'rgba(207,92,54,0.12)', border: '1px solid rgba(207,92,54,0.3)', color: '#CF5C36' }}>
+                    Approve
                   </button>
-                </div>
+                )}
 
-                <button
-                  onClick={() => deleteReview(r.id)}
-                  title="Delete"
-                  className="flex items-center justify-center text-[#404040] hover:text-red-400/70 transition-colors"
-                >
+                <button onClick={() => deleteReview(r.id)} title="Delete" className="flex items-center justify-center text-[#404040] hover:text-red-400/70 transition-colors">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" />
                     <path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" />

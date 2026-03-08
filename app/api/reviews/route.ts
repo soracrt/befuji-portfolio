@@ -55,9 +55,20 @@ async function writeReviews(reviews: unknown[]) {
   }))
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const reviews = await readReviews()
+    const { searchParams } = new URL(req.url)
+    const category = searchParams.get('category')
+    const approvedParam = searchParams.get('approved')
+
+    let reviews = await readReviews() as Record<string, unknown>[]
+
+    if (category) reviews = reviews.filter(r => r.category === category)
+    if (approvedParam !== null) {
+      const want = approvedParam === 'true'
+      reviews = reviews.filter(r => (r.approved === true) === want)
+    }
+
     return NextResponse.json(reviews, {
       headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' },
     })
@@ -96,7 +107,7 @@ async function sendReviewNotification(review: {
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { name, service, company, text } = body
+    const { name, service, company, text, category } = body
     if (!name || !service || !text) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
@@ -105,8 +116,10 @@ export async function POST(req: Request) {
       name: String(name).slice(0, 80),
       service: String(service),
       company: company ? String(company).slice(0, 80) : '',
-      text: String(text).slice(0, 120),
+      text: String(text).slice(0, 400),
       featured: false,
+      category: category ? String(category) : 'commercial',
+      approved: body.approved === true,
       createdAt: new Date().toISOString().slice(0, 10),
     }
     const reviews = await readReviews()
