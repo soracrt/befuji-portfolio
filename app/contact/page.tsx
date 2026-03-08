@@ -197,10 +197,9 @@ export default function ContactPage() {
                       className="font-display"
                       style={{
                         position:      'absolute',
-                        top:           0,
+                        bottom:        '18px',
                         left:          0,
                         right:         0,
-                        paddingTop:    '4px',
                         fontSize:      'clamp(1.8rem, 4vw, 3.8rem)',
                         fontWeight:    500,
                         letterSpacing: '-0.02em',
