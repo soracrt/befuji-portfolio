@@ -875,72 +875,28 @@ export default function WorkPage() {
       {/* ── Process timeline ── */}
       <ProcessTimeline tab={activeTab} />
 
-      {/* ── CTA ── */}
-      {(() => {
-        const CTA_COPY: Record<string, { heading: string; sub: string }> = {
-          Commercial: {
-            heading: 'Ready to make something people actually stop for?',
-            sub:     'Tell us about your brand and we\'ll put together a direction that sells.',
-          },
-          Artists: {
-            heading: 'Got a track that deserves a visual?',
-            sub:     'Drop the details and we\'ll turn it around fast — same-day for most projects.',
-          },
-          Websites: {
-            heading: 'Time to build something you\'re proud to send people to.',
-            sub:     'Share your references and we\'ll get the right direction locked in from day one.',
-          },
-        }
-        const copy = CTA_COPY[activeTab] ?? CTA_COPY['Commercial']
-        return (
-          <div className="px-8 pb-20">
-            <div className="max-w-5xl mx-auto">
-              <FadeIn>
-                <div
-                  className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-8 px-10 py-12"
-                  style={{
-                    background:   'rgba(207,92,54,0.06)',
-                    border:       '1px solid rgba(207,92,54,0.18)',
-                  }}
-                >
-                  {/* Subtle radial glow in corner */}
-                  <div className="absolute -top-16 -right-16 w-64 h-64 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(207,92,54,0.12) 0%, transparent 70%)' }} />
-
-                  <div className="relative flex-1">
-                    <p className="font-display font-bold mb-3" style={{ fontSize: 'clamp(1.3rem,2.5vw,1.9rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
-                      {copy.heading}
-                    </p>
-                    <p className="font-sans text-sm leading-[1.7]" style={{ color: 'rgba(238,229,233,0.45)', maxWidth: '480px' }}>
-                      {copy.sub}
-                    </p>
-                  </div>
-
-                  <Link
-                    href="/quote"
-                    className="relative shrink-0 font-sans text-xs tracking-[0.12em] uppercase px-8 py-4 rounded-full transition-all duration-200"
-                    style={{
-                      background:  '#CF5C36',
-                      color:       '#fff',
-                      boxShadow:   '0 0 28px rgba(207,92,54,0.4)',
-                      whiteSpace:  'nowrap',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background  = '#d96b42'
-                      e.currentTarget.style.boxShadow   = '0 0 40px rgba(207,92,54,0.6)'
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background  = '#CF5C36'
-                      e.currentTarget.style.boxShadow   = '0 0 28px rgba(207,92,54,0.4)'
-                    }}
-                  >
-                    Get a quote
-                  </Link>
-                </div>
-              </FadeIn>
-            </div>
-          </div>
-        )
-      })()}
+      {/* ── CTA pill ── */}
+      <div className="flex justify-center pb-20">
+        <Link
+          href="/quote"
+          className="font-sans text-xs tracking-[0.12em] uppercase px-7 py-3 rounded-full transition-all duration-200"
+          style={{
+            background:  '#CF5C36',
+            color:       '#fff',
+            boxShadow:   '0 0 24px rgba(207,92,54,0.35)',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = '#d96b42'
+            e.currentTarget.style.boxShadow  = '0 0 36px rgba(207,92,54,0.55)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = '#CF5C36'
+            e.currentTarget.style.boxShadow  = '0 0 24px rgba(207,92,54,0.35)'
+          }}
+        >
+          Start your project
+        </Link>
+      </div>
 
       {/* ── Reviews ── */}
       <div className="px-8 py-20">
