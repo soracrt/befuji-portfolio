@@ -7,11 +7,11 @@ export function FooterSection() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="w-full px-8 pt-20 pb-8" style={{ borderTop: '1px solid rgba(238,229,233,0.07)' }}>
+    <footer className="w-full px-4 sm:px-8 pt-12 sm:pt-20 pb-8" style={{ borderTop: '1px solid rgba(238,229,233,0.07)' }}>
       <div className="max-w-6xl mx-auto">
 
         {/* Top section */}
-        <div className="grid grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-16">
 
           {/* Left: CTA */}
           <div className="flex flex-col justify-between">
@@ -31,7 +31,7 @@ export function FooterSection() {
           </div>
 
           {/* Right: animated tagline */}
-          <div className="flex flex-col justify-between items-end text-right">
+          <div className="flex flex-col justify-between items-start sm:items-end text-left sm:text-right">
             <h2
               className="font-display font-bold leading-[1.0]"
               style={{ fontSize: 'clamp(2.5rem, 4.5vw, 5rem)', color: '#EEE5E9', letterSpacing: '-0.03em' }}
@@ -40,13 +40,13 @@ export function FooterSection() {
               <span style={{ color: '#CF5C36' }}>boring.</span>
             </h2>
             <div className="flex gap-12 mt-8">
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <p className="font-sans text-sm font-medium mb-1" style={{ color: '#EEE5E9' }}>Motion</p>
                 <p className="font-sans text-xs leading-relaxed" style={{ color: 'rgba(238,229,233,0.35)' }}>
                   Film, ads, SaaS<br />brand videos.
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <p className="font-sans text-sm font-medium mb-1" style={{ color: '#EEE5E9' }}>Web</p>
                 <p className="font-sans text-xs leading-relaxed" style={{ color: 'rgba(238,229,233,0.35)' }}>
                   Minimal sites,<br />built fast.
@@ -62,7 +62,7 @@ export function FooterSection() {
 
         {/* Middle row */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-8">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {[
               { label: 'Work',    href: '/work' },
               { label: 'Reviews', href: '/reviews' },
