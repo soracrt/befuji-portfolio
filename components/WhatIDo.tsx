@@ -44,6 +44,7 @@ function Feature({
   target,
   icon,
   index,
+  total,
 }: {
   title: string
   tagline: string
@@ -51,13 +52,16 @@ function Feature({
   target: string
   icon: React.ReactNode
   index: number
+  total: number
 }) {
   return (
     <div
       className={cn(
-        'flex flex-col py-10 relative group/feature border-r',
-        (index === 0 || index === 2) && 'border-l',
-        index < 2 && 'border-b',
+        'flex flex-col py-8 sm:py-10 relative group/feature',
+        'border-b sm:border-r',
+        (index === 0 || index === 2) && 'sm:border-l',
+        index < 2 && 'sm:border-b',
+        index === total - 1 && 'border-b-0',
       )}
       style={{ borderColor: '#1a1a1a' }}
     >
@@ -129,9 +133,9 @@ export default function WhatIDo() {
   return (
     <section className="px-8 pb-24">
       <div className="max-w-5xl mx-auto border-t border-b" style={{ borderColor: '#1a1a1a' }}>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2">
           {features.map((f, i) => (
-            <Feature key={f.title} {...f} index={i} />
+            <Feature key={f.title} {...f} index={i} total={features.length} />
           ))}
         </div>
       </div>
