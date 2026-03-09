@@ -81,8 +81,8 @@ const FAQS: Record<Category, { question: string; answer: string }[]> = {
 
 const CATEGORY_LABELS: Record<Category, string> = {
   General: 'General',
-  Motion:  'Motion Graphics',
-  Website: 'Website FAQ',
+  Motion:  'Motion',
+  Website: 'Website',
 }
 
 export default function FaqPage() {
