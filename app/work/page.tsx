@@ -692,7 +692,7 @@ function ProcessTimeline({ tab }: { tab: string }) {
   const steps = PROCESS_STEPS_BY_TAB[visibleTab] ?? PROCESS_STEPS_BY_TAB['Commercial']
 
   return (
-    <div className="px-8 py-20">
+    <div className="px-4 sm:px-8 py-12 sm:py-20">
       <div className="max-w-5xl mx-auto">
 
         <FadeIn>
@@ -804,7 +804,7 @@ export default function WorkPage() {
         @keyframes liquid-shimmer { 0%   { transform: translateX(-100%) }    100% { transform: translateX(100%) } }
       `}</style>
 
-      <div className="pt-32 pb-16 px-8">
+      <div className="pt-28 sm:pt-32 pb-16 px-4 sm:px-8">
         <div className="max-w-5xl mx-auto">
 
           {/* Back */}
@@ -932,7 +932,7 @@ export default function WorkPage() {
       </div>
 
       {/* ── Reviews ── */}
-      <div className="px-8 py-20">
+      <div className="px-4 sm:px-8 py-12 sm:py-20">
         <div className="max-w-5xl mx-auto">
 
           <FadeIn>
@@ -1007,8 +1007,8 @@ export default function WorkPage() {
                 className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase transition-all duration-200"
                 style={{
                   height:       '36px',
-                  paddingLeft:  '14px',
-                  paddingRight: '14px',
+                  paddingLeft:  '12px',
+                  paddingRight: '12px',
                   borderRadius: '9999px',
                   background:   active ? '#CF5C36' : 'transparent',
                   color:        active ? '#fff' : 'rgba(238,229,233,0.45)',
@@ -1018,7 +1018,7 @@ export default function WorkPage() {
                 }}
               >
                 <span style={{ opacity: active ? 1 : 0.7 }}>{TAB_ICONS[tab]}</span>
-                {tab}
+                <span className="hidden sm:inline">{tab}</span>
               </button>
             )
           })}
