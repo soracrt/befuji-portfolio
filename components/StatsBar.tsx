@@ -67,7 +67,7 @@ function StatBlock({
       <span
         className="font-display leading-none"
         style={{
-          fontSize:      'clamp(1.5rem, 7.5vw, 5.5rem)',
+          fontSize:      'clamp(2.2rem, 9vw, 5.5rem)',
           color:         '#CF5C36',
           fontWeight:    400,
           letterSpacing: '-0.04em',
@@ -109,7 +109,7 @@ export default function StatsBar() {
   }, [])
 
   return (
-    <div ref={ref} className="px-8 pb-24">
+    <div ref={ref} className="px-4 sm:px-8 pb-16 sm:pb-24">
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-3 gap-8">
           {BLOCKS.map(({ key, label }, i) => (

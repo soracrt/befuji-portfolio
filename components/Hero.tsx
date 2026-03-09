@@ -4,11 +4,11 @@ import Link from 'next/link'
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
+    <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 text-center">
 
       <h1
         className="font-display leading-[0.95] tracking-[-0.04em] mb-8"
-        style={{ fontSize: 'clamp(3.5rem, 9vw, 8.5rem)', fontWeight: 400, color: '#EEE5E9' }}
+        style={{ fontSize: 'clamp(3rem, 11vw, 8.5rem)', fontWeight: 400, color: '#EEE5E9' }}
       >
         <span className="block">built to be</span>
         <span className="block">remembered<span style={{ color: '#CF5C36' }}>.</span></span>

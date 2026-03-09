@@ -131,7 +131,7 @@ function Feature({
 
 export default function WhatIDo() {
   return (
-    <section className="px-8 pb-24">
+    <section className="px-4 sm:px-8 pb-16 sm:pb-24">
       <div className="max-w-5xl mx-auto border-t border-b" style={{ borderColor: '#1a1a1a' }}>
         <div className="grid grid-cols-1 sm:grid-cols-2">
           {features.map((f, i) => (
