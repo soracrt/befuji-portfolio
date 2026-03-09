@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const LINKS = [
-  { label: 'Home',    href: '/' },
-  { label: 'Work',    href: '/work' },
-  { label: 'FAQ',     href: '/faq' },
-  { label: 'Contact', href: '/contact', accent: true },
+  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/work' },
+  { label: 'FAQ',  href: '/faq' },
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 295
+const OPEN_WIDTH  = 248
 const CLOSED_SIZE = 44
 
 export default function Nav() {
