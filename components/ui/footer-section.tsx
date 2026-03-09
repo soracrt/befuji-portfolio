@@ -65,7 +65,6 @@ export function FooterSection() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {[
               { label: 'Work',    href: '/work' },
-              { label: 'Reviews', href: '/reviews' },
               { label: 'FAQ',     href: '/faq' },
               { label: 'Contact', href: '/contact' },
             ].map(({ label, href }) => (
