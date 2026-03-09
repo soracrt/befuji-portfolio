@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react'
-import Footer from '@/components/Footer'
 
 // ── form steps ────────────────────────────────────────────────────────────────
 const STEPS = [
@@ -97,7 +96,15 @@ export default function ContactPage() {
   const exitOffset = dir === 'fwd' ? 'translateX(-24px)' : 'translateX(24px)'
 
   return (
-    <main style={{ background: '#000', minHeight: '100vh' }}>
+    <main style={{
+      background:     '#000',
+      height:         '100vh',
+      overflow:       'hidden',
+      display:        'flex',
+      flexDirection:  'column',
+      justifyContent: 'center',
+      padding:        'clamp(80px, 10vh, 120px) clamp(24px, 6vw, 80px) clamp(40px, 6vh, 80px)',
+    }}>
 
       <style>{`
         @keyframes slide-in-fwd {
@@ -113,53 +120,50 @@ export default function ContactPage() {
         .dot-btn:hover              { background: rgba(207,92,54,0.5) !important; }
       `}</style>
 
-      {/* ── header ── */}
-      <section style={{ padding: 'clamp(120px, 14vw, 180px) clamp(24px, 6vw, 80px) 0' }}>
+      {/* ── heading ── */}
+      <div style={{ marginBottom: 'clamp(24px, 4vh, 48px)' }}>
         <p
           className="font-sans"
-          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '10px' }}
+          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}
         >
           <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
           How to contact us
         </p>
         <h1
           className="font-display"
-          style={{ fontSize: 'clamp(3rem, 7vw, 7rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#EEE5E9' }}
+          style={{ fontSize: 'clamp(2.8rem, 6vw, 6rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#EEE5E9' }}
         >
           Contact us<span style={{ color: '#CF5C36' }}>.</span>
         </h1>
-      </section>
+      </div>
 
       {/* ── email ── */}
-      <section style={{ padding: 'clamp(40px, 5vw, 60px) clamp(24px, 6vw, 80px)' }}>
-        <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: '36px' }}>
-          <p
-            className="font-sans"
-            style={{ fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.3)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgba(238,229,233,0.3)', flexShrink: 0 }}>
-              <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
-            </svg>
-            Email
-          </p>
-          <a href="mailto:hello@kulaire.com" className="contact-link font-sans" style={{ fontSize: '14px', color: 'rgba(238,229,233,0.55)', letterSpacing: '-0.01em', transition: 'color 0.15s ease', display: 'inline-block' }}>
-            hello@kulaire.com
-          </a>
-        </div>
-      </section>
-
-      {/* ── get in touch ── */}
-      <section style={{ padding: '0 clamp(24px, 6vw, 80px) clamp(80px, 10vw, 140px)', maxWidth: '860px' }}>
-
+      <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: '28px', marginBottom: 'clamp(28px, 4vh, 52px)' }}>
         <p
           className="font-sans"
-          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '48px', display: 'flex', alignItems: 'center', gap: '10px' }}
+          style={{ fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.3)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgba(238,229,233,0.3)', flexShrink: 0 }}>
+            <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
+          </svg>
+          Email
+        </p>
+        <a href="mailto:hello@kulaire.com" className="contact-link font-sans" style={{ fontSize: '14px', color: 'rgba(238,229,233,0.55)', letterSpacing: '-0.01em', transition: 'color 0.15s ease', display: 'inline-block' }}>
+          hello@kulaire.com
+        </a>
+      </div>
+
+      {/* ── get in touch ── */}
+      <div style={{ maxWidth: '860px' }}>
+        <p
+          className="font-sans"
+          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '36px', display: 'flex', alignItems: 'center', gap: '10px' }}
         >
           <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
           Get in touch
         </p>
 
-        <div style={{ minHeight: '200px' }}>
+        <div>
 
           {/* ── success ── */}
           {submitted ? (
@@ -413,9 +417,7 @@ export default function ContactPage() {
             </div>
           )}
         </div>
-      </section>
-
-      <Footer />
+      </div>
     </main>
   )
 }
