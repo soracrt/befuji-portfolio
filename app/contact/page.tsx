@@ -99,14 +99,12 @@ export default function ContactPage() {
 
   return (
     <main style={{
-      background:     '#000',
-      height:         '100vh',
-      overflow:       'hidden',
-      position:       'relative',
-      display:        'flex',
-      flexDirection:  'column',
-      justifyContent: 'center',
-      padding:        'clamp(80px, 10vh, 120px) clamp(24px, 6vw, 80px) clamp(40px, 6vh, 80px)',
+      background:    '#000',
+      height:        '100vh',
+      overflow:      'hidden',
+      display:       'flex',
+      flexDirection: 'column',
+      padding:       'clamp(80px, 10vh, 128px) clamp(24px, 6vw, 80px) clamp(40px, 6vh, 80px)',
     }}>
 
       <style>{`
@@ -124,7 +122,7 @@ export default function ContactPage() {
       `}</style>
 
       {/* ── back button ── */}
-      <div style={{ position: 'absolute', top: 'clamp(72px, 10vh, 100px)', left: 'clamp(24px, 6vw, 80px)' }}>
+      <div style={{ marginBottom: 'clamp(32px, 5vh, 64px)' }}>
         <button
           onClick={() => router.back()}
           className="font-sans"
@@ -132,13 +130,13 @@ export default function ContactPage() {
             display:       'flex',
             alignItems:    'center',
             gap:           '8px',
-            height:        '36px',
+            height:        '34px',
             paddingLeft:   '14px',
             paddingRight:  '16px',
             borderRadius:  '9999px',
-            background:    'rgba(238,229,233,0.04)',
-            border:        '1px solid rgba(238,229,233,0.08)',
-            color:         'rgba(238,229,233,0.35)',
+            background:    'rgba(238,229,233,0.05)',
+            border:        '1px solid rgba(238,229,233,0.12)',
+            color:         'rgba(238,229,233,0.72)',
             fontSize:      '11px',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
@@ -147,24 +145,24 @@ export default function ContactPage() {
           }}
           onMouseEnter={e => {
             e.currentTarget.style.background   = 'rgba(238,229,233,0.08)'
-            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.18)'
-            e.currentTarget.style.color        = 'rgba(238,229,233,0.7)'
+            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.22)'
+            e.currentTarget.style.color        = '#EEE5E9'
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.background   = 'rgba(238,229,233,0.04)'
-            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.08)'
-            e.currentTarget.style.color        = 'rgba(238,229,233,0.35)'
+            e.currentTarget.style.background   = 'rgba(238,229,233,0.05)'
+            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.12)'
+            e.currentTarget.style.color        = 'rgba(238,229,233,0.72)'
           }}
         >
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="10" y1="6" x2="2" y2="6"/><polyline points="5,3 2,6 5,9"/>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
           </svg>
           Back
         </button>
       </div>
 
       {/* ── heading ── */}
-      <div style={{ marginBottom: 'clamp(24px, 4vh, 48px)' }}>
+      <div style={{ marginBottom: 'clamp(20px, 3vh, 36px)' }}>
         <h1
           className="font-display"
           style={{ fontSize: 'clamp(2.8rem, 6vw, 6rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#EEE5E9' }}
