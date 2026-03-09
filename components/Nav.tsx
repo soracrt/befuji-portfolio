@@ -212,7 +212,7 @@ export default function Nav() {
       {/* Right column — flex-1, CTA left-aligned */}
       <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
         <Link
-          href={pathname === '/quote' ? '/contact' : '/quote'}
+          href={pathname === '/quote' || pathname === '/' ? '/contact' : '/quote'}
           className="font-sans text-xs tracking-[0.1em] uppercase"
           style={{
             height:               `${CLOSED_SIZE}px`,
@@ -241,7 +241,7 @@ export default function Nav() {
             e.currentTarget.style.color       = '#CF5C36'
           }}
         >
-          {pathname === '/quote' ? 'Contact us' : 'Get a quote'}
+          {pathname === '/quote' || pathname === '/' ? 'Contact us' : 'Get a quote'}
         </Link>
       </div>
 
