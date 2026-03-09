@@ -204,8 +204,9 @@ export default function Nav() {
             height:               `${CLOSED_SIZE}px`,
             display:              'flex',
             alignItems:           'center',
+            gap:                  '10px',
             paddingLeft:          '18px',
-            paddingRight:         '18px',
+            paddingRight:         '6px',
             borderRadius:         '9999px',
             backdropFilter:       'blur(28px) saturate(180%)',
             WebkitBackdropFilter: 'blur(28px) saturate(180%)',
@@ -227,10 +228,21 @@ export default function Nav() {
             e.currentTarget.style.color       = '#CF5C36'
           }}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}>
-            <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>
-          </svg>
           {pathname === '/quote' || pathname === '/' ? 'Contact us' : 'Get a quote'}
+          <span style={{
+            width:          '32px',
+            height:         '32px',
+            borderRadius:   '50%',
+            background:     '#CF5C36',
+            display:        'flex',
+            alignItems:     'center',
+            justifyContent: 'center',
+            flexShrink:     0,
+          }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/>
+            </svg>
+          </span>
         </Link>
       </div>
 
