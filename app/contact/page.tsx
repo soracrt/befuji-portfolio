@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react'
+import { useRouter } from 'next/navigation'
 
 // ── form steps ────────────────────────────────────────────────────────────────
 const STEPS = [
@@ -21,6 +22,7 @@ function isValidEmail(v: string) {
 
 // ── component ─────────────────────────────────────────────────────────────────
 export default function ContactPage() {
+  const router = useRouter()
   const [step,            setStep]           = useState(0)
   const [exiting,         setExiting]        = useState(false)
   const [dir,             setDir]            = useState<Dir>('fwd')
@@ -100,6 +102,7 @@ export default function ContactPage() {
       background:     '#000',
       height:         '100vh',
       overflow:       'hidden',
+      position:       'relative',
       display:        'flex',
       flexDirection:  'column',
       justifyContent: 'center',
@@ -119,6 +122,46 @@ export default function ContactPage() {
         .contact-link:hover         { color: #EEE5E9 !important;    }
         .dot-btn:hover              { background: rgba(207,92,54,0.5) !important; }
       `}</style>
+
+      {/* ── back button ── */}
+      <div style={{ position: 'absolute', top: 'clamp(72px, 10vh, 100px)', left: 'clamp(24px, 6vw, 80px)' }}>
+        <button
+          onClick={() => router.back()}
+          className="font-sans"
+          style={{
+            display:       'flex',
+            alignItems:    'center',
+            gap:           '8px',
+            height:        '36px',
+            paddingLeft:   '14px',
+            paddingRight:  '16px',
+            borderRadius:  '9999px',
+            background:    'rgba(238,229,233,0.04)',
+            border:        '1px solid rgba(238,229,233,0.08)',
+            color:         'rgba(238,229,233,0.35)',
+            fontSize:      '11px',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            cursor:        'pointer',
+            transition:    'background 0.15s, border-color 0.15s, color 0.15s',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background   = 'rgba(238,229,233,0.08)'
+            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.18)'
+            e.currentTarget.style.color        = 'rgba(238,229,233,0.7)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background   = 'rgba(238,229,233,0.04)'
+            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.08)'
+            e.currentTarget.style.color        = 'rgba(238,229,233,0.35)'
+          }}
+        >
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="10" y1="6" x2="2" y2="6"/><polyline points="5,3 2,6 5,9"/>
+          </svg>
+          Back
+        </button>
+      </div>
 
       {/* ── heading ── */}
       <div style={{ marginBottom: 'clamp(24px, 4vh, 48px)' }}>
