@@ -67,7 +67,7 @@ function StatBlock({
       <span
         className="font-display leading-none"
         style={{
-          fontSize:      'clamp(3rem, 6vw, 5.5rem)',
+          fontSize:      'clamp(1.5rem, 7.5vw, 5.5rem)',
           color:         '#CF5C36',
           fontWeight:    400,
           letterSpacing: '-0.04em',
