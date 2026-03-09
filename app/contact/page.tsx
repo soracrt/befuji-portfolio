@@ -122,13 +122,6 @@ export default function ContactPage() {
 
       {/* ── heading ── */}
       <div style={{ marginBottom: 'clamp(24px, 4vh, 48px)' }}>
-        <p
-          className="font-sans"
-          style={{ fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(238,229,233,0.4)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}
-        >
-          <span style={{ width: '2px', height: '14px', background: '#CF5C36', display: 'inline-block', borderRadius: '1px', flexShrink: 0 }} />
-          How to contact us
-        </p>
         <h1
           className="font-display"
           style={{ fontSize: 'clamp(2.8rem, 6vw, 6rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#EEE5E9' }}
