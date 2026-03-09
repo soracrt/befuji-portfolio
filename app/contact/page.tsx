@@ -125,33 +125,18 @@ export default function ContactPage() {
       <div style={{ marginBottom: 'clamp(32px, 5vh, 64px)' }}>
         <button
           onClick={() => router.back()}
-          className="font-sans"
+          className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.1em] uppercase transition-all duration-200 hover:border-[rgba(238,229,233,0.22)] hover:bg-[rgba(238,229,233,0.08)] hover:text-[rgba(238,229,233,1)]"
           style={{
-            display:       'flex',
-            alignItems:    'center',
-            gap:           '8px',
-            height:        '34px',
-            paddingLeft:   '14px',
-            paddingRight:  '16px',
-            borderRadius:  '9999px',
-            background:    'rgba(238,229,233,0.05)',
-            border:        '1px solid rgba(238,229,233,0.12)',
-            color:         'rgba(238,229,233,0.72)',
-            fontSize:      '11px',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            cursor:        'pointer',
-            transition:    'background 0.15s, border-color 0.15s, color 0.15s',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background   = 'rgba(238,229,233,0.08)'
-            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.22)'
-            e.currentTarget.style.color        = '#EEE5E9'
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background   = 'rgba(238,229,233,0.05)'
-            e.currentTarget.style.borderColor  = 'rgba(238,229,233,0.12)'
-            e.currentTarget.style.color        = 'rgba(238,229,233,0.72)'
+            height:               '34px',
+            paddingLeft:          '14px',
+            paddingRight:         '16px',
+            borderRadius:         '9999px',
+            background:           'rgba(238,229,233,0.05)',
+            border:               '1px solid rgba(238,229,233,0.12)',
+            color:                'rgba(238,229,233,0.72)',
+            backdropFilter:       'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            cursor:               'pointer',
           }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
