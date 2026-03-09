@@ -52,6 +52,8 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', handler)
   }, [open])
 
+  if (pathname === '/admin') return null
+
   return (
     <div
       className="fixed top-5 left-0 right-0 z-50 flex items-center px-4 sm:px-8 gap-3 sm:gap-5"
