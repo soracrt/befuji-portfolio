@@ -129,7 +129,7 @@ export function FaqSection({
 
         {/* Category tab pills */}
         {hasTabs && (
-          <div className="flex flex-wrap gap-2 mb-5">
+          <div className="flex flex-nowrap gap-2 mb-5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
             {categories!.map(cat => {
               const isActive = cat === activeCategory
               return (
