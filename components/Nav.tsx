@@ -227,6 +227,9 @@ export default function Nav() {
             e.currentTarget.style.color       = '#CF5C36'
           }}
         >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.7 }}>
+            <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>
+          </svg>
           {pathname === '/quote' || pathname === '/' ? 'Contact us' : 'Get a quote'}
         </Link>
       </div>
