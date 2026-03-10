@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import BackButton from '@/components/BackButton'
 
 /* ── Types ────────────────────────────────────────────────────────────────── */
 
@@ -134,7 +133,6 @@ export default function QuotePage() {
   const TOTAL = 7
   const steps = buildSteps(answers)
   const def   = steps[step - 1]
-  const prog  = ((step - 1) / (TOTAL - 1)) * 100
 
   function select(key: keyof Answers, value: string) {
     setAnswers(prev => {
@@ -239,27 +237,24 @@ export default function QuotePage() {
 
       <main className="min-h-screen flex flex-col px-6 sm:px-8 pt-16 sm:pt-20 pb-12">
 
-        {/* Progress header */}
+        {/* Segmented progress */}
         <div className="max-w-xl mx-auto w-full mb-10">
-          <div className="flex items-center justify-between mb-3">
-            <BackButton href="/" />
-            <span
-              className="font-sans text-xs tabular-nums"
-              style={{ color: 'rgba(238,229,233,0.25)', letterSpacing: '0.08em' }}
-            >
-              {step} / {TOTAL}
-            </span>
-          </div>
-          <div className="w-full h-[2px] rounded-full overflow-hidden" style={{ background: 'rgba(238,229,233,0.06)' }}>
-            <div
-              className="h-full rounded-full"
-              style={{
-                width:      `${prog}%`,
-                background: '#CF5C36',
-                transition: 'width 0.4s cubic-bezier(0.16,1,0.3,1)',
-                boxShadow:  '0 0 10px rgba(207,92,54,0.4)',
-              }}
-            />
+          <div className="flex gap-1.5">
+            {Array.from({ length: TOTAL }).map((_, i) => {
+              const done = i < step
+              return (
+                <div
+                  key={i}
+                  className="flex-1 rounded-full"
+                  style={{
+                    height:     '2.5px',
+                    background: done ? '#CF5C36' : 'rgba(238,229,233,0.08)',
+                    boxShadow:  done ? '0 0 6px rgba(207,92,54,0.5)' : 'none',
+                    transition: 'background 0.3s ease, box-shadow 0.3s ease',
+                  }}
+                />
+              )
+            })}
           </div>
         </div>
 
@@ -420,13 +415,39 @@ export default function QuotePage() {
               <button
                 type="button"
                 onClick={goBack}
-                className="font-sans text-xs tracking-[0.1em] uppercase transition-opacity hover:opacity-60"
-                style={{ color: 'rgba(238,229,233,0.35)' }}
+                className="flex items-center justify-center rounded-full transition-all duration-150 hover:opacity-60"
+                style={{
+                  width:      '36px',
+                  height:     '36px',
+                  background: 'rgba(238,229,233,0.05)',
+                  border:     '1px solid rgba(238,229,233,0.08)',
+                  color:      'rgba(238,229,233,0.5)',
+                  flexShrink: 0,
+                }}
+                aria-label="Go back"
               >
-                ← Back
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
               </button>
             ) : (
-              <div />
+              <Link
+                href="/"
+                className="flex items-center justify-center rounded-full transition-all duration-150 hover:opacity-60"
+                style={{
+                  width:      '36px',
+                  height:     '36px',
+                  background: 'rgba(238,229,233,0.05)',
+                  border:     '1px solid rgba(238,229,233,0.08)',
+                  color:      'rgba(238,229,233,0.5)',
+                  flexShrink: 0,
+                }}
+                aria-label="Back to home"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </Link>
             )}
 
             {step < TOTAL ? (
