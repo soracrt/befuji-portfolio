@@ -14,6 +14,7 @@ type Answers = {
   styleRef: string
   existingAssets: string
   adFor: string
+  saasVideoFor: string
   platforms: string
   scriptReady: string
   brandKit: string
@@ -21,11 +22,6 @@ type Answers = {
   contentReady: string
   features: string
   webTimeline: string
-  building: string
-  screens: string
-  needsAuth: string
-  designReady: string
-  saasTimeline: string
   name: string
   email: string
   description: string
@@ -46,7 +42,7 @@ function buildSteps(a: Answers): StepDef[] {
   const s1: StepDef = {
     type: 'choice', key: 'service',
     question: 'What are you looking for?',
-    options: ['Motion Graphics', 'Web Design', 'SaaS'],
+    options: ['Motion Graphics', 'Web Design'],
   }
 
   let mid: StepDef[]
@@ -55,7 +51,7 @@ function buildSteps(a: Answers): StepDef[] {
     const who: StepDef = {
       type: 'choice', key: 'motionWho',
       question: 'Who are you?',
-      options: ['Artist', 'Brand'],
+      options: ['Artist', 'Brand', 'SaaS'],
     }
     if (a.motionWho === 'Artist') {
       mid = [
@@ -68,29 +64,29 @@ function buildSteps(a: Answers): StepDef[] {
     } else if (a.motionWho === 'Brand') {
       mid = [
         who,
-        { type: 'choice', key: 'adFor',       question: "What's the ad for?",          options: ['Product launch', 'App demo', 'Event or campaign', 'Ongoing social content'] },
-        { type: 'choice', key: 'platforms',   question: 'Which platforms?',             options: ['Instagram / TikTok', 'YouTube', 'Website / landing page', 'Multiple'] },
-        { type: 'choice', key: 'scriptReady', question: 'Do you have a script ready?',  options: ['Yes', 'No, need direction'] },
-        { type: 'choice', key: 'brandKit',    question: 'Do you have a brand kit?',     options: ['Yes', 'Partially', 'No'] },
+        { type: 'choice', key: 'adFor',       question: "What's the ad for?",         options: ['Product launch', 'Event or campaign', 'Promo', 'Trailer'] },
+        { type: 'choice', key: 'platforms',   question: 'Which platforms?',            options: ['Instagram / TikTok', 'YouTube', 'Website / landing page', 'Multiple'] },
+        { type: 'choice', key: 'scriptReady', question: 'Do you have a script ready?', options: ['Yes', 'No, need direction'] },
+        { type: 'choice', key: 'brandKit',    question: 'Do you have a brand kit?',    options: ['Yes', 'Partially', 'No'] },
+      ]
+    } else if (a.motionWho === 'SaaS') {
+      mid = [
+        who,
+        { type: 'choice', key: 'saasVideoFor', question: "What's the video for?",      options: ['App demo', 'Explainer video', 'Product trailer', 'Ad'] },
+        { type: 'choice', key: 'platforms',    question: 'Which platforms?',            options: ['Instagram / TikTok', 'YouTube', 'Website / landing page', 'Multiple'] },
+        { type: 'choice', key: 'scriptReady',  question: 'Do you have a script ready?', options: ['Yes', 'No, need direction'] },
+        { type: 'choice', key: 'brandKit',     question: 'Do you have a brand kit?',    options: ['Yes', 'Partially', 'No'] },
       ]
     } else {
       mid = [who, PH, PH, PH, PH]
     }
   } else if (a.service === 'Web Design') {
     mid = [
-      { type: 'text',   key: 'pages',        question: 'What pages do you need?',      placeholder: 'Home, About, Contact, Portfolio...' },
-      { type: 'choice', key: 'contentReady', question: 'Do you have content ready?',   options: ['Yes, fully', 'Partially', 'No, need help'] },
-      { type: 'choice', key: 'brandKit',     question: 'Do you have a brand kit?',     options: ['Yes', 'Partially', 'No'] },
-      { type: 'choice', key: 'features',     question: 'Any specific features?',       options: ['Contact form', 'Blog', 'Booking', 'E-commerce', 'Just static pages'] },
-      { type: 'choice', key: 'webTimeline',  question: 'When do you need it?',         options: ['ASAP — under 2 weeks', '2–4 weeks', '1–2 months', 'No rush'] },
-    ]
-  } else if (a.service === 'SaaS') {
-    mid = [
-      { type: 'choice', key: 'building',     question: 'What are you building?',             options: ['SaaS app', 'Internal tool', 'Client portal', 'Other'] },
-      { type: 'text',   key: 'screens',      question: 'What pages / screens do you need?',  placeholder: 'Dashboard, settings, onboarding flow...' },
-      { type: 'choice', key: 'needsAuth',    question: 'Do you need auth / login?',          options: ['Yes', 'No'] },
-      { type: 'choice', key: 'designReady',  question: 'Do you have a design ready?',        options: ['Yes — Figma / design file', 'Partially', 'No, design from scratch'] },
-      { type: 'choice', key: 'saasTimeline', question: 'When do you need it?',               options: ['ASAP — under 2 weeks', '2–4 weeks', '1–2 months', 'No rush'] },
+      { type: 'text',   key: 'pages',        question: 'What pages do you need?',     placeholder: 'Home, About, Contact, Portfolio...' },
+      { type: 'choice', key: 'contentReady', question: 'Do you have content ready?',  options: ['Yes, fully', 'Partially', 'No, need help'] },
+      { type: 'choice', key: 'brandKit',     question: 'Do you have a brand kit?',    options: ['Yes', 'Partially', 'No'] },
+      { type: 'choice', key: 'features',     question: 'Any specific features?',      options: ['Contact form', 'Blog', 'Booking', 'E-commerce', 'Just static pages'] },
+      { type: 'choice', key: 'webTimeline',  question: 'When do you need it?',        options: ['ASAP — under 2 weeks', '2–4 weeks', '1–2 months', 'No rush'] },
     ]
   } else {
     mid = [PH, PH, PH, PH, PH]
@@ -104,9 +100,8 @@ function buildSteps(a: Answers): StepDef[] {
 const EMPTY: Answers = {
   service: '', motionWho: '',
   videoFor: '', trackLength: '', styleRef: '', existingAssets: '',
-  adFor: '', platforms: '', scriptReady: '', brandKit: '',
+  adFor: '', saasVideoFor: '', platforms: '', scriptReady: '', brandKit: '',
   pages: '', contentReady: '', features: '', webTimeline: '',
-  building: '', screens: '', needsAuth: '', designReady: '', saasTimeline: '',
   name: '', email: '', description: '', timezone: '', contact: '',
 }
 

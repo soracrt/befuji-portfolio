@@ -28,9 +28,8 @@ export async function POST(req: Request) {
     const {
       service, motionWho,
       videoFor, trackLength, styleRef, existingAssets,
-      adFor, platforms, scriptReady, brandKit,
+      adFor, saasVideoFor, platforms, scriptReady, brandKit,
       pages, contentReady, features, webTimeline,
-      building, screens, needsAuth, designReady, saasTimeline,
       name, email, description, timezone, contact,
     } = body
 
@@ -42,24 +41,23 @@ export async function POST(req: Request) {
         trackRows += row('Track length',    trackLength)
         trackRows += row('Style reference', styleRef)
         trackRows += row('Existing assets', existingAssets)
-      } else {
+      } else if (motionWho === 'Brand') {
         trackRows += row('Ad for',       adFor)
+        trackRows += row('Platforms',    platforms)
+        trackRows += row('Script ready', scriptReady)
+        trackRows += row('Brand kit',    brandKit)
+      } else if (motionWho === 'SaaS') {
+        trackRows += row('Video for',    saasVideoFor)
         trackRows += row('Platforms',    platforms)
         trackRows += row('Script ready', scriptReady)
         trackRows += row('Brand kit',    brandKit)
       }
     } else if (service === 'Web Design') {
-      trackRows += row('Pages needed',   pages)
-      trackRows += row('Content ready',  contentReady)
-      trackRows += row('Brand kit',      brandKit)
-      trackRows += row('Features',       features)
-      trackRows += row('Timeline',       webTimeline)
-    } else if (service === 'SaaS') {
-      trackRows += row('Building',      building)
-      trackRows += row('Screens needed', screens)
-      trackRows += row('Auth / login',   needsAuth)
-      trackRows += row('Design ready',   designReady)
-      trackRows += row('Timeline',       saasTimeline)
+      trackRows += row('Pages needed',  pages)
+      trackRows += row('Content ready', contentReady)
+      trackRows += row('Brand kit',     brandKit)
+      trackRows += row('Features',      features)
+      trackRows += row('Timeline',      webTimeline)
     }
 
     const descSection = description
