@@ -17,20 +17,21 @@ const s3 = new S3Client({
 const BUCKET = process.env.R2_BUCKET_NAME ?? ''
 const DATA_KEY = '_projects.json'
 
-// In-memory cache — avoids a redundant R2 read before every write.
-// Valid for the lifetime of this serverless instance (typically minutes).
-let cache: unknown[] | null = null
+// In-memory cache with 30s TTL — avoids redundant R2 reads while staying fresh.
+let cache: { data: unknown[]; ts: number } | null = null
+const CACHE_TTL = 30_000
 
 async function readProjects(): Promise<unknown[]> {
-  if (cache !== null) return cache
+  if (cache !== null && Date.now() - cache.ts < CACHE_TTL) return cache.data
 
   // Try R2 first
   try {
     const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: DATA_KEY }))
     const text = await res.Body?.transformToString()
     if (text) {
-      cache = JSON.parse(text)
-      return cache!
+      const data = JSON.parse(text)
+      cache = { data, ts: Date.now() }
+      return data
     }
   } catch {
     // Key doesn't exist yet — fall through to local seed
@@ -40,16 +41,17 @@ async function readProjects(): Promise<unknown[]> {
   try {
     const localFile = path.join(process.cwd(), 'data', 'projects.json')
     const text = await fs.readFile(localFile, 'utf-8')
-    cache = JSON.parse(text)
-    return cache!
+    const data = JSON.parse(text)
+    cache = { data, ts: Date.now() }
+    return data
   } catch {
-    cache = []
+    cache = { data: [], ts: Date.now() }
     return []
   }
 }
 
 async function writeProjects(projects: unknown[]) {
-  cache = projects // update cache synchronously so next read is instant
+  cache = { data: projects, ts: Date.now() } // update cache synchronously so next read is instant
   await s3.send(new PutObjectCommand({
     Bucket: BUCKET,
     Key: DATA_KEY,
