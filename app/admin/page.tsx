@@ -13,6 +13,15 @@ type Project = {
   client: string
   video: string
   isRecent: boolean
+  subcategory?: 'featured' | 'client' | 'personal'
+  artistName?: string
+  monthlyListeners?: number
+  videoLink?: string
+  artistLink?: string
+  description?: string
+  image?: string
+  websiteUrl?: string
+  caseStudyUrl?: string
 }
 
 type Review = {
@@ -795,7 +804,7 @@ function EditableCell({
 function CategorySelect({
   value,
   onChange,
-  options = ['Ads', 'SaaS', 'Others'],
+  options = ['Ads', 'SaaS', 'Film', 'Music Video', 'Artist Promo', 'Community', 'Web Design', 'Others'],
 }: {
   value: string
   onChange: (v: string) => void
@@ -874,6 +883,21 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Artist-specific fields
+  const [subcategory, setSubcategory] = useState<'featured' | 'client' | 'personal' | ''>('')
+  const [artistName, setArtistName] = useState('')
+  const [monthlyListeners, setMonthlyListeners] = useState('')
+  const [videoLink, setVideoLink] = useState('')
+  const [artistLink, setArtistLink] = useState('')
+  const [description, setDescription] = useState('')
+
+  // Website-specific fields
+  const [websiteUrl, setWebsiteUrl] = useState('')
+  const [caseStudyUrl, setCaseStudyUrl] = useState('')
+
+  const isArtist  = ['music video', 'artist promo', 'community', 'music', 'artist'].some(k => category.toLowerCase().includes(k))
+  const isWebsite = ['web', 'digital'].some(k => category.toLowerCase().includes(k))
+
   function acceptFile(f: File) {
     if (f.type === 'video/mp4' || f.type === 'video/quicktime') setFile(f)
   }
@@ -917,6 +941,14 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
         client,
         video: publicUrl,
         isRecent: false,
+        ...(description        && { description }),
+        ...(isArtist && subcategory  && { subcategory: subcategory as 'featured' | 'client' | 'personal' }),
+        ...(isArtist && artistName   && { artistName }),
+        ...(isArtist && monthlyListeners && { monthlyListeners: Number(monthlyListeners) }),
+        ...(isArtist && videoLink    && { videoLink }),
+        ...(isArtist && artistLink   && { artistLink }),
+        ...(isWebsite && websiteUrl  && { websiteUrl }),
+        ...(isWebsite && caseStudyUrl && { caseStudyUrl }),
       }
       await fetch('/api/admin/projects', {
         method: 'POST',
@@ -1025,6 +1057,75 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
               className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
               style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
             />
+            <textarea
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              placeholder="Description (optional)"
+              rows={2}
+              className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all resize-none"
+              style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+            />
+
+            {/* ── Artist fields (shown when category contains artist/music/community) ── */}
+            {isArtist && (
+              <div className="flex flex-col gap-2 pt-1 pb-1">
+                <p className="font-sans text-[#606060]" style={{ fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Artist details</p>
+                <CategorySelect
+                  value={subcategory}
+                  onChange={v => setSubcategory(v as 'featured' | 'client' | 'personal')}
+                  options={['featured', 'client', 'personal']}
+                />
+                <input
+                  value={artistName}
+                  onChange={e => setArtistName(e.target.value)}
+                  placeholder="Artist name"
+                  className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+                  style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+                />
+                <input
+                  value={monthlyListeners}
+                  onChange={e => setMonthlyListeners(e.target.value.replace(/\D/g, ''))}
+                  placeholder="Monthly listeners (number)"
+                  className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+                  style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+                />
+                <input
+                  value={videoLink}
+                  onChange={e => setVideoLink(e.target.value)}
+                  placeholder="Video link (YouTube / TikTok / Instagram)"
+                  className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+                  style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+                />
+                <input
+                  value={artistLink}
+                  onChange={e => setArtistLink(e.target.value)}
+                  placeholder="Artist link (Spotify / SoundCloud)"
+                  className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+                  style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+                />
+              </div>
+            )}
+
+            {/* ── Website fields ── */}
+            {isWebsite && (
+              <div className="flex flex-col gap-2 pt-1 pb-1">
+                <p className="font-sans text-[#606060]" style={{ fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Website details</p>
+                <input
+                  value={websiteUrl}
+                  onChange={e => setWebsiteUrl(e.target.value)}
+                  placeholder="Live website URL"
+                  className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+                  style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+                />
+                <input
+                  value={caseStudyUrl}
+                  onChange={e => setCaseStudyUrl(e.target.value)}
+                  placeholder="Case study URL (optional)"
+                  className="w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#282828] transition-all"
+                  style={{ fontSize: '16px', letterSpacing: '-0.01em' }}
+                />
+              </div>
+            )}
 
             {uploading ? (
               <div className="mt-1">

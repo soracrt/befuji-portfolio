@@ -17,6 +17,11 @@ type Project = {
   description?: string
   websiteUrl?: string
   caseStudyUrl?: string
+  subcategory?: 'featured' | 'client' | 'personal'
+  artistName?: string
+  monthlyListeners?: number
+  videoLink?: string
+  artistLink?: string
 }
 
 type Review = {
@@ -717,6 +722,308 @@ function ProcessTimeline({ tab }: { tab: string }) {
   )
 }
 
+// ─── Artist conveyor card ─────────────────────────────────────────────────────
+
+function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.src = project.video
+    v.load()
+  }, [project.video])
+
+  return (
+    <div
+      className="relative shrink-0 rounded-2xl overflow-hidden cursor-pointer group"
+      style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: '#111' }}
+      onClick={onSelect}
+    >
+      {!loaded && (
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+      )}
+      <video
+        ref={videoRef}
+        muted
+        autoPlay
+        loop
+        playsInline
+        onLoadedData={() => setLoaded(true)}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        style={{ pointerEvents: 'none' }}
+      />
+      <div className="absolute inset-0 transition-all duration-300 group-hover:bg-black/40 flex items-center justify-center">
+        <div
+          className="opacity-0 group-hover:opacity-100 transition-all duration-200 scale-90 group-hover:scale-100 w-11 h-11 rounded-full flex items-center justify-center"
+          style={{ background: 'rgba(207,92,54,0.9)', backdropFilter: 'blur(8px)' }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+        </div>
+      </div>
+      <div
+        className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}
+      >
+        <p className="font-display font-bold text-sm text-white truncate" style={{ letterSpacing: '-0.02em' }}>{project.title}</p>
+        {project.artistName && (
+          <p className="font-sans text-xs mt-0.5 truncate" style={{ color: 'rgba(238,229,233,0.5)' }}>{project.artistName}</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Conveyor reel ────────────────────────────────────────────────────────────
+
+function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (p: Project) => void }) {
+  const scrollRef  = useRef<HTMLDivElement>(null)
+  const isDragging = useRef(false)
+  const didDrag    = useRef(false)
+  const startX     = useRef(0)
+  const startScroll = useRef(0)
+
+  function onMouseDown(e: React.MouseEvent) {
+    isDragging.current = true
+    didDrag.current    = false
+    startX.current     = e.clientX
+    startScroll.current = scrollRef.current?.scrollLeft ?? 0
+  }
+  function onMouseMove(e: React.MouseEvent) {
+    if (!isDragging.current) return
+    const dx = e.clientX - startX.current
+    if (Math.abs(dx) > 5) didDrag.current = true
+    if (scrollRef.current) scrollRef.current.scrollLeft = startScroll.current - dx
+  }
+  function stopDrag() { isDragging.current = false }
+
+  function onTouchStart(e: React.TouchEvent) {
+    isDragging.current  = true
+    didDrag.current     = false
+    startX.current      = e.touches[0].clientX
+    startScroll.current = scrollRef.current?.scrollLeft ?? 0
+  }
+  function onTouchMove(e: React.TouchEvent) {
+    const dx = e.touches[0].clientX - startX.current
+    if (Math.abs(dx) > 5) didDrag.current = true
+    if (scrollRef.current) scrollRef.current.scrollLeft = startScroll.current - dx
+  }
+
+  if (projects.length === 0) return (
+    <p className="font-sans text-sm py-6" style={{ color: 'rgba(238,229,233,0.2)' }}>No projects here yet.</p>
+  )
+
+  return (
+    <div
+      ref={scrollRef}
+      className="flex gap-4 overflow-x-auto pb-2"
+      style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'], cursor: 'grab' }}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={stopDrag}
+      onMouseLeave={stopDrag}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={stopDrag}
+    >
+      {projects.map(p => (
+        <ArtistCard key={p.id} project={p} onSelect={() => { if (!didDrag.current) onSelect(p) }} />
+      ))}
+    </div>
+  )
+}
+
+// ─── Artist modal ─────────────────────────────────────────────────────────────
+
+function ArtistModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handler)
+    document.body.style.overflow = 'hidden'
+    return () => { document.removeEventListener('keydown', handler); document.body.style.overflow = '' }
+  }, [onClose])
+
+  function videoLabel(url: string) {
+    if (url.includes('tiktok'))    return 'Watch on TikTok'
+    if (url.includes('instagram')) return 'Watch on Instagram'
+    return 'Watch on YouTube'
+  }
+  function artistLabel(url: string) {
+    if (url.includes('soundcloud')) return 'SoundCloud'
+    return 'Spotify'
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(14px)' }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+    >
+      <div
+        className="relative w-full overflow-hidden rounded-2xl"
+        style={{ maxWidth: '500px', background: '#0d0d0d', border: '1px solid rgba(238,229,233,0.1)', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}
+      >
+        {/* Video — 1:1 */}
+        <div style={{ aspectRatio: '1/1' }}>
+          <video src={project.video} controls autoPlay playsInline className="w-full h-full object-cover" />
+        </div>
+
+        {/* Content */}
+        <div className="p-6 flex flex-col gap-4">
+          <div>
+            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.15rem,2.5vw,1.6rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
+              {project.title}
+            </h2>
+            {(project.artistName || project.monthlyListeners) && (
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                {project.artistName && (
+                  <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.65)' }}>{project.artistName}</span>
+                )}
+                {project.artistName && project.monthlyListeners && (
+                  <span style={{ color: 'rgba(238,229,233,0.2)' }}>·</span>
+                )}
+                {project.monthlyListeners && (
+                  <span className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>
+                    {project.monthlyListeners.toLocaleString()} monthly listeners
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {project.description && (
+            <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.5)' }}>
+              {project.description}
+            </p>
+          )}
+
+          <div className="flex items-center gap-3 flex-wrap mt-1">
+            {project.videoLink && (
+              <a
+                href={project.videoLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+                style={{ background: '#CF5C36', color: '#fff', boxShadow: '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7), 0 6px 20px rgba(207,92,54,0.4)' }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
+              >
+                {videoLabel(project.videoLink)}
+              </a>
+            )}
+            {project.artistLink && (
+              <a
+                href={project.artistLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+                style={{ background: 'transparent', color: 'rgba(238,229,233,0.65)', border: '1px solid rgba(238,229,233,0.2)' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.65)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.2)' }}
+              >
+                {artistLabel(project.artistLink)}
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150"
+          style={{ background: 'rgba(238,229,233,0.08)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.5)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(238,229,233,0.16)'; e.currentTarget.style.color = '#EEE5E9' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(238,229,233,0.08)'; e.currentTarget.style.color = 'rgba(238,229,233,0.5)' }}
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Featured artist video section ────────────────────────────────────────────
+
+function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpand: () => void }) {
+  return (
+    <div>
+      <p className="font-sans text-xs tracking-[0.14em] uppercase mb-5" style={{ color: 'rgba(207,92,54,0.7)' }}>
+        Featured Videos
+      </p>
+      <VideoCard project={project} priority />
+      <div className="mt-6 flex flex-col gap-3">
+        <h2
+          className="font-display font-bold"
+          style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}
+        >
+          {project.title}
+        </h2>
+        {(project.artistName || project.monthlyListeners) && (
+          <div className="flex items-center gap-2 flex-wrap">
+            {project.artistName && (
+              <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.65)' }}>{project.artistName}</span>
+            )}
+            {project.artistName && project.monthlyListeners && (
+              <span style={{ color: 'rgba(238,229,233,0.2)' }}>·</span>
+            )}
+            {project.monthlyListeners && (
+              <span className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>
+                {project.monthlyListeners.toLocaleString()} monthly listeners
+              </span>
+            )}
+          </div>
+        )}
+        {project.description && (
+          <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.5)', maxWidth: '55ch' }}>
+            {project.description}
+          </p>
+        )}
+        <div className="flex items-center gap-3 mt-1 flex-wrap">
+          {project.videoLink ? (
+            <a
+              href={project.videoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+              style={{ background: '#CF5C36', color: '#fff', boxShadow: '0 0 18px rgba(207,92,54,0.5)' }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7)' }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5)' }}
+            >
+              Watch video
+            </a>
+          ) : (
+            <button
+              onClick={onExpand}
+              className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+              style={{ background: '#CF5C36', color: '#fff', boxShadow: '0 0 18px rgba(207,92,54,0.5)' }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7)' }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5)' }}
+            >
+              Watch video
+            </button>
+          )}
+          {project.artistLink && (
+            <a
+              href={project.artistLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+              style={{ background: 'transparent', color: 'rgba(238,229,233,0.65)', border: '1px solid rgba(238,229,233,0.2)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.65)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.2)' }}
+            >
+              Artist profile
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Website card ─────────────────────────────────────────────────────────────
 
 function WebsiteCard({ project }: { project: Project }) {
@@ -860,6 +1167,7 @@ export default function WorkPage() {
   const [activeTab, setActiveTab]             = useState('Commercial')
   const [page, setPage]                       = useState(0)
   const [showHotbar, setShowHotbar]           = useState(false)
+  const [modalProject, setModalProject]       = useState<Project | null>(null)
   const tabsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -950,7 +1258,7 @@ export default function WorkPage() {
             <div className="flex flex-col gap-16">
               {projectsLoading
                 ? Array.from({ length: 2 }).map((_, i) => (
-                    <div key={i} className="flex flex-col md:flex-row gap-8 animate-pulse">
+                    <div key={i} className="flex flex-col md:flex-row gap-8">
                       <div className="w-full md:w-[58%] rounded-2xl shrink-0" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
                       <div className="flex-1 flex flex-col gap-3 pt-1">
                         <div className="h-9 w-48 rounded-xl" style={{ background: '#161616' }} />
@@ -969,39 +1277,103 @@ export default function WorkPage() {
                     </FadeIn>
                   ))
               }
+              {!projectsLoading && filtered.length === 0 && (
+                <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.2)' }}>No website projects yet.</p>
+              )}
             </div>
+
+          ) : activeTab === 'Artists' ? (
+
+            /* ── Artists: featured hero + two conveyor reels ── */
+            (() => {
+              const featured  = filtered.find(p => p.subcategory === 'featured')
+              const clients   = filtered.filter(p => p.subcategory === 'client')
+              const personal  = filtered.filter(p => p.subcategory === 'personal')
+              const untagged  = filtered.filter(p => !p.subcategory)
+
+              return (
+                <div className="flex flex-col gap-16">
+                  {/* Featured */}
+                  {projectsLoading ? (
+                    <div>
+                      <div className="h-4 w-32 rounded mb-5" style={{ background: '#161616' }} />
+                      <div className="rounded-2xl" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                    </div>
+                  ) : featured ? (
+                    <FadeIn>
+                      <FeaturedVideoSection project={featured} onExpand={() => setModalProject(featured)} />
+                    </FadeIn>
+                  ) : null}
+
+                  {/* Artist Projects */}
+                  <FadeIn>
+                    <div>
+                      <p className="font-sans text-xs tracking-[0.14em] uppercase mb-5" style={{ color: 'rgba(238,229,233,0.25)' }}>
+                        Artist Projects
+                      </p>
+                      {projectsLoading ? (
+                        <div className="flex gap-4 overflow-hidden">
+                          {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="shrink-0 rounded-2xl" style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                          ))}
+                        </div>
+                      ) : (
+                        <ConveyorReel projects={[...clients, ...untagged]} onSelect={setModalProject} />
+                      )}
+                    </div>
+                  </FadeIn>
+
+                  {/* Personal Projects */}
+                  <FadeIn>
+                    <div>
+                      <p className="font-sans text-xs tracking-[0.14em] uppercase mb-5" style={{ color: 'rgba(238,229,233,0.25)' }}>
+                        Personal Projects
+                      </p>
+                      {projectsLoading ? (
+                        <div className="flex gap-4 overflow-hidden">
+                          {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="shrink-0 rounded-2xl" style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                          ))}
+                        </div>
+                      ) : (
+                        <ConveyorReel projects={personal} onSelect={setModalProject} />
+                      )}
+                    </div>
+                  </FadeIn>
+                </div>
+              )
+            })()
 
           ) : (
 
-            /* ── Video grid: 2-col ── */
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
-              {projectsLoading
-                ? Array.from({ length: PER_PAGE }).map((_, i) => (
-                    <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
-                  ))
-                : [
-                    ...paginated.map((project, i) => (
-                      <FadeIn key={project.id} delay={i * 60}>
-                        <VideoCard project={project} priority={i < 2} />
-                      </FadeIn>
-                    )),
-                    ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
-                      <div key={`ph-${i}`} style={{ aspectRatio: '16/9' }} />
-                    )),
-                  ]
-              }
-            </div>
+            /* ── Video grid: 2-col (Commercial) ── */
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
+                {projectsLoading
+                  ? Array.from({ length: PER_PAGE }).map((_, i) => (
+                      <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                    ))
+                  : [
+                      ...paginated.map((project, i) => (
+                        <FadeIn key={project.id} delay={i * 60}>
+                          <VideoCard project={project} priority={i < 2} />
+                        </FadeIn>
+                      )),
+                      ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
+                        <div key={`ph-${i}`} style={{ aspectRatio: '16/9' }} />
+                      )),
+                    ]
+                }
+              </div>
+              {!projectsLoading && filtered.length === 0 && (
+                <p className="font-sans text-sm text-center pt-6" style={{ color: 'rgba(238,229,233,0.2)' }}>
+                  No commercial projects yet.
+                </p>
+              )}
+              <PaginationLine total={totalPages} current={page} onChange={setPage} />
+            </>
 
           )}
-
-          {!projectsLoading && filtered.length === 0 && (
-            <p className="font-sans text-sm text-center pt-6" style={{ color: 'rgba(238,229,233,0.2)' }}>
-              No {activeTab.toLowerCase()} projects yet.
-            </p>
-          )}
-
-          {/* Segmented pagination line */}
-          <PaginationLine total={totalPages} current={page} onChange={setPage} />
 
         </div>
       </div>
@@ -1157,6 +1529,11 @@ export default function WorkPage() {
           })}
         </div>
       </div>
+
+      {/* ── Artist modal ── */}
+      {modalProject && (
+        <ArtistModal project={modalProject} onClose={() => setModalProject(null)} />
+      )}
 
     </main>
   )
