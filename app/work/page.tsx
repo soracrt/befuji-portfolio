@@ -13,6 +13,10 @@ type Project = {
   category: string | null
   client: string
   video: string
+  image?: string
+  description?: string
+  websiteUrl?: string
+  caseStudyUrl?: string
 }
 
 type Review = {
@@ -713,6 +717,103 @@ function ProcessTimeline({ tab }: { tab: string }) {
   )
 }
 
+// ─── Website card ─────────────────────────────────────────────────────────────
+
+function WebsiteCard({ project }: { project: Project }) {
+  return (
+    <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+
+      {/* Screenshot — 16:9 */}
+      <div
+        className="w-full md:w-[58%] shrink-0 rounded-2xl overflow-hidden"
+        style={{ aspectRatio: '16/9', background: '#111' }}
+      >
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover"
+            draggable={false}
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #111 0%, #1a1a1a 100%)' }}
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(238,229,233,0.12)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18" />
+              <circle cx="7" cy="6" r="0.5" fill="rgba(238,229,233,0.12)" />
+              <circle cx="10" cy="6" r="0.5" fill="rgba(238,229,233,0.12)" />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col gap-4 pt-1">
+        <h2
+          className="font-display font-bold"
+          style={{ fontSize: 'clamp(1.4rem, 2.8vw, 2.2rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}
+        >
+          {project.title}
+        </h2>
+
+        {project.client && (
+          <p className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(207,92,54,0.7)' }}>
+            {project.client}
+          </p>
+        )}
+
+        {project.description && (
+          <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.5)', maxWidth: '38ch' }}>
+            {project.description}
+          </p>
+        )}
+
+        {/* Buttons */}
+        <div className="flex items-center gap-3 mt-2 flex-wrap">
+          <a
+            href={project.websiteUrl || '#'}
+            target={project.websiteUrl ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+            style={{
+              background:  '#CF5C36',
+              color:       '#fff',
+              boxShadow:   '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)',
+              cursor:      project.websiteUrl ? 'pointer' : 'default',
+              opacity:     project.websiteUrl ? 1 : 0.45,
+            }}
+            onMouseEnter={e => { if (project.websiteUrl) e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7), 0 6px 20px rgba(207,92,54,0.4)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
+          >
+            View website
+          </a>
+
+          <a
+            href={project.caseStudyUrl || '#'}
+            target={project.caseStudyUrl ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+            style={{
+              background:   'transparent',
+              color:        project.caseStudyUrl ? 'rgba(238,229,233,0.65)' : 'rgba(238,229,233,0.25)',
+              border:       '1px solid rgba(238,229,233,0.18)',
+              cursor:       project.caseStudyUrl ? 'pointer' : 'default',
+            }}
+            onMouseEnter={e => { if (project.caseStudyUrl) { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' } }}
+            onMouseLeave={e => { e.currentTarget.style.color = project.caseStudyUrl ? 'rgba(238,229,233,0.65)' : 'rgba(238,229,233,0.25)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
+          >
+            Case study
+          </a>
+        </div>
+      </div>
+
+    </div>
+  )
+}
+
 // ─── Tabs + routing ───────────────────────────────────────────────────────────
 
 const TABS = ['Commercial', 'Artists', 'Websites']
@@ -842,24 +943,56 @@ export default function WorkPage() {
             </div>
           </FadeIn>
 
-          {/* Grid — always exactly PER_PAGE cells to prevent layout shift */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
-            {projectsLoading
-              ? Array.from({ length: PER_PAGE }).map((_, i) => (
-                  <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
-                ))
-              : [
-                  ...paginated.map((project, i) => (
-                    <FadeIn key={project.id} delay={i * 60}>
-                      <VideoCard project={project} priority={i < 2} />
+          {/* Projects */}
+          {activeTab === 'Websites' ? (
+
+            /* ── Website cards: image-left, content-right, stacked list ── */
+            <div className="flex flex-col gap-16">
+              {projectsLoading
+                ? Array.from({ length: 2 }).map((_, i) => (
+                    <div key={i} className="flex flex-col md:flex-row gap-8 animate-pulse">
+                      <div className="w-full md:w-[58%] rounded-2xl shrink-0" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                      <div className="flex-1 flex flex-col gap-3 pt-1">
+                        <div className="h-9 w-48 rounded-xl" style={{ background: '#161616' }} />
+                        <div className="h-4 w-full rounded" style={{ background: '#0f0f0f' }} />
+                        <div className="h-4 w-3/4 rounded" style={{ background: '#0f0f0f' }} />
+                        <div className="flex gap-3 mt-2">
+                          <div className="h-9 w-32 rounded-full" style={{ background: '#1a0e09' }} />
+                          <div className="h-9 w-28 rounded-full" style={{ background: '#111' }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                : paginated.map((project, i) => (
+                    <FadeIn key={project.id} delay={i * 80}>
+                      <WebsiteCard project={project} />
                     </FadeIn>
-                  )),
-                  ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
-                    <div key={`ph-${i}`} style={{ aspectRatio: '16/9' }} />
-                  )),
-                ]
-            }
-          </div>
+                  ))
+              }
+            </div>
+
+          ) : (
+
+            /* ── Video grid: 2-col ── */
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10">
+              {projectsLoading
+                ? Array.from({ length: PER_PAGE }).map((_, i) => (
+                    <div key={i} className="rounded-2xl overflow-hidden" style={{ aspectRatio: '16/9', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                  ))
+                : [
+                    ...paginated.map((project, i) => (
+                      <FadeIn key={project.id} delay={i * 60}>
+                        <VideoCard project={project} priority={i < 2} />
+                      </FadeIn>
+                    )),
+                    ...Array.from({ length: Math.max(0, PER_PAGE - paginated.length) }).map((_, i) => (
+                      <div key={`ph-${i}`} style={{ aspectRatio: '16/9' }} />
+                    )),
+                  ]
+              }
+            </div>
+
+          )}
 
           {!projectsLoading && filtered.length === 0 && (
             <p className="font-sans text-sm text-center pt-6" style={{ color: 'rgba(238,229,233,0.2)' }}>
