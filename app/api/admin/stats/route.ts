@@ -18,8 +18,11 @@ const BUCKET   = process.env.R2_BUCKET_NAME ?? ''
 const DATA_KEY = '_stats.json'
 
 type StatsData = { views: number; likes: number; artists: number; slots: number }
+type Project   = { category?: string; monthlyListeners?: number }
 
 const defaults: StatsData = { views: 2500000, likes: 397000, artists: 17, slots: 2 }
+
+const ARTIST_KEYWORDS = ['music video', 'artist promo', 'community', 'music', 'artist']
 
 async function readStats(): Promise<StatsData> {
   try {
@@ -37,6 +40,15 @@ async function readStats(): Promise<StatsData> {
   return defaults
 }
 
+async function readProjects(): Promise<Project[]> {
+  try {
+    const res  = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: '_projects.json' }))
+    const text = await res.Body?.transformToString()
+    if (text) return JSON.parse(text)
+  } catch {}
+  return []
+}
+
 async function writeStats(data: StatsData) {
   await s3.send(new PutObjectCommand({
     Bucket:      BUCKET,
@@ -48,8 +60,11 @@ async function writeStats(data: StatsData) {
 
 export async function GET() {
   try {
-    const stats = await readStats()
-    return NextResponse.json(stats, {
+    const [stats, projects] = await Promise.all([readStats(), readProjects()])
+    const totalMonthlyListeners = projects
+      .filter(p => ARTIST_KEYWORDS.some(k => (p.category ?? '').toLowerCase().includes(k)))
+      .reduce((sum, p) => sum + (p.monthlyListeners ?? 0), 0)
+    return NextResponse.json({ ...stats, totalMonthlyListeners }, {
       headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' },
     })
   } catch (err) {

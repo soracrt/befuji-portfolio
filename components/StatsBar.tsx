@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-type StatsData = { views: number; likes: number; artists: number }
+type StatsData = { views: number; likes: number; artists: number; totalMonthlyListeners: number }
 
 const BLOCKS: { key: keyof StatsData; label: string }[] = [
-  { key: 'artists', label: 'Artists & Brands'   },
-  { key: 'views',   label: 'Total Views'        },
-  { key: 'likes',   label: 'Total Likes'        },
+  { key: 'artists',               label: 'Artists & Brands'   },
+  { key: 'views',                 label: 'Total Views'        },
+  { key: 'likes',                 label: 'Total Likes'        },
+  { key: 'totalMonthlyListeners', label: 'Monthly Listeners'  },
 ]
 
 function useCountUp(target: number, duration: number, started: boolean) {
@@ -80,7 +81,7 @@ function StatBlock({
 }
 
 export default function StatsBar() {
-  const [stats, setStats]   = useState<StatsData>({ views: 2500000, likes: 397000, artists: 17 })
+  const [stats, setStats]   = useState<StatsData>({ views: 2500000, likes: 397000, artists: 17, totalMonthlyListeners: 0 })
   const [started, setStarted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -111,7 +112,7 @@ export default function StatsBar() {
   return (
     <div ref={ref} className="px-4 sm:px-8 pb-16 sm:pb-24">
       <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-4 gap-8">
           {BLOCKS.map(({ key, label }, i) => (
             <StatBlock
               key={key}

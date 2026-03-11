@@ -50,7 +50,7 @@ type ClientLog = {
 
 type Section = 'overview' | 'projects' | 'recent' | 'reviews' | 'clients' | 'finance' | 'stats'
 
-type StatsData = { views: number; likes: number; artists: number; slots: number }
+type StatsData = { views: number; likes: number; artists: number; slots: number; totalMonthlyListeners?: number }
 type EditKey = 'title' | 'category' | 'client'
 type DisplayCurrency = 'USD' | 'IDR'
 
@@ -1160,6 +1160,161 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
   )
 }
 
+// ─── Project Expand Panel ─────────────────────────────────────────────────────
+
+const IS_ARTIST  = (cat: string) => ['music video', 'artist promo', 'community', 'music', 'artist'].some(k => cat.toLowerCase().includes(k))
+const IS_WEBSITE = (cat: string) => ['web', 'digital'].some(k => cat.toLowerCase().includes(k))
+
+function ProjectExpandPanel({
+  project,
+  onSave,
+  onClose,
+}: {
+  project: Project
+  onSave: (updated: Project) => void
+  onClose: () => void
+}) {
+  const [form, setForm] = useState<Project>({ ...project })
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved]   = useState(false)
+
+  const isArtist  = IS_ARTIST(form.category)
+  const isWebsite = IS_WEBSITE(form.category)
+
+  const fieldClass = "w-full bg-[#111111] rounded-xl px-4 py-3 font-sans text-white/90 placeholder-[#303030] outline-none ring-1 ring-[#1e1e1e] focus:ring-[#2a2a2a] transition-all"
+  const fieldStyle = { fontSize: '16px', letterSpacing: '-0.01em' }
+  const labelStyle = { fontSize: '11px', letterSpacing: '0.12em', color: '#686868', textTransform: 'uppercase' as const }
+
+  async function handleSave() {
+    setSaving(true)
+    try {
+      await fetch('/api/admin/projects', {
+        method: 'PUT',
+        body: JSON.stringify(form),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      onSave(form)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div
+      className="rounded-xl mt-1 mb-1 p-5 flex flex-col gap-4"
+      style={{ background: '#141414', boxShadow: '0 0 0 1px #222' }}
+    >
+      {/* Basic fields */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="flex flex-col gap-1.5">
+          <label className="font-sans" style={labelStyle}>Title</label>
+          <input className={fieldClass} style={fieldStyle} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Untitled" />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="font-sans" style={labelStyle}>Category</label>
+          <CategorySelect value={form.category} onChange={v => setForm(f => ({ ...f, category: v }))} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="font-sans" style={labelStyle}>Client</label>
+          <input className={fieldClass} style={fieldStyle} value={form.client} onChange={e => setForm(f => ({ ...f, client: e.target.value }))} placeholder="—" />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label className="font-sans" style={labelStyle}>Description</label>
+        <textarea
+          className={fieldClass + ' resize-none'}
+          style={fieldStyle}
+          rows={2}
+          value={form.description ?? ''}
+          onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+          placeholder="Optional description"
+        />
+      </div>
+
+      {/* Artist-specific fields */}
+      {isArtist && (
+        <div className="flex flex-col gap-3">
+          <p className="font-sans" style={{ ...labelStyle, color: '#a864dc' }}>Artist Details</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="font-sans" style={labelStyle}>Subcategory</label>
+              <CategorySelect
+                value={form.subcategory ?? ''}
+                onChange={v => setForm(f => ({ ...f, subcategory: v as 'featured' | 'client' | 'personal' }))}
+                options={['featured', 'client', 'personal']}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="font-sans" style={labelStyle}>Artist Name</label>
+              <input className={fieldClass} style={fieldStyle} value={form.artistName ?? ''} onChange={e => setForm(f => ({ ...f, artistName: e.target.value }))} placeholder="Artist name" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="font-sans" style={labelStyle}>Monthly Listeners</label>
+              <input
+                className={fieldClass}
+                style={fieldStyle}
+                type="number"
+                min={0}
+                value={form.monthlyListeners ?? ''}
+                onChange={e => setForm(f => ({ ...f, monthlyListeners: parseInt(e.target.value) || 0 }))}
+                placeholder="0"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="font-sans" style={labelStyle}>Video Link</label>
+              <input className={fieldClass} style={fieldStyle} value={form.videoLink ?? ''} onChange={e => setForm(f => ({ ...f, videoLink: e.target.value }))} placeholder="YouTube / TikTok / Instagram" />
+            </div>
+            <div className="flex flex-col gap-1.5 col-span-2">
+              <label className="font-sans" style={labelStyle}>Artist Link</label>
+              <input className={fieldClass} style={fieldStyle} value={form.artistLink ?? ''} onChange={e => setForm(f => ({ ...f, artistLink: e.target.value }))} placeholder="Spotify / SoundCloud" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Website-specific fields */}
+      {isWebsite && (
+        <div className="flex flex-col gap-3">
+          <p className="font-sans" style={{ ...labelStyle, color: '#6b82dc' }}>Website Details</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="font-sans" style={labelStyle}>Live Website URL</label>
+              <input className={fieldClass} style={fieldStyle} value={form.websiteUrl ?? ''} onChange={e => setForm(f => ({ ...f, websiteUrl: e.target.value }))} placeholder="https://..." />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="font-sans" style={labelStyle}>Case Study URL</label>
+              <input className={fieldClass} style={fieldStyle} value={form.caseStudyUrl ?? ''} onChange={e => setForm(f => ({ ...f, caseStudyUrl: e.target.value }))} placeholder="Optional" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex items-center gap-3 pt-1">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="font-sans font-medium py-2.5 px-5 rounded-xl transition-all disabled:opacity-40"
+          style={{ background: '#fff', color: '#0a0a0a', fontSize: '15px', letterSpacing: '-0.01em' }}
+        >
+          {saving ? '···' : 'Save changes'}
+        </button>
+        {saved && <span className="font-sans" style={{ fontSize: '14px', color: '#4ade80' }}>Saved.</span>}
+        <button
+          onClick={onClose}
+          className="ml-auto font-sans text-[#505050] hover:text-[#808080] transition-colors"
+          style={{ fontSize: '14px' }}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── Projects Section ─────────────────────────────────────────────────────────
 
 function ProjectsSection({
@@ -1173,6 +1328,7 @@ function ProjectsSection({
   const [editingCell, setEditingCell] = useState<{ id: string; field: EditKey } | null>(null)
   const [editValue, setEditValue] = useState('')
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
   const dragIndex = useRef<number | null>(null)
 
   function startEdit(project: Project, field: EditKey) {
@@ -1197,6 +1353,7 @@ function ProjectsSection({
 
   function deleteProject(id: string) {
     setProjects(prev => prev.filter(p => p.id !== id))
+    if (expandedId === id) setExpandedId(null)
     fetch('/api/admin/projects', {
       method: 'DELETE',
       body: JSON.stringify({ id }),
@@ -1242,8 +1399,8 @@ function ProjectsSection({
         <p className="font-sans text-[#585858] text-sm">No projects yet. Upload a video to get started.</p>
       ) : (
         <div>
-          <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '20px 96px 1fr 1fr 1fr 32px' }}>
-            {(['', '', 'Title', 'Category', 'Client', ''] as const).map((col, i) => (
+          <div className="grid gap-4 px-5 pb-2 mb-1" style={{ gridTemplateColumns: '20px 96px 1fr 1fr 1fr 24px 32px' }}>
+            {(['', '', 'Title', 'Category', 'Client', '', ''] as const).map((col, i) => (
               <div key={i} className="font-sans" style={{ fontSize: '15px', letterSpacing: '0.11em', color: '#888888' }}>
                 {col}
               </div>
@@ -1262,67 +1419,93 @@ function ProjectsSection({
                 onCommit: commitEdit,
                 onCancel: cancelEdit,
               })
+              const isExpanded = expandedId === p.id
 
               return (
-                <div
-                  key={p.id}
-                  draggable
-                  onDragStart={() => { dragIndex.current = idx }}
-                  onDragEnd={() => { dragIndex.current = null; setDragOverIdx(null) }}
-                  onDragOver={e => { e.preventDefault(); setDragOverIdx(idx) }}
-                  onDragLeave={() => setDragOverIdx(null)}
-                  onDrop={() => {
-                    setDragOverIdx(null)
-                    if (dragIndex.current !== null && dragIndex.current !== idx) {
-                      reorderProjects(dragIndex.current, idx)
-                    }
-                    dragIndex.current = null
-                  }}
-                  className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-colors"
-                  style={{
-                    gridTemplateColumns: '20px 96px 1fr 1fr 1fr 32px',
-                    background: dragOverIdx === idx ? '#1a1a1a' : '#0f0f0f',
-                    boxShadow: dragOverIdx === idx ? '0 0 0 1px #2e2e2e' : '0 0 0 1px #1c1c1c',
-                  }}
-                >
-                  <div className="flex items-center justify-center text-[#202020] group-hover:text-[#404040] transition-colors cursor-grab active:cursor-grabbing">
-                    <IconDragHandle />
-                  </div>
-
-                  <div className="w-[96px] h-[54px] rounded-lg overflow-hidden bg-[#1a1a1a] shrink-0">
-                    <video
-                      src={p.video}
-                      className="w-full h-full object-cover"
-                      muted
-                      preload="metadata"
-                      onLoadedMetadata={e => { ;(e.target as HTMLVideoElement).currentTime = 0.5 }}
-                    />
-                  </div>
-
-                  <EditableCell {...cellProps('title')} placeholder="Untitled" />
-                  <CategorySelect
-                    value={p.category}
-                    onChange={v => {
-                      setProjects(prev => prev.map(proj => proj.id === p.id ? { ...proj, category: v } : proj))
-                      fetch('/api/admin/projects', {
-                        method: 'PUT',
-                        body: JSON.stringify({ id: p.id, category: v }),
-                        headers: { 'Content-Type': 'application/json' },
-                      }).catch(console.error)
+                <div key={p.id}>
+                  <div
+                    draggable
+                    onDragStart={() => { dragIndex.current = idx }}
+                    onDragEnd={() => { dragIndex.current = null; setDragOverIdx(null) }}
+                    onDragOver={e => { e.preventDefault(); setDragOverIdx(idx) }}
+                    onDragLeave={() => setDragOverIdx(null)}
+                    onDrop={() => {
+                      setDragOverIdx(null)
+                      if (dragIndex.current !== null && dragIndex.current !== idx) {
+                        reorderProjects(dragIndex.current, idx)
+                      }
+                      dragIndex.current = null
                     }}
-                  />
-                  <EditableCell {...cellProps('client')} placeholder="—" />
-
-                  <button
-                    onClick={() => deleteProject(p.id)}
-                    title="Delete"
-                    className="flex items-center justify-center text-[#404040] hover:text-red-400/70 transition-colors opacity-0 group-hover:opacity-100"
+                    className="grid gap-4 items-center px-5 py-4 rounded-xl group transition-colors"
+                    style={{
+                      gridTemplateColumns: '20px 96px 1fr 1fr 1fr 24px 32px',
+                      background: dragOverIdx === idx ? '#1a1a1a' : isExpanded ? '#161616' : '#0f0f0f',
+                      boxShadow: dragOverIdx === idx ? '0 0 0 1px #2e2e2e' : isExpanded ? '0 0 0 1px #252525' : '0 0 0 1px #1c1c1c',
+                    }}
                   >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" />
-                      <path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" />
-                    </svg>
-                  </button>
+                    <div className="flex items-center justify-center text-[#202020] group-hover:text-[#404040] transition-colors cursor-grab active:cursor-grabbing">
+                      <IconDragHandle />
+                    </div>
+
+                    <div className="w-[96px] h-[54px] rounded-lg overflow-hidden bg-[#1a1a1a] shrink-0">
+                      <video
+                        src={p.video}
+                        className="w-full h-full object-cover"
+                        muted
+                        preload="metadata"
+                        onLoadedMetadata={e => { ;(e.target as HTMLVideoElement).currentTime = 0.5 }}
+                      />
+                    </div>
+
+                    <EditableCell {...cellProps('title')} placeholder="Untitled" />
+                    <CategorySelect
+                      value={p.category}
+                      onChange={v => {
+                        setProjects(prev => prev.map(proj => proj.id === p.id ? { ...proj, category: v } : proj))
+                        fetch('/api/admin/projects', {
+                          method: 'PUT',
+                          body: JSON.stringify({ id: p.id, category: v }),
+                          headers: { 'Content-Type': 'application/json' },
+                        }).catch(console.error)
+                      }}
+                    />
+                    <EditableCell {...cellProps('client')} placeholder="—" />
+
+                    {/* Expand toggle */}
+                    <button
+                      onClick={() => setExpandedId(isExpanded ? null : p.id)}
+                      title={isExpanded ? 'Collapse' : 'Edit details'}
+                      className="flex items-center justify-center transition-colors"
+                      style={{ color: isExpanded ? '#a0a0a0' : '#404040' }}
+                    >
+                      <svg
+                        width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+
+                    <button
+                      onClick={() => deleteProject(p.id)}
+                      title="Delete"
+                      className="flex items-center justify-center text-[#404040] hover:text-red-400/70 transition-colors opacity-0 group-hover:opacity-100"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {isExpanded && (
+                    <ProjectExpandPanel
+                      project={p}
+                      onSave={updated => setProjects(prev => prev.map(proj => proj.id === p.id ? updated : proj))}
+                      onClose={() => setExpandedId(null)}
+                    />
+                  )}
                 </div>
               )
             })}
@@ -2364,6 +2547,23 @@ function StatsAdminSection({ stats, setStats }: { stats: StatsData; setStats: Re
             />
           </div>
         ))}
+
+        {/* Read-only computed field */}
+        <div className="flex flex-col gap-2">
+          <label className="font-sans" style={{ fontSize: '11px', letterSpacing: '0.12em', color: '#686868', textTransform: 'uppercase' }}>
+            Monthly Listeners <span style={{ color: '#404040' }}>· auto-computed</span>
+          </label>
+          <div
+            className="w-full bg-[#0d0d0d] rounded-xl px-4 py-3 font-sans tabular-nums"
+            style={{ fontSize: '16px', letterSpacing: '-0.01em', color: '#686868', boxShadow: '0 0 0 1px #1a1a1a' }}
+          >
+            {(stats.totalMonthlyListeners ?? 0).toLocaleString()}
+          </div>
+          <p className="font-sans" style={{ fontSize: '12px', color: '#404040' }}>
+            Sum of monthly listeners across all artist-category projects. Edit per-project in the Projects section.
+          </p>
+        </div>
+
         <div className="flex items-center gap-4 mt-3">
           <button
             type="submit"
