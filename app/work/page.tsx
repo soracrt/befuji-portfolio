@@ -737,8 +737,14 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
 
   return (
     <div
-      className="relative shrink-0 rounded-2xl overflow-hidden cursor-pointer group"
-      style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: '#111' }}
+      className="relative shrink-0 overflow-hidden cursor-pointer group"
+      style={{
+        width: 'clamp(200px, 26vw, 290px)',
+        aspectRatio: '1/1',
+        background: '#111',
+        borderRadius: '20px',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
+      }}
       onClick={onSelect}
     >
       {!loaded && (
@@ -754,17 +760,19 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         style={{ pointerEvents: 'none' }}
       />
-      <div className="absolute inset-0 transition-all duration-300 group-hover:bg-black/40 flex items-center justify-center">
+      {/* Centre play icon on hover */}
+      <div className="absolute inset-0 transition-all duration-300 group-hover:bg-black/35 flex items-center justify-center">
         <div
           className="opacity-0 group-hover:opacity-100 transition-all duration-200 scale-90 group-hover:scale-100 w-11 h-11 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(207,92,54,0.9)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(207,92,54,0.92)', backdropFilter: 'blur(8px)', boxShadow: '0 0 20px rgba(207,92,54,0.5)' }}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3" /></svg>
         </div>
       </div>
+      {/* Bottom overlay — always visible */}
       <div
-        className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}
+        className="absolute bottom-0 left-0 right-0 px-3.5 py-3"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)' }}
       >
         <p className="font-display font-bold text-sm text-white truncate" style={{ letterSpacing: '-0.02em' }}>{project.title}</p>
         {project.artistName && (
@@ -778,16 +786,31 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
 // ─── Conveyor reel ────────────────────────────────────────────────────────────
 
 function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (p: Project) => void }) {
-  const scrollRef  = useRef<HTMLDivElement>(null)
-  const isDragging = useRef(false)
-  const didDrag    = useRef(false)
-  const startX     = useRef(0)
+  const scrollRef   = useRef<HTMLDivElement>(null)
+  const isDragging  = useRef(false)
+  const didDrag     = useRef(false)
+  const startX      = useRef(0)
   const startScroll = useRef(0)
+  const [canLeft,  setCanLeft]  = useState(false)
+  const [canRight, setCanRight] = useState(true)
+
+  function updateArrows() {
+    const el = scrollRef.current
+    if (!el) return
+    setCanLeft(el.scrollLeft > 4)
+    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
+  }
+
+  useEffect(() => { updateArrows() }, [projects])
+
+  function nudge(dir: 1 | -1) {
+    scrollRef.current?.scrollBy({ left: dir * (290 + 16) * 2, behavior: 'smooth' })
+  }
 
   function onMouseDown(e: React.MouseEvent) {
-    isDragging.current = true
-    didDrag.current    = false
-    startX.current     = e.clientX
+    isDragging.current  = true
+    didDrag.current     = false
+    startX.current      = e.clientX
     startScroll.current = scrollRef.current?.scrollLeft ?? 0
   }
   function onMouseMove(e: React.MouseEvent) {
@@ -814,22 +837,56 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
     <p className="font-sans text-sm py-6" style={{ color: 'rgba(238,229,233,0.2)' }}>No projects here yet.</p>
   )
 
+  const ArrowBtn = ({ dir }: { dir: -1 | 1 }) => {
+    const visible = dir === -1 ? canLeft : canRight
+    return (
+      <button
+        onClick={() => nudge(dir)}
+        className="absolute top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+        style={{
+          [dir === -1 ? 'left' : 'right']: '-18px',
+          background:   'rgba(14,14,14,0.9)',
+          border:       '1px solid rgba(238,229,233,0.12)',
+          backdropFilter: 'blur(10px)',
+          color:        'rgba(238,229,233,0.7)',
+          opacity:      visible ? 1 : 0,
+          pointerEvents: visible ? 'auto' : 'none',
+          boxShadow:    '0 4px 16px rgba(0,0,0,0.5)',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)' }}
+        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.7)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.12)' }}
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          {dir === -1
+            ? <polyline points="15 18 9 12 15 6" />
+            : <polyline points="9 18 15 12 9 6" />
+          }
+        </svg>
+      </button>
+    )
+  }
+
   return (
-    <div
-      ref={scrollRef}
-      className="flex gap-4 overflow-x-auto pb-2"
-      style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'], cursor: 'grab' }}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={stopDrag}
-      onMouseLeave={stopDrag}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={stopDrag}
-    >
-      {projects.map(p => (
-        <ArtistCard key={p.id} project={p} onSelect={() => { if (!didDrag.current) onSelect(p) }} />
-      ))}
+    <div className="relative">
+      <ArrowBtn dir={-1} />
+      <div
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-auto pb-2"
+        style={{ scrollbarWidth: 'none', cursor: 'grab' }}
+        onScroll={updateArrows}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={stopDrag}
+        onMouseLeave={stopDrag}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={stopDrag}
+      >
+        {projects.map(p => (
+          <ArtistCard key={p.id} project={p} onSelect={() => { if (!didDrag.current) onSelect(p) }} />
+        ))}
+      </div>
+      <ArrowBtn dir={1} />
     </div>
   )
 }
@@ -950,10 +1007,37 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
 function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpand: () => void }) {
   return (
     <div>
-      <p className="font-sans text-xs tracking-[0.14em] uppercase mb-5" style={{ color: 'rgba(207,92,54,0.7)' }}>
-        Featured Videos
+      {/* Editorial heading */}
+      <h2
+        className="font-display font-bold"
+        style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}
+      >
+        Featured
+      </h2>
+      <p className="font-sans text-sm mt-1.5 mb-8" style={{ color: 'rgba(238,229,233,0.3)', fontStyle: 'italic' }}>
+        Handpicked favorites from my portfolio
       </p>
-      <VideoCard project={project} priority />
+
+      {/* Video card with badge overlay */}
+      <div className="relative">
+        <VideoCard project={project} priority />
+        {/* Featured badge — top-left */}
+        <div
+          className="absolute top-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full pointer-events-none"
+          style={{
+            background:     'rgba(207,92,54,0.88)',
+            backdropFilter: 'blur(10px)',
+            border:         '1px solid rgba(207,92,54,0.5)',
+            boxShadow:      '0 2px 12px rgba(207,92,54,0.35)',
+          }}
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff" stroke="none">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          <span className="font-sans text-xs font-medium text-white" style={{ letterSpacing: '0.04em' }}>Featured</span>
+        </div>
+      </div>
+
       <div className="mt-6 flex flex-col gap-3">
         <h2
           className="font-display font-bold"
@@ -1308,13 +1392,16 @@ export default function WorkPage() {
                   {/* Artist Projects */}
                   <FadeIn>
                     <div>
-                      <p className="font-sans text-xs tracking-[0.14em] uppercase mb-5" style={{ color: 'rgba(238,229,233,0.25)' }}>
+                      <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                         Artist Projects
+                      </h2>
+                      <p className="font-sans text-sm mt-1.5 mb-7" style={{ color: 'rgba(238,229,233,0.3)', fontStyle: 'italic' }}>
+                        Motion design work for music artists
                       </p>
                       {projectsLoading ? (
                         <div className="flex gap-4 overflow-hidden">
                           {Array.from({ length: 3 }).map((_, i) => (
-                            <div key={i} className="shrink-0 rounded-2xl" style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                            <div key={i} className="shrink-0 rounded-[20px]" style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
                           ))}
                         </div>
                       ) : (
@@ -1326,13 +1413,16 @@ export default function WorkPage() {
                   {/* Personal Projects */}
                   <FadeIn>
                     <div>
-                      <p className="font-sans text-xs tracking-[0.14em] uppercase mb-5" style={{ color: 'rgba(238,229,233,0.25)' }}>
+                      <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                         Personal Projects
+                      </h2>
+                      <p className="font-sans text-sm mt-1.5 mb-7" style={{ color: 'rgba(238,229,233,0.3)', fontStyle: 'italic' }}>
+                        Edits made for the love of it
                       </p>
                       {projectsLoading ? (
                         <div className="flex gap-4 overflow-hidden">
                           {Array.from({ length: 3 }).map((_, i) => (
-                            <div key={i} className="shrink-0 rounded-2xl" style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
+                            <div key={i} className="shrink-0 rounded-[20px]" style={{ width: 'clamp(200px, 26vw, 290px)', aspectRatio: '1/1', background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite' }} />
                           ))}
                         </div>
                       ) : (
