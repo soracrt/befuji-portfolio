@@ -75,7 +75,7 @@ type Review = {
 }
 
 const PER_PAGE = 6
-const SERVICES = ['Ads', 'SaaS', 'Film', 'Other']
+const SERVICES = ['Commercial', 'Motion Graphics', 'Website Development']
 
 export default function ReviewsClient({ initialReviews }: { initialReviews: Review[] }) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews)
