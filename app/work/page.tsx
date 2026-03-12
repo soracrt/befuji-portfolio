@@ -915,37 +915,55 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(14px)' }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      style={{ background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(20px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div
-        className="relative w-full flex flex-col sm:flex-row overflow-hidden rounded-2xl"
-        style={{ maxWidth: '720px', background: '#0d0d0d', border: '1px solid rgba(238,229,233,0.1)', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}
+      {/* Close — floats above both cards */}
+      <button
+        onClick={onClose}
+        className="absolute top-5 right-5 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150"
+        style={{ background: 'rgba(238,229,233,0.08)', border: '1px solid rgba(238,229,233,0.12)', color: 'rgba(238,229,233,0.5)' }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(238,229,233,0.16)'; e.currentTarget.style.color = '#EEE5E9' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(238,229,233,0.08)'; e.currentTarget.style.color = 'rgba(238,229,233,0.5)' }}
       >
-        {/* Video — square, left side */}
-        <div className="shrink-0 w-full sm:w-[42%]" style={{ aspectRatio: '1/1' }}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      {/* Two separate cards */}
+      <div className="flex flex-col sm:flex-row gap-3 w-full" style={{ maxWidth: '860px' }}>
+
+        {/* Left card — video square */}
+        <div
+          className="shrink-0 w-full sm:w-[44%] overflow-hidden rounded-2xl"
+          style={{ aspectRatio: '1/1', background: '#080808', border: '1px solid rgba(238,229,233,0.08)' }}
+        >
           <video src={project.video} controls autoPlay playsInline className="w-full h-full object-cover" />
         </div>
 
-        {/* Content — right side */}
-        <div className="flex flex-col justify-between gap-5 p-6 sm:p-7 flex-1">
+        {/* Right card — content */}
+        <div
+          className="flex flex-col justify-between flex-1 rounded-2xl p-6 sm:p-8"
+          style={{ background: '#0d0d0d', border: '1px solid rgba(238,229,233,0.08)', minHeight: '260px' }}
+        >
+          {/* Top: title + meta */}
           <div className="flex flex-col gap-3">
-            {/* Title + artist info */}
             <div>
-              <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.2rem,2.5vw,1.75rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+              <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.3rem,2.8vw,2rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
                 {project.title}
               </h2>
               {(project.artistName || project.monthlyListeners) && (
-                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
                   {project.artistName && (
-                    <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.55)' }}>{project.artistName}</span>
+                    <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.5)' }}>{project.artistName}</span>
                   )}
                   {project.artistName && project.monthlyListeners && (
-                    <span style={{ color: 'rgba(238,229,233,0.2)' }}>·</span>
+                    <span style={{ color: 'rgba(238,229,233,0.18)' }}>·</span>
                   )}
                   {project.monthlyListeners && (
-                    <span className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.3)' }}>
+                    <span className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.28)' }}>
                       {project.monthlyListeners.toLocaleString()} monthly listeners
                     </span>
                   )}
@@ -953,54 +971,70 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
               )}
             </div>
 
-            {/* Description */}
             {project.description && (
-              <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.45)' }}>
+              <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.4)' }}>
                 {project.description}
               </p>
             )}
           </div>
 
-          {/* Pills */}
-          <div className="flex items-center gap-3 flex-wrap">
-            {project.videoLink ? (
+          {/* Bottom: pills */}
+          <div className="flex items-center gap-3 flex-wrap mt-6">
+            {project.videoLink && (
               <a
                 href={project.videoLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
-                style={{ background: '#CF5C36', color: '#fff', boxShadow: '0 0 18px rgba(207,92,54,0.45), 0 4px 14px rgba(207,92,54,0.25)' }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.65), 0 6px 20px rgba(207,92,54,0.4)' }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.45), 0 4px 14px rgba(207,92,54,0.25)' }}
+                className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase px-6 py-3 rounded-full transition-all duration-200"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(224,100,58,0.95) 0%, #CF5C36 100%)',
+                  color: '#fff',
+                  boxShadow: [
+                    '0 0 0 1px rgba(207,92,54,0.5)',
+                    '0 0 18px rgba(207,92,54,0.55)',
+                    '0 0 40px rgba(207,92,54,0.25)',
+                    'inset 0 1px 0 rgba(255,255,255,0.18)',
+                    'inset 0 -1px 0 rgba(0,0,0,0.2)',
+                  ].join(', '),
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.boxShadow = [
+                    '0 0 0 1px rgba(207,92,54,0.7)',
+                    '0 0 28px rgba(207,92,54,0.75)',
+                    '0 0 56px rgba(207,92,54,0.38)',
+                    'inset 0 1px 0 rgba(255,255,255,0.22)',
+                    'inset 0 -1px 0 rgba(0,0,0,0.2)',
+                  ].join(', ')
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.boxShadow = [
+                    '0 0 0 1px rgba(207,92,54,0.5)',
+                    '0 0 18px rgba(207,92,54,0.55)',
+                    '0 0 40px rgba(207,92,54,0.25)',
+                    'inset 0 1px 0 rgba(255,255,255,0.18)',
+                    'inset 0 -1px 0 rgba(0,0,0,0.2)',
+                  ].join(', ')
+                  e.currentTarget.style.transform = 'translateY(0)'
+                }}
               >
-                {videoLabel(project.videoLink)} <ArrowIcon />
+                {videoLabel(project.videoLink)}
+                <ArrowIcon />
               </a>
-            ) : null}
+            )}
             <Link
               href="/contact"
               onClick={onClose}
-              className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
-              style={{ background: 'transparent', color: 'rgba(238,229,233,0.55)', border: '1px solid rgba(238,229,233,0.18)' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.55)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
+              className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase px-6 py-3 rounded-full transition-all duration-200"
+              style={{ background: 'transparent', color: 'rgba(238,229,233,0.5)', border: '1px solid rgba(238,229,233,0.16)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.32)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.5)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.16)' }}
             >
-              Interested? <ArrowIcon />
+              View More <ArrowIcon />
             </Link>
           </div>
         </div>
 
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150"
-          style={{ background: 'rgba(238,229,233,0.08)', border: '1px solid rgba(238,229,233,0.1)', color: 'rgba(238,229,233,0.5)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(238,229,233,0.16)'; e.currentTarget.style.color = '#EEE5E9' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(238,229,233,0.08)'; e.currentTarget.style.color = 'rgba(238,229,233,0.5)' }}
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
       </div>
     </div>
   )
