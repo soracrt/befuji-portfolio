@@ -3,6 +3,8 @@ import fs from 'fs/promises'
 import path from 'path'
 import ReviewsClient from './ReviewsClient'
 
+export const dynamic = 'force-dynamic'
+
 type Review = {
   id: string
   name: string
