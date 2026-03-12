@@ -276,8 +276,8 @@ function PaginationLine({ total, current, onChange }: { total: number; current: 
 
 const MARQUEE_BRANDS: Record<string, string[]> = {
   Commercial: ['Apex Motors', 'Loopkit', 'Volta Brand', 'Frameshifts', 'Kura Studio', 'Stackline'],
-  Artists:    ['Nocturne Visuals', 'Independent Artists', 'Film Collective', 'Visual Studio', 'Sound & Vision'],
-  Websites:   ['Stackline', 'Frameshifts', 'Loopkit', 'Web Studio', 'Digital Co'],
+  'Motion Graphics':     ['Nocturne Visuals', 'Independent Artists', 'Film Collective', 'Visual Studio', 'Sound & Vision'],
+  'Website Development': ['Stackline', 'Frameshifts', 'Loopkit', 'Web Studio', 'Digital Co'],
 }
 
 function Marquee({ tab }: { tab: string }) {
@@ -436,9 +436,9 @@ function ReviewForm({ category }: { category: string }) {
   const [error, setError]           = useState('')
 
   const SERVICE_BY_CAT: Record<string, string[]> = {
-    Commercial: ['Ads', 'SaaS', 'Motion Graphics'],
-    Artists:    ['Artist Promo', 'Music Video', 'Other'],
-    Websites:   ['Front-end', 'Back-end', 'Full Website'],
+    Commercial:            ['Ads', 'SaaS', 'Motion Graphics'],
+    'Motion Graphics':     ['Artist Promo', 'Music Video', 'Other'],
+    'Website Development': ['Front-end', 'Back-end', 'Full Website'],
   }
   const services = SERVICE_BY_CAT[category] ?? SERVICE_BY_CAT['Commercial']
 
@@ -611,7 +611,7 @@ const PROCESS_STEPS_BY_TAB: Record<string, Step[]> = {
     { side: 'client',  title: 'Final review',                  desc: 'Last look before we wrap. Revisions accepted here too.' },
     { side: 'kulaire', title: 'Delivery',                      desc: 'Final files, formatted for every platform you need.' },
   ],
-  Artists: [
+  'Motion Graphics': [
     { side: 'client',  title: 'Song selection',    desc: 'Drop the track and timestamp. We\'ll take it from there.' },
     { side: 'kulaire', title: 'Quote + invoice',   desc: 'We send the quote. You cover 50% to lock it in.' },
     { side: 'client',  title: 'Deposit confirmed', desc: 'Once the deposit clears, we start immediately.' },
@@ -619,7 +619,7 @@ const PROCESS_STEPS_BY_TAB: Record<string, Step[]> = {
     { side: 'client',  title: 'Revisions',         desc: 'Up to 2 revision rounds included.' },
     { side: 'kulaire', title: 'Final delivery',    desc: 'Project is yours. Posting available as an add-on.' },
   ],
-  Websites: [
+  'Website Development': [
     { side: 'client',  title: 'Brand details & references', desc: 'Send everything — colors, fonts, inspo, the works.' },
     { side: 'kulaire', title: 'Design direction',           desc: 'We confirm whether we\'re building from your design or starting fresh.' },
     { side: 'kulaire', title: 'Wireframe & concept',        desc: 'We map the structure and get your sign-off before building.' },
@@ -1234,21 +1234,22 @@ function WebsiteCard({ project }: { project: Project }) {
 
 // ─── Tabs + routing ───────────────────────────────────────────────────────────
 
-const TABS = ['Commercial', 'Artists', 'Websites']
+const TABS = ['Commercial', 'Motion Graphics', 'Website Development']
 const PER_PAGE = 4
 
 function matchesTab(category: string | null, tab: string) {
   const cat = (category || '').toLowerCase()
-  if (tab === 'Commercial') return ['ads', 'ad', 'film', 'saas', 'business', 'motion'].some(m => cat.includes(m))
-  if (tab === 'Artists')    return ['artist', 'music', 'community'].some(m => cat.includes(m))
-  if (tab === 'Websites')   return ['web', 'website', 'digital'].some(m => cat.includes(m))
+  if (tab === 'Commercial')          return ['ads', 'ad', 'film', 'saas', 'business', 'motion'].some(m => cat.includes(m))
+  if (tab === 'Motion Graphics')     return ['artist', 'music', 'community'].some(m => cat.includes(m))
+  if (tab === 'Website Development') return ['web', 'website', 'digital'].some(m => cat.includes(m))
   return false
 }
 
 // Map tab label to API category string
 function tabToCategory(tab: string) {
-  if (tab === 'Websites') return 'digital'
-  return tab.toLowerCase()
+  if (tab === 'Website Development') return 'digital'
+  if (tab === 'Motion Graphics')     return 'artists'
+  return 'commercial'
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -1259,12 +1260,12 @@ const TAB_ICONS: Record<string, React.ReactNode> = {
       <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
     </svg>
   ),
-  Artists: (
+  'Motion Graphics': (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
     </svg>
   ),
-  Websites: (
+  'Website Development': (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
     </svg>
@@ -1363,7 +1364,7 @@ export default function WorkPage() {
           </FadeIn>
 
           {/* Projects */}
-          {activeTab === 'Websites' ? (
+          {activeTab === 'Website Development' ? (
 
             /* ── Website cards: image-left, content-right, stacked list ── */
             <div className="flex flex-col gap-16">
@@ -1393,7 +1394,7 @@ export default function WorkPage() {
               )}
             </div>
 
-          ) : activeTab === 'Artists' ? (
+          ) : activeTab === 'Motion Graphics' ? (
 
             /* ── Artists: featured hero + two conveyor reels ── */
             (() => {
@@ -1558,7 +1559,7 @@ export default function WorkPage() {
                   What they say
                 </p>
                 <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                  What my {activeTab === 'Websites' ? 'web' : activeTab === 'Artists' ? 'artist' : 'commercial'} clients say.
+                  What my {activeTab === 'Website Development' ? 'web' : activeTab === 'Motion Graphics' ? 'motion graphics' : 'commercial'} clients say.
                 </h2>
               </div>
             </FadeIn>
