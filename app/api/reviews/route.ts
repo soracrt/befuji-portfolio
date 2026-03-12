@@ -69,6 +69,12 @@ export async function GET(req: Request) {
       reviews = reviews.filter(r => (r.approved === true) === want)
     }
 
+    const featuredParam = searchParams.get('featured')
+    if (featuredParam !== null) {
+      const want = featuredParam === 'true'
+      reviews = reviews.filter(r => (r.featured === true) === want)
+    }
+
     return NextResponse.json(reviews, {
       headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' },
     })

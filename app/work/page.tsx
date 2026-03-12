@@ -1291,7 +1291,7 @@ export default function WorkPage() {
 
   // Reload approved reviews whenever tab changes
   useEffect(() => {
-    fetch(`/api/reviews?category=${tabToCategory(activeTab)}&approved=true`)
+    fetch(`/api/reviews?category=${tabToCategory(activeTab)}&approved=true&featured=true`)
       .then(r => r.json())
       .then((data: Review[]) => { if (Array.isArray(data)) setReviews(data) })
       .catch(() => setReviews([]))
@@ -1548,51 +1548,43 @@ export default function WorkPage() {
       </div>
 
       {/* ── Reviews ── */}
-      <div className="px-4 sm:px-8 py-12 sm:py-20">
-        <div className="max-w-5xl mx-auto">
+      {reviews.length > 0 && (
+        <div className="px-4 sm:px-8 py-12 sm:py-20">
+          <div className="max-w-5xl mx-auto">
 
-          <FadeIn>
-            <div className="mb-10">
-              <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
-                What they say
-              </p>
-              <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                From {activeTab === 'Websites' ? 'web' : activeTab.toLowerCase()} clients.
-              </h2>
+            <FadeIn>
+              <div className="mb-10">
+                <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
+                  What they say
+                </p>
+                <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+                  What my {activeTab === 'Websites' ? 'web' : activeTab === 'Artists' ? 'artist' : 'commercial'} clients say.
+                </h2>
+              </div>
+            </FadeIn>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+              {reviews.map((r, i) => (
+                <FadeIn key={r.id} delay={i * 50}>
+                  <WorkReviewCard review={r} />
+                </FadeIn>
+              ))}
             </div>
-          </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16" style={{ minHeight: '220px' }}>
-            {reviews.map((r, i) => (
-              <FadeIn key={r.id} delay={i * 50}>
-                <WorkReviewCard review={r} />
-              </FadeIn>
-            ))}
-            {reviews.length === 0 && (
-              <p className="font-sans text-sm col-span-full self-center" style={{ color: 'rgba(238,229,233,0.18)' }}>
-                No reviews for this category yet — be the first.
-              </p>
-            )}
+            <FadeIn>
+              <div className="flex items-center gap-6">
+                <Link href="/reviews" className="font-sans text-sm" style={{ color: '#CF5C36', letterSpacing: '0.01em' }}>
+                  See all reviews →
+                </Link>
+                <Link href="/reviews" className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)', letterSpacing: '0.01em' }}>
+                  Leave a review →
+                </Link>
+              </div>
+            </FadeIn>
+
           </div>
-
-          {/* Divider */}
-          <div className="mb-10" style={{ borderTop: '1px solid rgba(238,229,233,0.06)' }} />
-
-          {/* Add review */}
-          <FadeIn>
-            <div className="mb-6">
-              <p className="font-sans text-xs tracking-[0.14em] uppercase mb-1" style={{ color: 'rgba(207,92,54,0.7)' }}>
-                Add your review
-              </p>
-              <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>
-                Worked with kulaire on a {activeTab === 'Websites' ? 'web' : activeTab.toLowerCase()} project? Leave a note.
-              </p>
-            </div>
-            <ReviewForm category={activeTab} />
-          </FadeIn>
-
         </div>
-      </div>
+      )}
 
       {/* ── Floating category hotbar ── */}
       <div
