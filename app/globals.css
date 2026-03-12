@@ -40,6 +40,42 @@ body {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }
 
+/* Volume slider */
+input[type='range'].vol-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  outline: none;
+  cursor: pointer;
+  border-radius: 9999px;
+  display: block;
+}
+input[type='range'].vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #CF5C36;
+  cursor: pointer;
+  margin-top: -3.5px;
+}
+input[type='range'].vol-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #CF5C36;
+  border: none;
+  cursor: pointer;
+}
+input[type='range'].vol-slider::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 9999px;
+}
+input[type='range'].vol-slider::-moz-range-track {
+  height: 3px;
+  border-radius: 9999px;
+}
+
 /* Link accent hover */
 .link-accent {
   transition: color 0.2s ease, opacity 0.2s ease;

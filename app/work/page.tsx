@@ -56,6 +56,8 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
   const rafRef         = useRef(0)
   const [playing, setPlaying]         = useState(true)
   const [muted, setMuted]             = useState(true)
+  const [volume, setVolume]           = useState(0.75)
+  const [showVol, setShowVol]         = useState(false)
   const [progress, setProgress]       = useState(0)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration]       = useState('0:00')
@@ -104,11 +106,19 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
     if (!v) return
     if (v.muted) {
       if (activeUnmute) activeUnmute.mute()
-      v.muted = false; v.volume = 0.75; setMuted(false)
+      v.muted = false; v.volume = volume; setMuted(false)
       activeUnmute = { mute: () => { if (videoRef.current) videoRef.current.muted = true; setMuted(true) } }
     } else {
       v.muted = true; setMuted(true); activeUnmute = null
     }
+  }
+
+  const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation()
+    const v = videoRef.current
+    const val = parseFloat(e.target.value)
+    setVolume(val)
+    if (v) { v.volume = val; v.muted = val === 0; setMuted(val === 0) }
   }
 
   const toggleFullscreen = (e: React.MouseEvent) => {
@@ -192,11 +202,31 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
                 ? <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16" rx="1" /><rect x="15" y="4" width="4" height="16" rx="1" /></svg>
                 : <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>}
             </button>
-            <button onClick={toggleMute} className="text-white/70 hover:text-white transition-colors" aria-label={muted ? 'Unmute' : 'Mute'}>
-              {muted
-                ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
-                : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>}
-            </button>
+            <div
+              className="flex items-center gap-1.5"
+              onMouseEnter={() => setShowVol(true)}
+              onMouseLeave={() => setShowVol(false)}
+            >
+              <button onClick={toggleMute} className="text-white/70 hover:text-white transition-colors" aria-label={muted ? 'Unmute' : 'Mute'}>
+                {muted || volume === 0
+                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
+                  : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>}
+              </button>
+              <div style={{ width: showVol ? '58px' : '0px', overflow: 'hidden', transition: 'width 0.2s ease' }}>
+                <input
+                  type="range"
+                  min="0" max="1" step="0.01"
+                  value={muted ? 0 : volume}
+                  onChange={handleVolume}
+                  onClick={e => e.stopPropagation()}
+                  className="vol-slider"
+                  style={{
+                    width: '58px',
+                    background: `linear-gradient(to right, #CF5C36 ${(muted ? 0 : volume) * 100}%, rgba(238,229,233,0.2) ${(muted ? 0 : volume) * 100}%)`,
+                  }}
+                />
+              </div>
+            </div>
             <span className="ml-auto font-mono text-[11px] text-white/40 tabular-nums">{currentTime} / {duration}</span>
             <button onClick={toggleFullscreen} className="text-white/70 hover:text-white transition-colors" aria-label="Fullscreen">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
