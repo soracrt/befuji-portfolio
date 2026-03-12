@@ -858,7 +858,7 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
   }
 
   if (projects.length === 0) return (
-    <p className="font-sans text-sm py-6" style={{ color: 'rgba(238,229,233,0.2)' }}>No projects here yet.</p>
+    <p className="font-display font-bold py-6" style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: '#EEE5E9', letterSpacing: '-0.02em' }}>No projects to be shown yet.</p>
   )
 
   const ArrowBtn = ({ dir }: { dir: -1 | 1 }) => {
@@ -1400,7 +1400,7 @@ export default function WorkPage() {
                       <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                         Artist Projects
                       </h2>
-                      <p className="font-sans text-sm mt-1.5 mb-7" style={{ color: 'rgba(238,229,233,0.3)', fontStyle: 'italic' }}>
+                      <p className="font-sans mt-2 mb-7" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1rem)', color: '#EEE5E9', fontStyle: 'italic' }}>
                         Motion design work for music artists
                       </p>
                       {projectsLoading ? (
@@ -1421,7 +1421,7 @@ export default function WorkPage() {
                       <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                         Personal Projects
                       </h2>
-                      <p className="font-sans text-sm mt-1.5 mb-7" style={{ color: 'rgba(238,229,233,0.3)', fontStyle: 'italic' }}>
+                      <p className="font-sans mt-2 mb-7" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1rem)', color: '#EEE5E9', fontStyle: 'italic' }}>
                         Edits made for the love of it
                       </p>
                       {projectsLoading ? (
