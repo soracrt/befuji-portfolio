@@ -976,7 +976,7 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
               <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>
                 Edited by{' '}
                 {project.editorLink ? (
-                  <a href={project.editorLink} target="_blank" rel="noopener noreferrer" className="link-accent transition-colors duration-150" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.editedBy}</a>
+                  <a href={project.editorLink} target="_blank" rel="noopener noreferrer" className="transition-colors duration-150 hover:text-[#EEE5E9]" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.editedBy}</a>
                 ) : (
                   <span>{project.editedBy}</span>
                 )}
