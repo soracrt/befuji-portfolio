@@ -77,6 +77,12 @@ type Review = {
 const PER_PAGE = 6
 const SERVICES = ['Commercial', 'Motion Graphics', 'Website Development']
 
+function serviceToCategory(service: string) {
+  if (service === 'Motion Graphics')     return 'artists'
+  if (service === 'Website Development') return 'digital'
+  return 'commercial'
+}
+
 export default function ReviewsClient({ initialReviews }: { initialReviews: Review[] }) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews)
   const [page, setPage] = useState(0)
@@ -114,7 +120,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, service, company, text }),
+        body: JSON.stringify({ name, service, company, text, category: serviceToCategory(service) }),
       })
       if (res.ok) {
         const newReview = await res.json()
