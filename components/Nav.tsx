@@ -5,13 +5,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Work', href: '/work' },
-  { label: 'FAQ',  href: '/faq' },
+  { label: 'Home',    href: '/' },
+  { label: 'Work',    href: '/work' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'FAQ',     href: '/faq' },
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 248
+const OPEN_WIDTH  = 310
 const CLOSED_SIZE = 44
 
 export default function Nav() {
@@ -56,7 +57,7 @@ export default function Nav() {
 
   return (
     <div
-      className="fixed top-5 left-0 right-0 z-50 flex items-center px-4 sm:px-8 gap-3 sm:gap-5"
+      className="fixed top-5 left-0 right-0 z-50 flex items-center justify-center px-4 sm:px-8 gap-3 sm:gap-4"
       style={{
         transform:  visible ? 'translateY(0)' : 'translateY(-200%)',
         transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
@@ -64,8 +65,8 @@ export default function Nav() {
       }}
     >
 
-      {/* Left column — hidden on mobile, email pill right-aligned on desktop */}
-      <div className="hidden sm:flex sm:flex-1 sm:justify-end">
+      {/* Left pill — email, hidden on mobile */}
+      <div className="hidden sm:block">
         <a
           href="mailto:hello@kulaire.com"
           className="font-sans text-xs tracking-[0.1em]"
@@ -196,8 +197,8 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* Right column — grows to fill space on mobile, CTA left-aligned on desktop */}
-      <div className="flex flex-1 justify-end sm:justify-start">
+      {/* Right pill — CTA */}
+      <div>
         <Link
           href={pathname === '/quote' || pathname === '/' ? '/contact' : '/quote'}
           className="font-sans text-xs tracking-[0.1em] uppercase"
