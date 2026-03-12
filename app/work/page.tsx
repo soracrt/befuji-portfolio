@@ -799,25 +799,8 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         style={{ pointerEvents: 'none' }}
       />
-      {/* Centre play icon on hover */}
-      <div className="absolute inset-0 transition-all duration-300 group-hover:bg-black/35 flex items-center justify-center">
-        <div
-          className="opacity-0 group-hover:opacity-100 transition-all duration-200 scale-90 group-hover:scale-100 w-11 h-11 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(207,92,54,0.92)', backdropFilter: 'blur(8px)', boxShadow: '0 0 20px rgba(207,92,54,0.5)' }}
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-        </div>
-      </div>
-      {/* Bottom overlay — always visible */}
-      <div
-        className="absolute bottom-0 left-0 right-0 px-3.5 py-3"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)' }}
-      >
-        <p className="font-display font-bold text-sm text-white truncate" style={{ letterSpacing: '-0.02em' }}>{project.title}</p>
-        {project.artistName && (
-          <p className="font-sans text-xs mt-0.5 truncate" style={{ color: 'rgba(238,229,233,0.5)' }}>{project.artistName}</p>
-        )}
-      </div>
+      {/* Subtle dark overlay on hover */}
+      <div className="absolute inset-0 transition-all duration-300 group-hover:bg-black/25" />
     </div>
   )
 }
