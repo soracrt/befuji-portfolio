@@ -1397,12 +1397,9 @@ export default function WorkPage() {
                   {/* Artist Projects */}
                   <FadeIn>
                     <div>
-                      <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
+                      <h2 className="font-display font-bold mb-7" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                         Artist Projects
                       </h2>
-                      <p className="font-sans mt-2 mb-7" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1rem)', color: '#EEE5E9', fontStyle: 'italic' }}>
-                        Motion design work for music artists
-                      </p>
                       {projectsLoading ? (
                         <div className="flex gap-4 overflow-hidden">
                           {Array.from({ length: 3 }).map((_, i) => (
@@ -1418,12 +1415,9 @@ export default function WorkPage() {
                   {/* Personal Projects */}
                   <FadeIn>
                     <div>
-                      <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
+                      <h2 className="font-display font-bold mb-7" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}>
                         Personal Projects
                       </h2>
-                      <p className="font-sans mt-2 mb-7" style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1rem)', color: '#EEE5E9', fontStyle: 'italic' }}>
-                        Edits made for the love of it
-                      </p>
                       {projectsLoading ? (
                         <div className="flex gap-4 overflow-hidden">
                           {Array.from({ length: 3 }).map((_, i) => (
