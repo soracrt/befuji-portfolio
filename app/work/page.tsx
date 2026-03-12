@@ -22,6 +22,7 @@ type Project = {
   monthlyListeners?: number
   videoLink?: string
   artistLink?: string
+  editedBy?: string
 }
 
 type Review = {
@@ -970,6 +971,9 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
             {project.artistName && (
               <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.artistName}</p>
             )}
+            {project.editedBy && (
+              <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>Edited by {project.editedBy}</p>
+            )}
           </div>
 
           {project.videoLink ? (
@@ -1064,6 +1068,9 @@ function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpan
               </span>
             )}
           </div>
+        )}
+        {project.editedBy && (
+          <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>Edited by {project.editedBy}</p>
         )}
         {project.description && (
           <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.5)', maxWidth: '55ch' }}>
