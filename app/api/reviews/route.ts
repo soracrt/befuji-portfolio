@@ -56,13 +56,13 @@ export async function GET(req: Request) {
     if (category) reviews = reviews.filter(r => r.category === category)
     if (approvedParam !== null) {
       const want = approvedParam === 'true'
-      reviews = reviews.filter(r => (r.approved === true) === want)
+      reviews = reviews.filter(r => !!r.approved === want)
     }
 
     const featuredParam = searchParams.get('featured')
     if (featuredParam !== null) {
       const want = featuredParam === 'true'
-      reviews = reviews.filter(r => (r.featured === true) === want)
+      reviews = reviews.filter(r => !!r.featured === want)
     }
 
     return NextResponse.json(reviews, {
