@@ -23,6 +23,7 @@ type Project = {
   videoLink?: string
   artistLink?: string
   editedBy?: string
+  editorLink?: string
 }
 
 type Review = {
@@ -972,7 +973,14 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
               <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.artistName}</p>
             )}
             {project.editedBy && (
-              <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>Edited by {project.editedBy}</p>
+              <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>
+                Edited by{' '}
+                {project.editorLink ? (
+                  <a href={project.editorLink} target="_blank" rel="noopener noreferrer" className="link-accent transition-colors duration-150" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.editedBy}</a>
+                ) : (
+                  <span>{project.editedBy}</span>
+                )}
+              </p>
             )}
           </div>
 
@@ -1070,7 +1078,14 @@ function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpan
           </div>
         )}
         {project.editedBy && (
-          <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>Edited by {project.editedBy}</p>
+          <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>
+            Edited by{' '}
+            {project.editorLink ? (
+              <a href={project.editorLink} target="_blank" rel="noopener noreferrer" className="link-accent transition-colors duration-150" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.editedBy}</a>
+            ) : (
+              <span>{project.editedBy}</span>
+            )}
+          </p>
         )}
         {project.description && (
           <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.5)', maxWidth: '55ch' }}>
