@@ -906,10 +906,12 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
     if (url.includes('instagram')) return 'Watch on Instagram'
     return 'Watch on YouTube'
   }
-  function artistLabel(url: string) {
-    if (url.includes('soundcloud')) return 'SoundCloud'
-    return 'Spotify'
-  }
+
+  const ArrowIcon = () => (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" />
+    </svg>
+  )
 
   return (
     <div
@@ -918,70 +920,72 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
       <div
-        className="relative w-full overflow-hidden rounded-2xl"
-        style={{ maxWidth: '500px', background: '#0d0d0d', border: '1px solid rgba(238,229,233,0.1)', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}
+        className="relative w-full flex flex-col sm:flex-row overflow-hidden rounded-2xl"
+        style={{ maxWidth: '720px', background: '#0d0d0d', border: '1px solid rgba(238,229,233,0.1)', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}
       >
-        {/* Video — 1:1 */}
-        <div style={{ aspectRatio: '1/1' }}>
+        {/* Video — square, left side */}
+        <div className="shrink-0 w-full sm:w-[42%]" style={{ aspectRatio: '1/1' }}>
           <video src={project.video} controls autoPlay playsInline className="w-full h-full object-cover" />
         </div>
 
-        {/* Content */}
-        <div className="p-6 flex flex-col gap-4">
-          <div>
-            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.15rem,2.5vw,1.6rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
-              {project.title}
-            </h2>
-            {(project.artistName || project.monthlyListeners) && (
-              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                {project.artistName && (
-                  <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.65)' }}>{project.artistName}</span>
-                )}
-                {project.artistName && project.monthlyListeners && (
-                  <span style={{ color: 'rgba(238,229,233,0.2)' }}>·</span>
-                )}
-                {project.monthlyListeners && (
-                  <span className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)' }}>
-                    {project.monthlyListeners.toLocaleString()} monthly listeners
-                  </span>
-                )}
-              </div>
+        {/* Content — right side */}
+        <div className="flex flex-col justify-between gap-5 p-6 sm:p-7 flex-1">
+          <div className="flex flex-col gap-3">
+            {/* Title + artist info */}
+            <div>
+              <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.2rem,2.5vw,1.75rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+                {project.title}
+              </h2>
+              {(project.artistName || project.monthlyListeners) && (
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                  {project.artistName && (
+                    <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.55)' }}>{project.artistName}</span>
+                  )}
+                  {project.artistName && project.monthlyListeners && (
+                    <span style={{ color: 'rgba(238,229,233,0.2)' }}>·</span>
+                  )}
+                  {project.monthlyListeners && (
+                    <span className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.3)' }}>
+                      {project.monthlyListeners.toLocaleString()} monthly listeners
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Description */}
+            {project.description && (
+              <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.45)' }}>
+                {project.description}
+              </p>
             )}
           </div>
 
-          {project.description && (
-            <p className="font-sans text-sm leading-[1.75]" style={{ color: 'rgba(238,229,233,0.5)' }}>
-              {project.description}
-            </p>
-          )}
-
-          <div className="flex items-center gap-3 flex-wrap mt-1">
-            {project.videoLink && (
+          {/* Pills */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {project.videoLink ? (
               <a
                 href={project.videoLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
-                style={{ background: '#CF5C36', color: '#fff', boxShadow: '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7), 0 6px 20px rgba(207,92,54,0.4)' }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
+                className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+                style={{ background: '#CF5C36', color: '#fff', boxShadow: '0 0 18px rgba(207,92,54,0.45), 0 4px 14px rgba(207,92,54,0.25)' }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.65), 0 6px 20px rgba(207,92,54,0.4)' }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.45), 0 4px 14px rgba(207,92,54,0.25)' }}
               >
-                {videoLabel(project.videoLink)}
+                {videoLabel(project.videoLink)} <ArrowIcon />
               </a>
-            )}
-            {project.artistLink && (
-              <a
-                href={project.artistLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
-                style={{ background: 'transparent', color: 'rgba(238,229,233,0.65)', border: '1px solid rgba(238,229,233,0.2)' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.65)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.2)' }}
-              >
-                {artistLabel(project.artistLink)}
-              </a>
-            )}
+            ) : null}
+            <Link
+              href="/contact"
+              onClick={onClose}
+              className="flex items-center gap-2 font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+              style={{ background: 'transparent', color: 'rgba(238,229,233,0.55)', border: '1px solid rgba(238,229,233,0.18)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.55)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
+            >
+              Interested? <ArrowIcon />
+            </Link>
           </div>
         </div>
 
