@@ -18,18 +18,11 @@ const s3 = new S3Client({
 const BUCKET = process.env.R2_BUCKET_NAME ?? ''
 const DATA_KEY = '_reviews.json'
 
-let cache: unknown[] | null = null
-
 async function readReviews(): Promise<unknown[]> {
-  if (cache !== null) return cache
-
   try {
     const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: DATA_KEY }))
     const text = await res.Body?.transformToString()
-    if (text) {
-      cache = JSON.parse(text)
-      return cache!
-    }
+    if (text) return JSON.parse(text)
   } catch {
     // Key doesn't exist yet — fall through to local seed
   }
@@ -37,16 +30,13 @@ async function readReviews(): Promise<unknown[]> {
   try {
     const localFile = path.join(process.cwd(), 'data', 'reviews.json')
     const text = await fs.readFile(localFile, 'utf-8')
-    cache = JSON.parse(text)
-    return cache!
+    return JSON.parse(text)
   } catch {
-    cache = []
     return []
   }
 }
 
 async function writeReviews(reviews: unknown[]) {
-  cache = reviews
   await s3.send(new PutObjectCommand({
     Bucket: BUCKET,
     Key: DATA_KEY,
