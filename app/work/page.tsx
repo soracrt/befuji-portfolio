@@ -1012,7 +1012,7 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
               onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.32)' }}
               onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.5)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.16)' }}
             >
-              View More <ArrowIcon />
+              Get Yours Now <ArrowIcon />
             </Link>
           )}
         </div>
