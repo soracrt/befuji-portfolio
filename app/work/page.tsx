@@ -43,10 +43,11 @@ function fmt(t: number) {
 }
 
 // paddingBottom: '56.25%' = 16:9, '100%' = 1:1
-function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: {
+function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false, autoUnmute = false }: {
   src: string
   paddingBottom?: string
   priority?: boolean
+  autoUnmute?: boolean
 }) {
   const videoRef       = useRef<HTMLVideoElement>(null)
   const containerRef   = useRef<HTMLDivElement>(null)
@@ -55,7 +56,7 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
   const draggingRef    = useRef(false)
   const rafRef         = useRef(0)
   const [playing, setPlaying]         = useState(true)
-  const [muted, setMuted]             = useState(true)
+  const [muted, setMuted]             = useState(!autoUnmute)
   const [volume, setVolume]           = useState(0.75)
   const [showVol, setShowVol]         = useState(false)
   const [progress, setProgress]       = useState(0)
@@ -67,6 +68,7 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
     const video = videoRef.current
     if (!video) return
     video.volume = 0.75
+    video.muted = !autoUnmute
 
     if (priority) {
       video.src = src
@@ -182,7 +184,7 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover cursor-pointer"
           style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease' }}
-          autoPlay muted loop playsInline preload="none"
+          autoPlay loop playsInline preload="none"
           onClick={togglePlay}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
@@ -957,7 +959,7 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
         </button>
 
         {/* Video card */}
-        <CustomVideoPlayer src={project.video} paddingBottom="100%" priority />
+        <CustomVideoPlayer src={project.video} paddingBottom="100%" priority autoUnmute />
 
         {/* Title + pill below video */}
         <div className="flex items-center justify-between gap-4 mt-4 px-1">
