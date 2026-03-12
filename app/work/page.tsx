@@ -220,10 +220,7 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: 
                   onChange={handleVolume}
                   onClick={e => e.stopPropagation()}
                   className="vol-slider"
-                  style={{
-                    width: '58px',
-                    background: `linear-gradient(to right, #CF5C36 ${(muted ? 0 : volume) * 100}%, rgba(238,229,233,0.2) ${(muted ? 0 : volume) * 100}%)`,
-                  }}
+                  style={{ width: '58px', '--pct': `${(muted ? 0 : volume) * 100}%` } as React.CSSProperties}
                 />
               </div>
             </div>
