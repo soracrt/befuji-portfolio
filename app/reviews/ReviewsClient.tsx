@@ -98,6 +98,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
   const [hoverRating, setHoverRating] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   // Animate cards in on first mount (data already present from SSR)
   useEffect(() => {
@@ -117,7 +118,13 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name.trim() || !text.trim() || !service || rating === 0) return
+    const errs: Record<string, string> = {}
+    if (!name.trim())  errs.name    = 'Name is required.'
+    if (!service)      errs.service = 'Please select a service.'
+    if (rating === 0)  errs.rating  = 'Please select a star rating.'
+    if (!text.trim())  errs.text    = 'Review text is required.'
+    if (Object.keys(errs).length > 0) { setErrors(errs); return }
+    setErrors({})
     setSubmitting(true)
     try {
       const res = await fetch('/api/reviews', {
@@ -263,19 +270,20 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                 <input
                   type="text"
                   value={name}
-                  onChange={e => setName(e.target.value)}
-                  required
+                  onChange={e => { setName(e.target.value); setErrors(p => ({ ...p, name: '' })) }}
                   placeholder="Your name"
-                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none focus:border-ink/40 transition-colors"
-                  style={{ borderColor: 'rgba(255,255,252,0.12)' }}
+                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none transition-colors"
+                  style={{ borderColor: errors.name ? 'rgba(207,92,54,0.6)' : 'rgba(255,255,252,0.12)' }}
                 />
+                {errors.name && <p className="font-sans text-xs" style={{ color: '#CF5C36' }}>{errors.name}</p>}
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.6)' }}>
                   Service
                 </label>
-                <CustomSelect value={service} options={SERVICES} onChange={setService} />
+                <CustomSelect value={service} options={SERVICES} onChange={v => { setService(v); setErrors(p => ({ ...p, service: '' })) }} />
+                {errors.service && <p className="font-sans text-xs" style={{ color: '#CF5C36' }}>{errors.service}</p>}
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -287,7 +295,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                     <button
                       key={star}
                       type="button"
-                      onClick={() => setRating(star)}
+                      onClick={() => { setRating(star); setErrors(p => ({ ...p, rating: '' })) }}
                       onMouseEnter={() => setHoverRating(star)}
                       style={{ background: 'none', border: 'none', padding: '2px', cursor: 'pointer', lineHeight: 1 }}
                     >
@@ -301,6 +309,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                     </button>
                   ))}
                 </div>
+                {errors.rating && <p className="font-sans text-xs" style={{ color: '#CF5C36' }}>{errors.rating}</p>}
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -331,13 +340,13 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                 </div>
                 <textarea
                   value={text}
-                  onChange={e => setText(e.target.value.slice(0, 120))}
-                  required
+                  onChange={e => { setText(e.target.value.slice(0, 120)); setErrors(p => ({ ...p, text: '' })) }}
                   placeholder="Tell us about your experience..."
                   rows={4}
-                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none focus:border-ink/40 transition-colors resize-none"
-                  style={{ borderColor: 'rgba(255,255,252,0.12)' }}
+                  className="bg-transparent border rounded-lg px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none transition-colors resize-none"
+                  style={{ borderColor: errors.text ? 'rgba(207,92,54,0.6)' : 'rgba(255,255,252,0.12)' }}
                 />
+                {errors.text && <p className="font-sans text-xs" style={{ color: '#CF5C36' }}>{errors.text}</p>}
               </div>
 
               <div className="flex items-center gap-5 mt-2">
