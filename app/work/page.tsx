@@ -42,16 +42,21 @@ function fmt(t: number) {
   return `${m}:${s}`
 }
 
-function VideoCard({ project, priority = false }: { project: Project; priority?: boolean }) {
+// paddingBottom: '56.25%' = 16:9, '100%' = 1:1
+function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false }: {
+  src: string
+  paddingBottom?: string
+  priority?: boolean
+}) {
   const videoRef       = useRef<HTMLVideoElement>(null)
   const containerRef   = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
   const fillRef        = useRef<HTMLDivElement>(null)
   const draggingRef    = useRef(false)
   const rafRef         = useRef(0)
-  const [playing, setPlaying]     = useState(true)
-  const [muted, setMuted]         = useState(true)
-  const [progress, setProgress]   = useState(0)
+  const [playing, setPlaying]         = useState(true)
+  const [muted, setMuted]             = useState(true)
+  const [progress, setProgress]       = useState(0)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration]       = useState('0:00')
   const [loaded, setLoaded]           = useState(false)
@@ -59,15 +64,16 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
+    video.volume = 0.75
 
     if (priority) {
-      video.src = project.video
+      video.src = src
       video.load()
       video.addEventListener('canplay', () => setLoaded(true), { once: true })
     } else {
       const loadObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          video.src = project.video
+          video.src = src
           video.load()
           video.addEventListener('canplay', () => setLoaded(true), { once: true })
           loadObserver.disconnect()
@@ -83,7 +89,7 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
 
     playObserver.observe(video)
     return () => { playObserver.disconnect() }
-  }, [project.video, priority])
+  }, [src, priority])
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -98,7 +104,7 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
     if (!v) return
     if (v.muted) {
       if (activeUnmute) activeUnmute.mute()
-      v.muted = false; v.volume = 0.5; setMuted(false)
+      v.muted = false; v.volume = 0.75; setMuted(false)
       activeUnmute = { mute: () => { if (videoRef.current) videoRef.current.muted = true; setMuted(true) } }
     } else {
       v.muted = true; setMuted(true); activeUnmute = null
@@ -154,52 +160,58 @@ function VideoCard({ project, priority = false }: { project: Project; priority?:
   }, [seekToX])
 
   return (
-    <div>
-      <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#0a0a0a] group">
-        {!loaded && (
-          <div className="absolute inset-0 z-10" style={{
-            background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)',
-            backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite',
-          }} />
-        )}
-        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-          <video
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-            style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease' }}
-            autoPlay muted loop playsInline preload="none"
-            onClick={togglePlay}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-          />
-          <div className="absolute bottom-0 left-0 right-0 px-3 pt-8 pb-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <div ref={progressBarRef} className="w-full h-[3px] bg-white/20 rounded-full mb-3 cursor-pointer relative"
-              onMouseDown={(e) => { e.stopPropagation(); draggingRef.current = true; seekToX(e.clientX) }}>
-              <div ref={fillRef} className="h-full rounded-full relative" style={{ width: `${progress}%`, background: '#CF5C36' }}>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2.5 h-2.5 rounded-full" style={{ background: '#CF5C36' }} />
-              </div>
+    <div ref={containerRef} className="relative rounded-2xl overflow-hidden bg-[#0a0a0a] group">
+      {!loaded && (
+        <div className="absolute inset-0 z-10" style={{
+          background: 'linear-gradient(90deg,#0f0f0f 25%,#161616 50%,#0f0f0f 75%)',
+          backgroundSize: '200% 100%', animation: 'shimmer 1.6s infinite',
+        }} />
+      )}
+      <div className="relative w-full" style={{ paddingBottom }}>
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+          style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease' }}
+          autoPlay muted loop playsInline preload="none"
+          onClick={togglePlay}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+        />
+        <div className="absolute bottom-0 left-0 right-0 px-3 pt-8 pb-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div ref={progressBarRef} className="w-full h-[3px] bg-white/20 rounded-full mb-3 cursor-pointer relative"
+            onMouseDown={(e) => { e.stopPropagation(); draggingRef.current = true; seekToX(e.clientX) }}>
+            <div ref={fillRef} className="h-full rounded-full relative" style={{ width: `${progress}%`, background: '#CF5C36' }}>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2.5 h-2.5 rounded-full" style={{ background: '#CF5C36' }} />
             </div>
-            <div className="flex items-center gap-3">
-              <button onClick={togglePlay} className="text-white/70 hover:text-white transition-colors" aria-label={playing ? 'Pause' : 'Play'}>
-                {playing
-                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16" rx="1" /><rect x="15" y="4" width="4" height="16" rx="1" /></svg>
-                  : <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>}
-              </button>
-              <button onClick={toggleMute} className="text-white/70 hover:text-white transition-colors" aria-label={muted ? 'Unmute' : 'Mute'}>
-                {muted
-                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
-                  : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>}
-              </button>
-              <span className="ml-auto font-mono text-[11px] text-white/40 tabular-nums">{currentTime} / {duration}</span>
-              <button onClick={toggleFullscreen} className="text-white/70 hover:text-white transition-colors" aria-label="Fullscreen">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
-              </button>
-            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={togglePlay} className="text-white/70 hover:text-white transition-colors" aria-label={playing ? 'Pause' : 'Play'}>
+              {playing
+                ? <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16" rx="1" /><rect x="15" y="4" width="4" height="16" rx="1" /></svg>
+                : <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>}
+            </button>
+            <button onClick={toggleMute} className="text-white/70 hover:text-white transition-colors" aria-label={muted ? 'Unmute' : 'Mute'}>
+              {muted
+                ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></svg>
+                : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>}
+            </button>
+            <span className="ml-auto font-mono text-[11px] text-white/40 tabular-nums">{currentTime} / {duration}</span>
+            <button onClick={toggleFullscreen} className="text-white/70 hover:text-white transition-colors" aria-label="Fullscreen">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
+            </button>
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function VideoCard({ project, priority = false }: { project: Project; priority?: boolean }) {
+  return (
+    <div>
+      <CustomVideoPlayer src={project.video} priority={priority} />
       <div className="mt-3 px-0.5 flex items-baseline justify-between gap-3">
         <span className="font-sans capitalize" style={{ fontSize: '14px', color: '#EEE5E9', letterSpacing: '-0.01em' }}>{project.title}</span>
         {project.category && (
@@ -935,9 +947,7 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
         </button>
 
         {/* Video card */}
-        <div className="w-full overflow-hidden rounded-2xl" style={{ aspectRatio: '1/1', background: '#080808', border: '1px solid rgba(238,229,233,0.08)' }}>
-          <video src={project.video} controls autoPlay playsInline className="w-full h-full object-cover" />
-        </div>
+        <CustomVideoPlayer src={project.video} paddingBottom="100%" priority />
 
         {/* Title + pill below video */}
         <div className="flex items-center justify-between gap-4 mt-4 px-1">
