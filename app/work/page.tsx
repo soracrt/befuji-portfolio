@@ -1571,9 +1571,14 @@ export default function WorkPage() {
                 <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
                   What they say
                 </p>
-                <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                  What my {activeTab === 'Website Development' ? 'web' : activeTab === 'Motion Graphics' ? 'motion graphics' : 'commercial'} clients say.
-                </h2>
+                <div className="flex items-center gap-5">
+                  <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+                    What my {activeTab === 'Website Development' ? 'web' : activeTab === 'Motion Graphics' ? 'motion graphics' : 'commercial'} clients say.
+                  </h2>
+                  <Link href="/reviews" className="font-sans text-sm shrink-0" style={{ color: '#CF5C36', letterSpacing: '0.01em' }}>
+                    See all →
+                  </Link>
+                </div>
               </div>
             </FadeIn>
 
@@ -1584,17 +1589,6 @@ export default function WorkPage() {
                 </FadeIn>
               ))}
             </div>
-
-            <FadeIn>
-              <div className="flex items-center gap-6">
-                <Link href="/reviews" className="font-sans text-sm" style={{ color: '#CF5C36', letterSpacing: '0.01em' }}>
-                  See all reviews →
-                </Link>
-                <Link href="/reviews" className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.35)', letterSpacing: '0.01em' }}>
-                  Leave a review →
-                </Link>
-              </div>
-            </FadeIn>
 
           </div>
         </div>
