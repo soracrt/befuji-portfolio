@@ -32,6 +32,7 @@ type Review = {
   service: string
   company?: string
   text: string
+  rating?: number
 }
 
 // ─── Video card ───────────────────────────────────────────────────────────────
@@ -304,10 +305,22 @@ function Marquee({ tab }: { tab: string }) {
 function WorkReviewCard({ review }: { review: Review }) {
   return (
     <div className="flex flex-col p-5 rounded-2xl h-full" style={{ background: '#0d0d0d', border: '1px solid rgba(238,229,233,0.07)' }}>
-      <div className="flex items-start justify-between gap-3 mb-4">
+      <div className="flex items-start justify-between gap-3 mb-3">
         <span className="font-sans text-sm font-medium" style={{ color: '#EEE5E9' }}>{review.name}</span>
         <span className="font-sans text-xs tracking-[0.12em] uppercase shrink-0" style={{ color: 'rgba(238,229,233,0.3)' }}>{review.service}</span>
       </div>
+      {review.rating && (
+        <div className="flex items-center gap-0.5 mb-3">
+          {[1, 2, 3, 4, 5].map(star => (
+            <svg key={star} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="none">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                fill={review.rating! >= star ? '#CF5C36' : 'rgba(238,229,233,0.1)'}
+              />
+            </svg>
+          ))}
+        </div>
+      )}
       <p className="font-sans text-sm leading-[1.75] flex-1" style={{ color: 'rgba(238,229,233,0.6)' }}>
         &ldquo;{review.text}&rdquo;
       </p>

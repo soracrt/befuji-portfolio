@@ -72,6 +72,7 @@ type Review = {
   company?: string
   text: string
   featured: boolean
+  rating?: number
 }
 
 const PER_PAGE = 6
@@ -93,6 +94,8 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
   const [service, setService] = useState('')
   const [company, setCompany] = useState('')
   const [text, setText] = useState('')
+  const [rating, setRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -114,13 +117,13 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name.trim() || !text.trim() || !service) return
+    if (!name.trim() || !text.trim() || !service || rating === 0) return
     setSubmitting(true)
     try {
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, service, company, text, category: serviceToCategory(service) }),
+        body: JSON.stringify({ name, service, company, text, rating, category: serviceToCategory(service) }),
       })
       if (res.ok) {
         const newReview = await res.json()
@@ -129,6 +132,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
         setService('')
         setCompany('')
         setText('')
+        setRating(0)
         setSubmitted(true)
         setTimeout(() => setSubmitted(false), 4000)
       }
@@ -272,6 +276,31 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
                   Service
                 </label>
                 <CustomSelect value={service} options={SERVICES} onChange={setService} />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,252,0.6)' }}>
+                  Rating
+                </label>
+                <div className="flex items-center gap-1" onMouseLeave={() => setHoverRating(0)}>
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      style={{ background: 'none', border: 'none', padding: '2px', cursor: 'pointer', lineHeight: 1 }}
+                    >
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="none">
+                        <polygon
+                          points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                          fill={(hoverRating || rating) >= star ? '#CF5C36' : 'rgba(255,255,252,0.12)'}
+                          style={{ transition: 'fill 0.15s ease' }}
+                        />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
