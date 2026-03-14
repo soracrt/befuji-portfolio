@@ -1169,9 +1169,9 @@ function WebsiteCard({ project }: { project: Project }) {
             {/* Browser chrome */}
             <div className="flex items-center gap-2 px-3 py-2" style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}>
               <div className="flex gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#3a3a3a' }} />
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#3a3a3a' }} />
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#3a3a3a' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FFBD2E' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
               </div>
               <span
                 className="font-sans truncate flex-1 text-center"
@@ -1196,7 +1196,8 @@ function WebsiteCard({ project }: { project: Project }) {
               src={absUrl}
               title={project.title}
               className="w-full"
-              style={{ height: 'calc(100% - 33px)', border: 'none', display: 'block' }}
+              style={{ height: 'calc(100% - 33px)', border: 'none', display: 'block', overflow: 'hidden' }}
+              scrolling="no"
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
             />
           </>
