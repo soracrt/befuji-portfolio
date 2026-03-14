@@ -17,10 +17,10 @@ const s3 = new S3Client({
 const BUCKET   = process.env.R2_BUCKET_NAME ?? ''
 const DATA_KEY = '_stats.json'
 
-type StatsData = { views: number; likes: number; artists: number; slots: number }
+type StatsData = { views: number; artists: number; slots: number }
 type Project   = { category?: string; monthlyListeners?: number }
 
-const defaults: StatsData = { views: 2500000, likes: 397000, artists: 17, slots: 2 }
+const defaults: StatsData = { views: 2500000, artists: 17, slots: 2 }
 
 const ARTIST_KEYWORDS = ['music video', 'artist promo', 'community', 'music', 'artist']
 
@@ -79,7 +79,6 @@ export async function PUT(req: Request) {
     const current = await readStats()
     const updated: StatsData = {
       views:   typeof body.views   === 'number' ? body.views   : current.views,
-      likes:   typeof body.likes   === 'number' ? body.likes   : current.likes,
       artists: typeof body.artists === 'number' ? body.artists : current.artists,
       slots:   typeof body.slots   === 'number' ? body.slots   : current.slots,
     }
