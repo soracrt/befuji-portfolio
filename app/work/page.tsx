@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
 import BackButton from '@/components/BackButton'
@@ -1172,45 +1173,60 @@ function BrowserChrome({ url, onClose, onToggleMax }: { url: string; onClose: ()
 function WebsiteCard({ project }: { project: Project }) {
   const [previewing, setPreviewing] = useState(false)
   const [maximized,  setMaximized]  = useState(false)
+  const [mounted,    setMounted]    = useState(false)
   const absUrl = project.websiteUrl
     ? (project.websiteUrl.startsWith('http') ? project.websiteUrl : `https://${project.websiteUrl}`)
     : null
 
+  useEffect(() => { setMounted(true) }, [])
+
+  useEffect(() => {
+    if (maximized) {
+      document.body.classList.add('preview-open')
+    } else {
+      document.body.classList.remove('preview-open')
+    }
+    return () => { document.body.classList.remove('preview-open') }
+  }, [maximized])
+
+  const popup = mounted && maximized && absUrl ? createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.45)' }}
+      onClick={e => { if (e.target === e.currentTarget) setMaximized(false) }}
+    >
+      <div
+        className="flex flex-col overflow-hidden"
+        style={{
+          width:        '85vw',
+          height:       '85vh',
+          borderRadius: 24,
+          background:   '#0d0d0d',
+          boxShadow:    '0 80px 200px rgba(0,0,0,0.95), 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.07)',
+          animation:    'windowIn 0.28s cubic-bezier(0.34,1.3,0.64,1) both',
+        }}
+      >
+        <BrowserChrome
+          url={absUrl}
+          onClose={() => { setMaximized(false); setPreviewing(false) }}
+          onToggleMax={() => setMaximized(false)}
+        />
+        <div style={{ position: 'relative', flex: 1, overflow: 'hidden', borderRadius: '0 0 24px 24px' }}>
+          <iframe
+            src={absUrl}
+            title={project.title}
+            style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          />
+        </div>
+      </div>
+    </div>,
+    document.body
+  ) : null
+
   return (
     <>
-      {/* Fullscreen overlay */}
-      {maximized && absUrl && (
-        /* Backdrop — blurred + dimmed page behind */
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
-          onClick={e => { if (e.target === e.currentTarget) setMaximized(false) }}
-        >
-          {/* Floating window */}
-          <div
-            className="flex flex-col overflow-hidden"
-            style={{
-              width:        '88vw',
-              height:       '84vh',
-              maxWidth:     1200,
-              borderRadius: 12,
-              background:   '#0d0d0d',
-              boxShadow:    '0 40px 120px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06)',
-              animation:    'windowIn 0.22s cubic-bezier(0.34,1.4,0.64,1) both',
-            }}
-          >
-            <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(false)} />
-            <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
-              <iframe
-                src={absUrl}
-                title={project.title}
-                style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      {popup}
 
       <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
 

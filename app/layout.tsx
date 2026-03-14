@@ -37,9 +37,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
       <body className="font-sans bg-bg text-ink">
-        <ScrollToTop />
-        <Nav />
-        {children}
+        <div id="site-root">
+          <ScrollToTop />
+          <Nav />
+          {children}
+        </div>
       </body>
     </html>
   )

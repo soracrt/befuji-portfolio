@@ -16,6 +16,22 @@ body {
   color: #fffffc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  perspective: 1200px;
+}
+
+#site-root {
+  transform-origin: center 40%;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.55s ease;
+  min-height: 100vh;
+}
+
+body.preview-open {
+  overflow: hidden;
+}
+
+body.preview-open #site-root {
+  transform: scale(0.95) translateZ(-60px);
+  filter: brightness(0.35);
 }
 
 /* Selection */
@@ -80,9 +96,9 @@ input[type='range'].vol-slider::-moz-range-track {
   background: linear-gradient(to right, #CF5C36 var(--pct), rgba(238,229,233,0.2) var(--pct));
 }
 
-/* Website preview window pop-in */
+/* Website preview window pop-in — floats forward from Z:0 toward viewer */
 @keyframes windowIn {
-  from { opacity: 0; transform: scale(0.93) translateY(12px); }
+  from { opacity: 0; transform: scale(0.88) translateY(24px); }
   to   { opacity: 1; transform: scale(1)    translateY(0);    }
 }
 
