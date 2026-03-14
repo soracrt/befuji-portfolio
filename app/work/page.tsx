@@ -1222,22 +1222,23 @@ function WebsiteCard({ project }: { project: Project }) {
             View website
           </a>
 
-          <a
-            href={project.caseStudyUrl || '#'}
-            target={project.caseStudyUrl ? '_blank' : undefined}
-            rel="noopener noreferrer"
-            className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
-            style={{
-              background:   'transparent',
-              color:        project.caseStudyUrl ? 'rgba(238,229,233,0.65)' : 'rgba(238,229,233,0.25)',
-              border:       '1px solid rgba(238,229,233,0.18)',
-              cursor:       project.caseStudyUrl ? 'pointer' : 'default',
-            }}
-            onMouseEnter={e => { if (project.caseStudyUrl) { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' } }}
-            onMouseLeave={e => { e.currentTarget.style.color = project.caseStudyUrl ? 'rgba(238,229,233,0.65)' : 'rgba(238,229,233,0.25)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
-          >
-            Case study
-          </a>
+          {project.caseStudyUrl && (
+            <a
+              href={project.caseStudyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+              style={{
+                background:   'transparent',
+                color:        'rgba(238,229,233,0.65)',
+                border:       '1px solid rgba(238,229,233,0.18)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.65)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
+            >
+              Case study
+            </a>
+          )}
         </div>
       </div>
 
