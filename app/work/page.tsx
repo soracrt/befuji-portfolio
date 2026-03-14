@@ -1259,7 +1259,7 @@ function WebsiteCard({ project }: { project: Project }) {
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover [transition:filter_0.45s_cubic-bezier(0.25,0.1,0.25,1)] group-hover/img:[filter:blur(0.5px)]"
                   draggable={false}
                 />
               ) : (
@@ -1282,7 +1282,7 @@ function WebsiteCard({ project }: { project: Project }) {
                 >
                   <span
                     className="flex items-center gap-2 font-sans text-xs tracking-[0.1em] uppercase px-4 py-2.5 rounded-full"
-                    style={{ background: 'rgba(207,92,54,0.18)', color: '#CF5C36', border: '1px solid rgba(207,92,54,0.5)', boxShadow: '0 0 20px rgba(207,92,54,0.45), 0 0 40px rgba(207,92,54,0.2)' }}
+                    style={{ background: 'rgba(207,92,54,0.25)', color: '#fff', border: '1px solid rgba(207,92,54,0.7)', boxShadow: '0 0 24px rgba(207,92,54,0.8), 0 0 60px rgba(207,92,54,0.45), 0 0 100px rgba(207,92,54,0.2)', fontWeight: 700 }}
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" />
