@@ -1205,7 +1205,7 @@ function WebsiteCard({ project }: { project: Project }) {
         {/* Buttons */}
         <div className="flex items-center gap-3 mt-2 flex-wrap">
           <a
-            href={project.websiteUrl || '#'}
+            href={project.websiteUrl ? (project.websiteUrl.startsWith('http') ? project.websiteUrl : `https://${project.websiteUrl}`) : '#'}
             target={project.websiteUrl ? '_blank' : undefined}
             rel="noopener noreferrer"
             className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
