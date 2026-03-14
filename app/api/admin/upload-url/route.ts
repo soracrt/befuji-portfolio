@@ -45,9 +45,7 @@ export async function GET(req: Request) {
   })
 
   const url = await getSignedUrl(s3, command, { expiresIn: 3600 })
-  const publicUrl = isVideo
-    ? `/api/videos/${safeName}`
-    : `${process.env.R2_PUBLIC_URL}/${safeName}`
+  const publicUrl = `/api/videos/${safeName}`
 
   return NextResponse.json({ url, key: safeName, publicUrl, contentType })
 }
