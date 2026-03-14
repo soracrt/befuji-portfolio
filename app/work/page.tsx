@@ -1249,7 +1249,12 @@ function WebsiteCard({ project }: { project: Project }) {
               </div>
             </div>
           ) : (
-            <>
+            <button
+              className="absolute inset-0 w-full h-full"
+              style={{ cursor: absUrl ? 'pointer' : 'default' }}
+              onClick={() => { if (absUrl) setPreviewing(true) }}
+              tabIndex={absUrl ? 0 : -1}
+            >
               {project.image ? (
                 <img
                   src={project.image}
@@ -1270,27 +1275,7 @@ function WebsiteCard({ project }: { project: Project }) {
                   </svg>
                 </div>
               )}
-              {absUrl && (
-                <button
-                  onClick={() => setPreviewing(true)}
-                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  style={{ background: 'rgba(0,0,0,0.55)' }}
-                >
-                  <span
-                    className="flex items-center gap-2 font-sans text-xs tracking-[0.1em] uppercase px-4 py-2.5 rounded-full"
-                    style={{ background: 'rgba(207,92,54,0.15)', color: '#CF5C36', border: '1px solid rgba(207,92,54,0.4)' }}
-                  >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2" />
-                      <path d="M3 9h18" />
-                      <circle cx="7" cy="6" r="1" fill="currentColor" />
-                      <circle cx="11" cy="6" r="1" fill="currentColor" />
-                    </svg>
-                    Live preview
-                  </span>
-                </button>
-              )}
-            </>
+            </button>
           )}
         </div>
 
@@ -1317,20 +1302,36 @@ function WebsiteCard({ project }: { project: Project }) {
 
         {/* Buttons */}
         <div className="flex items-center gap-3 mt-2 flex-wrap">
+          {absUrl && (
+            <button
+              onClick={() => { setMaximized(true); setPreviewing(true) }}
+              className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
+              style={{
+                background:  '#CF5C36',
+                color:       '#fff',
+                boxShadow:   '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7), 0 6px 20px rgba(207,92,54,0.4)' }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
+            >
+              Live preview
+            </button>
+          )}
+
           <a
             href={project.websiteUrl ? (project.websiteUrl.startsWith('http') ? project.websiteUrl : `https://${project.websiteUrl}`) : '#'}
             target={project.websiteUrl ? '_blank' : undefined}
             rel="noopener noreferrer"
             className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
             style={{
-              background:  '#CF5C36',
-              color:       '#fff',
-              boxShadow:   '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)',
-              cursor:      project.websiteUrl ? 'pointer' : 'default',
-              opacity:     project.websiteUrl ? 1 : 0.45,
+              background:   'transparent',
+              color:        'rgba(238,229,233,0.65)',
+              border:       '1px solid rgba(238,229,233,0.18)',
+              cursor:       project.websiteUrl ? 'pointer' : 'default',
+              opacity:      project.websiteUrl ? 1 : 0.45,
             }}
-            onMouseEnter={e => { if (project.websiteUrl) e.currentTarget.style.boxShadow = '0 0 28px rgba(207,92,54,0.7), 0 6px 20px rgba(207,92,54,0.4)' }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 18px rgba(207,92,54,0.5), 0 4px 14px rgba(207,92,54,0.28)' }}
+            onMouseEnter={e => { if (project.websiteUrl) { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' } }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.65)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
           >
             View website
           </a>
