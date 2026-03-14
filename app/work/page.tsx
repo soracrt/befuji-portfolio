@@ -1157,15 +1157,15 @@ function BrowserChrome({ url, onClose, onToggleMax }: { url: string; onClose: ()
       className="flex items-center gap-2 px-3 shrink-0"
       style={{ height: 33, background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}
     >
-      <div className="flex gap-1.5">
-        <button onClick={onClose}     className="w-2.5 h-2.5 rounded-full transition-opacity hover:opacity-80" style={{ background: '#FF5F57' }} />
-        <span                         className="w-2.5 h-2.5 rounded-full"                                     style={{ background: '#FFBD2E' }} />
-        <button onClick={onToggleMax} className="w-2.5 h-2.5 rounded-full transition-opacity hover:opacity-80" style={{ background: '#28C840' }} />
+      <div className="flex gap-1">
+        <button onClick={onClose}     className="w-2 h-2 rounded-full transition-opacity hover:opacity-80" style={{ background: '#FF5F57' }} />
+        <span                         className="w-2 h-2 rounded-full"                                     style={{ background: '#FFBD2E' }} />
+        <button onClick={onToggleMax} className="w-2 h-2 rounded-full transition-opacity hover:opacity-80" style={{ background: '#28C840' }} />
       </div>
       <span className="font-sans truncate flex-1 text-center" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.02em' }}>
         {url.replace(/^https?:\/\//, '')}
       </span>
-      <div style={{ width: 42 }} />
+      <div style={{ width: 36 }} />
     </div>
   )
 }
@@ -1198,8 +1198,8 @@ function WebsiteCard({ project }: { project: Project }) {
       <div
         className="flex flex-col overflow-hidden"
         style={{
-          width:        '85vw',
-          height:       '85vh',
+          width:        '70vw',
+          height:       '70vh',
           borderRadius: 24,
           background:   '#0d0d0d',
           boxShadow:    '0 80px 200px rgba(0,0,0,0.95), 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.07)',
