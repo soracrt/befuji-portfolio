@@ -1259,7 +1259,7 @@ function WebsiteCard({ project }: { project: Project }) {
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-all duration-300 group-hover/img:[filter:blur(1px)]"
+                  className="w-full h-full object-cover [transition:filter_0.4s_cubic-bezier(0.25,0.1,0.25,1)] group-hover/img:[filter:blur(1px)]"
                   draggable={false}
                 />
               ) : (
