@@ -894,12 +894,34 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
   // Website-specific fields
   const [websiteUrl, setWebsiteUrl] = useState('')
   const [caseStudyUrl, setCaseStudyUrl] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageUploading, setImageUploading] = useState(false)
+  const [imageUrl, setImageUrl] = useState('')
+  const imageInputRef = useRef<HTMLInputElement>(null)
 
   const isArtist  = ['music video', 'artist promo', 'community', 'music', 'artist'].some(k => category.toLowerCase().includes(k))
   const isWebsite = ['web', 'digital'].some(k => category.toLowerCase().includes(k))
 
   function acceptFile(f: File) {
     if (f.type === 'video/mp4' || f.type === 'video/quicktime') setFile(f)
+  }
+
+  function acceptImageFile(f: File) {
+    if (['image/png', 'image/jpeg', 'image/webp'].includes(f.type)) setImageFile(f)
+  }
+
+  async function uploadImage(f: File): Promise<string> {
+    setImageUploading(true)
+    try {
+      const urlRes = await fetch(`/api/admin/upload-url?filename=${encodeURIComponent(f.name)}`)
+      if (!urlRes.ok) throw new Error('Failed to get image upload URL')
+      const { url, publicUrl, contentType } = await urlRes.json()
+      await fetch(url, { method: 'PUT', headers: { 'Content-Type': contentType }, body: f })
+      setImageUrl(publicUrl)
+      return publicUrl
+    } finally {
+      setImageUploading(false)
+    }
   }
 
   function formatSize(bytes: number) {
@@ -914,6 +936,12 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
     setProgress(0)
     setError('')
     try {
+      // Upload image first (if provided for website projects)
+      let finalImageUrl = imageUrl
+      if (isWebsite && imageFile && !imageUrl) {
+        finalImageUrl = await uploadImage(imageFile)
+      }
+
       const urlRes = await fetch(`/api/admin/upload-url?filename=${encodeURIComponent(file.name)}`)
       if (!urlRes.ok) throw new Error('Failed to get upload URL')
       const { url, key, publicUrl, contentType } = await urlRes.json()
@@ -947,6 +975,7 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
         ...(isArtist && monthlyListeners && { monthlyListeners: Number(monthlyListeners) }),
         ...(isArtist && videoLink    && { videoLink }),
         ...(isArtist && artistLink   && { artistLink }),
+        ...(isWebsite && finalImageUrl && { image: finalImageUrl }),
         ...(isWebsite && websiteUrl  && { websiteUrl }),
         ...(isWebsite && caseStudyUrl && { caseStudyUrl }),
       }
@@ -1110,6 +1139,51 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
             {isWebsite && (
               <div className="flex flex-col gap-2 pt-1 pb-1">
                 <p className="font-sans text-[#606060]" style={{ fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Website details</p>
+
+                {/* Screenshot upload */}
+                <div
+                  className="rounded-xl transition-all"
+                  style={{ border: '1.5px dashed #272727', background: '#111111', cursor: imageFile || imageUrl ? 'default' : 'pointer' }}
+                  onClick={() => { if (!imageFile && !imageUrl) imageInputRef.current?.click() }}
+                >
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={e => { const f = e.target.files?.[0]; if (f) acceptImageFile(f) }}
+                  />
+                  {imageFile ? (
+                    <div className="px-4 py-3 flex items-center justify-between gap-3">
+                      <span className="font-sans text-white/60 truncate" style={{ fontSize: '13px' }}>{imageFile.name}</span>
+                      <button
+                        type="button"
+                        onClick={e => { e.stopPropagation(); setImageFile(null); setImageUrl('') }}
+                        className="text-[#505050] hover:text-[#909090] shrink-0 transition-colors"
+                      >
+                        <IconClose />
+                      </button>
+                    </div>
+                  ) : imageUrl ? (
+                    <div className="px-4 py-3 flex items-center justify-between gap-3">
+                      <span className="font-sans text-white/60 truncate" style={{ fontSize: '13px' }}>Screenshot uploaded</span>
+                      <button
+                        type="button"
+                        onClick={e => { e.stopPropagation(); setImageFile(null); setImageUrl('') }}
+                        className="text-[#505050] hover:text-[#909090] shrink-0 transition-colors"
+                      >
+                        <IconClose />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="px-4 py-3.5 text-center">
+                      <span className="font-sans text-[#404040]" style={{ fontSize: '13px' }}>
+                        {imageUploading ? 'Uploading screenshot…' : 'Click to upload screenshot (PNG / JPG / WebP)'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
                 <input
                   value={websiteUrl}
                   onChange={e => setWebsiteUrl(e.target.value)}
@@ -1279,6 +1353,10 @@ function ProjectExpandPanel({
       {isWebsite && (
         <div className="flex flex-col gap-3">
           <p className="font-sans" style={{ ...labelStyle, color: '#6b82dc' }}>Website Details</p>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-sans" style={labelStyle}>Screenshot URL</label>
+            <input className={fieldClass} style={fieldStyle} value={form.image ?? ''} onChange={e => setForm(f => ({ ...f, image: e.target.value }))} placeholder="https://... (16:9 screenshot)" />
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="font-sans" style={labelStyle}>Live Website URL</label>

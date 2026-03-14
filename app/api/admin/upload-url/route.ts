@@ -11,18 +11,32 @@ const s3 = new S3Client({
   },
 })
 
+const IMAGE_CONTENT_TYPES: Record<string, string> = {
+  png:  'image/png',
+  jpg:  'image/jpeg',
+  jpeg: 'image/jpeg',
+  webp: 'image/webp',
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const filename = searchParams.get('filename')
   if (!filename) return NextResponse.json({ error: 'Missing filename' }, { status: 400 })
 
   const ext = filename.split('.').pop()?.toLowerCase()
-  if (!ext || !['mp4', 'mov'].includes(ext)) {
-    return NextResponse.json({ error: 'Only mp4/mov allowed' }, { status: 400 })
+  if (!ext) return NextResponse.json({ error: 'Missing file extension' }, { status: 400 })
+
+  const isVideo = ['mp4', 'mov'].includes(ext)
+  const isImage = ext in IMAGE_CONTENT_TYPES
+
+  if (!isVideo && !isImage) {
+    return NextResponse.json({ error: 'Only mp4, mov, png, jpg, jpeg, webp allowed' }, { status: 400 })
   }
 
   const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, '_')
-  const contentType = ext === 'mov' ? 'video/quicktime' : 'video/mp4'
+  const contentType = isVideo
+    ? (ext === 'mov' ? 'video/quicktime' : 'video/mp4')
+    : IMAGE_CONTENT_TYPES[ext]
 
   const command = new PutObjectCommand({
     Bucket: process.env.R2_BUCKET_NAME ?? '',
@@ -31,7 +45,9 @@ export async function GET(req: Request) {
   })
 
   const url = await getSignedUrl(s3, command, { expiresIn: 3600 })
-  const publicUrl = `/api/videos/${safeName}`
+  const publicUrl = isVideo
+    ? `/api/videos/${safeName}`
+    : `${process.env.R2_PUBLIC_URL}/${safeName}`
 
   return NextResponse.json({ url, key: safeName, publicUrl, contentType })
 }
