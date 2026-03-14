@@ -1150,53 +1150,38 @@ function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpan
 
 // ─── Website card ─────────────────────────────────────────────────────────────
 
+function BrowserChrome({ url, onClose, onToggleMax }: { url: string; onClose: () => void; onToggleMax: () => void }) {
+  return (
+    <div
+      className="flex items-center gap-2 px-3 shrink-0"
+      style={{ height: 33, background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}
+    >
+      <div className="flex gap-1.5">
+        <button onClick={onClose}     className="w-2.5 h-2.5 rounded-full transition-opacity hover:opacity-80" style={{ background: '#FF5F57' }} />
+        <span                         className="w-2.5 h-2.5 rounded-full"                                     style={{ background: '#FFBD2E' }} />
+        <button onClick={onToggleMax} className="w-2.5 h-2.5 rounded-full transition-opacity hover:opacity-80" style={{ background: '#28C840' }} />
+      </div>
+      <span className="font-sans truncate flex-1 text-center" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.02em' }}>
+        {url.replace(/^https?:\/\//, '')}
+      </span>
+      <div style={{ width: 42 }} />
+    </div>
+  )
+}
+
 function WebsiteCard({ project }: { project: Project }) {
-  const [previewing, setPreviewing]   = useState(false)
-  const [maximized,  setMaximized]    = useState(false)
+  const [previewing, setPreviewing] = useState(false)
+  const [maximized,  setMaximized]  = useState(false)
   const absUrl = project.websiteUrl
     ? (project.websiteUrl.startsWith('http') ? project.websiteUrl : `https://${project.websiteUrl}`)
     : null
-
-  function BrowserChrome() {
-    return (
-      <div
-        className="flex items-center gap-2 px-3 shrink-0"
-        style={{ height: 33, background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}
-      >
-        {/* Traffic lights */}
-        <div className="flex gap-1.5">
-          <button
-            onClick={() => { setMaximized(false); setPreviewing(false) }}
-            className="w-2.5 h-2.5 rounded-full transition-opacity hover:opacity-80"
-            style={{ background: '#FF5F57' }}
-          />
-          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FFBD2E' }} />
-          <button
-            onClick={() => setMaximized(m => !m)}
-            className="w-2.5 h-2.5 rounded-full transition-opacity hover:opacity-80"
-            style={{ background: '#28C840' }}
-          />
-        </div>
-        {/* URL bar */}
-        <span
-          className="font-sans truncate flex-1 text-center"
-          style={{ fontSize: '11px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.02em' }}
-        >
-          {absUrl?.replace(/^https?:\/\//, '')}
-        </span>
-        {/* Spacer to balance traffic lights */}
-        <div style={{ width: 42 }} />
-      </div>
-    )
-  }
 
   return (
     <>
       {/* Fullscreen overlay */}
       {maximized && absUrl && (
         <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#000' }}>
-          <BrowserChrome />
-          {/* Iframe fills remaining viewport; overflow hidden hides scrollbars, absolute positioning ensures correct height */}
+          <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(m => !m)} />
           <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
             <iframe
               src={absUrl}
@@ -1218,7 +1203,7 @@ function WebsiteCard({ project }: { project: Project }) {
           {previewing && absUrl ? (
             /* Absolute overlay fills the aspect-ratio card; chrome is 33px, iframe fills the rest */
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column' }}>
-              <BrowserChrome />
+              <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(m => !m)} />
               <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
                 <iframe
                   src={absUrl}
