@@ -1190,32 +1190,21 @@ function WebsiteCard({ project }: { project: Project }) {
     )
   }
 
-  function IframeEmbed({ height }: { height: string }) {
-    return (
-      /* Overflow-clip wrapper hides the scrollbars while keeping scroll intact */
-      <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-        <iframe
-          src={absUrl!}
-          title={project.title}
-          style={{
-            width:   'calc(100% + 20px)',
-            height:  `calc(${height} + 20px)`,
-            border:  'none',
-            display: 'block',
-          }}
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        />
-      </div>
-    )
-  }
-
   return (
     <>
       {/* Fullscreen overlay */}
       {maximized && absUrl && (
         <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#000' }}>
           <BrowserChrome />
-          <IframeEmbed height="calc(100vh - 33px)" />
+          {/* Iframe fills remaining viewport; overflow hidden hides scrollbars, absolute positioning ensures correct height */}
+          <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+            <iframe
+              src={absUrl}
+              title={project.title}
+              style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            />
+          </div>
         </div>
       )}
 
@@ -1227,9 +1216,17 @@ function WebsiteCard({ project }: { project: Project }) {
           style={{ aspectRatio: '16/9', background: '#111' }}
         >
           {previewing && absUrl ? (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            /* Absolute overlay fills the aspect-ratio card; chrome is 33px, iframe fills the rest */
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column' }}>
               <BrowserChrome />
-              <IframeEmbed height="calc(100% - 33px)" />
+              <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+                <iframe
+                  src={absUrl}
+                  title={project.title}
+                  style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                />
+              </div>
             </div>
           ) : (
             <>
