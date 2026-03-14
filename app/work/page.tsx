@@ -1151,33 +1151,99 @@ function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpan
 // ─── Website card ─────────────────────────────────────────────────────────────
 
 function WebsiteCard({ project }: { project: Project }) {
+  const [previewing, setPreviewing] = useState(false)
+  const absUrl = project.websiteUrl
+    ? (project.websiteUrl.startsWith('http') ? project.websiteUrl : `https://${project.websiteUrl}`)
+    : null
+
   return (
     <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
 
-      {/* Screenshot — 16:9 */}
+      {/* Screenshot / iframe — 16:9 */}
       <div
-        className="w-full md:w-[58%] shrink-0 rounded-2xl overflow-hidden"
+        className="w-full md:w-[58%] shrink-0 rounded-2xl overflow-hidden relative group"
         style={{ aspectRatio: '16/9', background: '#111' }}
       >
-        {project.image ? (
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover"
-            draggable={false}
-          />
+        {previewing && absUrl ? (
+          <>
+            {/* Browser chrome */}
+            <div className="flex items-center gap-2 px-3 py-2" style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}>
+              <div className="flex gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#3a3a3a' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#3a3a3a' }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#3a3a3a' }} />
+              </div>
+              <span
+                className="font-sans truncate flex-1 text-center"
+                style={{ fontSize: '11px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.02em' }}
+              >
+                {absUrl.replace(/^https?:\/\//, '')}
+              </span>
+              <button
+                onClick={() => setPreviewing(false)}
+                className="ml-1 transition-colors"
+                style={{ color: 'rgba(238,229,233,0.3)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#EEE5E9')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(238,229,233,0.3)')}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <line x1="1" y1="1" x2="11" y2="11" />
+                  <line x1="11" y1="1" x2="1" y2="11" />
+                </svg>
+              </button>
+            </div>
+            <iframe
+              src={absUrl}
+              title={project.title}
+              className="w-full"
+              style={{ height: 'calc(100% - 33px)', border: 'none', display: 'block' }}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            />
+          </>
         ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #111 0%, #1a1a1a 100%)' }}
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(238,229,233,0.12)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M3 9h18" />
-              <circle cx="7" cy="6" r="0.5" fill="rgba(238,229,233,0.12)" />
-              <circle cx="10" cy="6" r="0.5" fill="rgba(238,229,233,0.12)" />
-            </svg>
-          </div>
+          <>
+            {project.image ? (
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover"
+                draggable={false}
+              />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #111 0%, #1a1a1a 100%)' }}
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(238,229,233,0.12)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <path d="M3 9h18" />
+                  <circle cx="7" cy="6" r="0.5" fill="rgba(238,229,233,0.12)" />
+                  <circle cx="10" cy="6" r="0.5" fill="rgba(238,229,233,0.12)" />
+                </svg>
+              </div>
+            )}
+            {/* Preview toggle — appears on hover */}
+            {absUrl && (
+              <button
+                onClick={() => setPreviewing(true)}
+                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                style={{ background: 'rgba(0,0,0,0.55)' }}
+              >
+                <span
+                  className="flex items-center gap-2 font-sans text-xs tracking-[0.1em] uppercase px-4 py-2.5 rounded-full"
+                  style={{ background: 'rgba(207,92,54,0.15)', color: '#CF5C36', border: '1px solid rgba(207,92,54,0.4)' }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M3 9h18" />
+                    <circle cx="7" cy="6" r="1" fill="currentColor" />
+                    <circle cx="11" cy="6" r="1" fill="currentColor" />
+                  </svg>
+                  Live preview
+                </span>
+              </button>
+            )}
+          </>
         )}
       </div>
 
