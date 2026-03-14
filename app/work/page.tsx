@@ -1180,15 +1180,34 @@ function WebsiteCard({ project }: { project: Project }) {
     <>
       {/* Fullscreen overlay */}
       {maximized && absUrl && (
-        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#000' }}>
-          <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(m => !m)} />
-          <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
-            <iframe
-              src={absUrl}
-              title={project.title}
-              style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-            />
+        /* Backdrop — blurred + dimmed page behind */
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+          onClick={e => { if (e.target === e.currentTarget) setMaximized(false) }}
+        >
+          {/* Floating window */}
+          <div
+            className="flex flex-col overflow-hidden"
+            style={{
+              width:        '88vw',
+              height:       '84vh',
+              maxWidth:     1200,
+              borderRadius: 12,
+              background:   '#0d0d0d',
+              boxShadow:    '0 40px 120px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06)',
+              animation:    'windowIn 0.22s cubic-bezier(0.34,1.4,0.64,1) both',
+            }}
+          >
+            <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(false)} />
+            <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+              <iframe
+                src={absUrl}
+                title={project.title}
+                style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
           </div>
         </div>
       )}
