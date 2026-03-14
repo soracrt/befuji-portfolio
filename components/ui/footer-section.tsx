@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { InstagramIcon } from 'lucide-react'
 
 export function FooterSection() {
   const year = new Date().getFullYear()
@@ -78,16 +77,6 @@ export function FooterSection() {
               </Link>
             ))}
           </div>
-          <a
-            href="https://instagram.com/soracrt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-opacity duration-150 hover:opacity-60"
-            style={{ color: 'rgba(238,229,233,0.4)' }}
-            aria-label="Instagram"
-          >
-            <InstagramIcon className="w-4 h-4" />
-          </a>
         </div>
 
         {/* Bottom row */}
