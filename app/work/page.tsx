@@ -1259,7 +1259,7 @@ function WebsiteCard({ project }: { project: Project }) {
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover [transition:filter_0.4s_cubic-bezier(0.25,0.1,0.25,1)] group-hover/img:[filter:blur(1px)]"
+                  className="w-full h-full object-cover"
                   draggable={false}
                 />
               ) : (
@@ -1277,8 +1277,8 @@ function WebsiteCard({ project }: { project: Project }) {
               )}
               {absUrl && (
                 <div
-                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-200"
-                  style={{ background: 'rgba(0,0,0,0.5)' }}
+                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 scale-110 group-hover/img:scale-100 [transition:opacity_0.45s_cubic-bezier(0.25,0.1,0.25,1),transform_0.45s_cubic-bezier(0.25,0.1,0.25,1)]"
+                  style={{ background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.85) 100%)' }}
                 >
                   <span
                     className="flex items-center gap-2 font-sans text-xs tracking-[0.1em] uppercase px-4 py-2.5 rounded-full"
