@@ -1193,7 +1193,7 @@ function WebsiteCard({ project }: { project: Project }) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{ background: 'rgba(0,0,0,0.45)' }}
-      onClick={e => { if (e.target === e.currentTarget) setMaximized(false) }}
+      onClick={e => { if (e.target === e.currentTarget) { setMaximized(false); setPreviewing(false) } }}
     >
       <div
         className="flex flex-col overflow-hidden"
