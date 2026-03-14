@@ -16,7 +16,6 @@ body {
   color: #fffffc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  perspective: 1200px;
 }
 
 #site-root {
@@ -30,7 +29,7 @@ body.preview-open {
 }
 
 body.preview-open #site-root {
-  transform: scale(0.95) translateZ(-60px);
+  transform: perspective(1200px) scale(0.95) translateZ(-60px);
   filter: brightness(0.35);
 }
 
