@@ -1320,7 +1320,8 @@ function WebsiteCard({ project }: { project: Project }) {
         </div>
       </div>
 
-    </div>
+      </div>
+    </>
   )
 }
 
