@@ -112,7 +112,40 @@ const fieldBase = {
   letterSpacing: '-0.01em',
 } as const
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const PHONE_RE    = /^[\+\d][\d\s\-\(\)]{6,}$/
+const DISCORD_RE  = /^[a-zA-Z0-9_.]{2,32}$/
+const KB_RUNS     = ['qwerty','qwert','asdfg','asdf','zxcvb','zxcv','hjkl','uiop','12345','abcde','aaaaa','sssss']
+const NAME_RE     = /^[a-zA-Z\u00C0-\u024F'\- ]+$/
+
+function isGibberish(s: string): boolean {
+  const t = s.toLowerCase().replace(/\s+/g, '')
+  if (t.length < 2) return true
+  if (/(.)\1{2,}/.test(t)) return true
+  if (KB_RUNS.some(r => t.includes(r))) return true
+  const vowels = (t.match(/[aeiou]/g) || []).length
+  if (t.length > 5 && vowels / t.length < 0.08) return true
+  return false
+}
+
+function validateName(s: string): string | null {
+  const t = s.trim()
+  if (!t) return 'Full name is required.'
+  if (!NAME_RE.test(t)) return 'Name can only contain letters, hyphens, and apostrophes.'
+  if (!t.includes(' ')) return 'Please enter your first and last name.'
+  if (isGibberish(t.replace(/\s+/g, ''))) return 'That does not look like a real name.'
+  return null
+}
+
+function validateContact(s: string): string | null {
+  const t = s.trim()
+  if (!t) return 'Phone or Discord handle is required.'
+  const digitsOnly = t.replace(/\D/g, '')
+  const looksPhone   = digitsOnly.length >= 7 && PHONE_RE.test(t)
+  const looksDiscord = DISCORD_RE.test(t)
+  if (!looksPhone && !looksDiscord) return 'Enter a phone number (e.g. +1 555 000 0000) or Discord handle.'
+  return null
+}
 
 const FINAL_FIELDS = [
   { k: 'name',        label: 'Full name',            ph: 'Your name',                  req: true,  isTextarea: false },
@@ -151,9 +184,9 @@ export default function QuotePage() {
     if (def.type === 'choice') return !!answers[def.key]
     if (def.type === 'text')   return !!(answers[def.key] as string).trim()
     if (def.type === 'final')  return (
-      !!answers.name.trim() &&
+      validateName(answers.name)    === null &&
       EMAIL_RE.test(answers.email.trim()) &&
-      !!answers.contact.trim()
+      validateContact(answers.contact) === null
     )
     return false
   }
@@ -544,9 +577,19 @@ export default function QuotePage() {
                             onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
                             onBlur={e  => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }}
                           />
+                          {k === 'name' && answers.name.trim() && validateName(answers.name) && (
+                            <p className="font-sans mt-1.5" style={{ fontSize: '11px', color: '#f87171' }}>
+                              {validateName(answers.name)}
+                            </p>
+                          )}
                           {k === 'email' && answers.email.trim() && !EMAIL_RE.test(answers.email.trim()) && (
                             <p className="font-sans mt-1.5" style={{ fontSize: '11px', color: '#f87171' }}>
                               Enter a valid email address.
+                            </p>
+                          )}
+                          {k === 'contact' && answers.contact.trim() && validateContact(answers.contact) && (
+                            <p className="font-sans mt-1.5" style={{ fontSize: '11px', color: '#f87171' }}>
+                              {validateContact(answers.contact)}
                             </p>
                           )}
                         </>
