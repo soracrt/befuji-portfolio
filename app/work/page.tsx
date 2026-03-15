@@ -857,9 +857,9 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
     return (
       <button
         onClick={() => setIndex(i => Math.max(0, Math.min(total - 3, i + dir)))}
-        className="absolute top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+        className="absolute top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
         style={{
-          [dir === -1 ? 'left' : 'right']: '-18px',
+          [dir === -1 ? 'left' : 'right']: '0px',
           background:     'rgba(14,14,14,0.9)',
           border:         '1px solid rgba(238,229,233,0.12)',
           backdropFilter: 'blur(10px)',
@@ -882,22 +882,44 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
   }
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
+    /* outer wrapper — arrows live here, outside the clip zone */
+    <div className="relative px-12">
       <ArrowBtn dir={-1} />
-      <div
-        className="flex"
-        style={{
-          gap: `${GAP}px`,
-          transform: `translateX(${-index * step}px)`,
-          transition: 'transform 0.4s ease-in-out',
-          willChange: 'transform',
-        }}
-      >
-        {projects.map(p => (
-          <div key={p.id} style={{ flex: `0 0 ${cardWidth}px`, minWidth: 0 }}>
-            <ArtistCard project={p} onSelect={() => onSelect(p)} />
-          </div>
-        ))}
+      {/* clip container — only the 3-card window is visible */}
+      <div ref={containerRef} className="relative overflow-hidden">
+        {/* left fade vignette */}
+        <div
+          className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none transition-opacity duration-400"
+          style={{
+            width: '80px',
+            background: 'linear-gradient(to right, #000000 0%, transparent 100%)',
+            opacity: canLeft ? 1 : 0,
+          }}
+        />
+        {/* right fade vignette */}
+        <div
+          className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none transition-opacity duration-400"
+          style={{
+            width: '80px',
+            background: 'linear-gradient(to left, #000000 0%, transparent 100%)',
+            opacity: canRight ? 1 : 0,
+          }}
+        />
+        <div
+          className="flex"
+          style={{
+            gap: `${GAP}px`,
+            transform: `translateX(${-index * step}px)`,
+            transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
+            willChange: 'transform',
+          }}
+        >
+          {projects.map(p => (
+            <div key={p.id} style={{ flex: `0 0 ${cardWidth}px`, minWidth: 0 }}>
+              <ArtistCard project={p} onSelect={() => onSelect(p)} />
+            </div>
+          ))}
+        </div>
       </div>
       <ArrowBtn dir={1} />
     </div>
