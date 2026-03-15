@@ -828,7 +828,7 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
 function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (p: Project) => void }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
-  const [index, setIndex] = useState(0)
+  const [page, setPage] = useState(0)
   const GAP = 16
 
   useEffect(() => {
@@ -840,32 +840,33 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
     return () => ro.disconnect()
   }, [])
 
-  useEffect(() => { setIndex(0) }, [projects])
+  useEffect(() => { setPage(0) }, [projects])
 
-  const total     = projects.length
-  const cardWidth = containerWidth > 0 ? (containerWidth - 2 * GAP) / 3 : 0
-  const step      = cardWidth + GAP
-  const canLeft   = index > 0
-  const canRight  = total > 3 && index < total - 3
+  const total      = projects.length
+  const totalPages = Math.ceil(total / 3)
+  const canLeft    = page > 0
+  const canRight   = page < totalPages - 1
+  const cardWidth  = containerWidth > 0 ? (containerWidth - 2 * GAP) / 3 : 0
+  const visible    = projects.slice(page * 3, page * 3 + 3)
 
   if (total === 0) return (
     <p className="font-display font-bold py-6" style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: '#EEE5E9', letterSpacing: '-0.02em' }}>No projects to be shown yet.</p>
   )
 
   const ArrowBtn = ({ dir }: { dir: -1 | 1 }) => {
-    const visible = dir === -1 ? canLeft : canRight
+    const active = dir === -1 ? canLeft : canRight
     return (
       <button
-        onClick={() => setIndex(i => Math.max(0, Math.min(total - 3, i + dir)))}
-        className="absolute top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+        onClick={() => setPage(p => p + dir)}
+        className="absolute top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
         style={{
           [dir === -1 ? 'left' : 'right']: '0px',
           background:     'rgba(14,14,14,0.9)',
           border:         '1px solid rgba(238,229,233,0.12)',
           backdropFilter: 'blur(10px)',
           color:          'rgba(238,229,233,0.7)',
-          opacity:        visible ? 1 : 0,
-          pointerEvents:  visible ? 'auto' : 'none',
+          opacity:        active ? 1 : 0,
+          pointerEvents:  active ? 'auto' : 'none',
           boxShadow:      '0 4px 16px rgba(0,0,0,0.5)',
         }}
         onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)' }}
@@ -882,46 +883,42 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
   }
 
   return (
-    /* outer wrapper — arrows live here, outside the clip zone */
     <div className="relative px-12">
       <ArrowBtn dir={-1} />
-      {/* clip container — only the 3-card window is visible */}
-      <div ref={containerRef} className="relative overflow-hidden">
-        {/* left fade vignette */}
-        <div
-          className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none transition-opacity duration-400"
-          style={{
-            width: '80px',
-            background: 'linear-gradient(to right, #000000 0%, transparent 100%)',
-            opacity: canLeft ? 1 : 0,
-          }}
-        />
-        {/* right fade vignette */}
-        <div
-          className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none transition-opacity duration-400"
-          style={{
-            width: '80px',
-            background: 'linear-gradient(to left, #000000 0%, transparent 100%)',
-            opacity: canRight ? 1 : 0,
-          }}
-        />
-        <div
-          className="flex"
-          style={{
-            gap: `${GAP}px`,
-            transform: `translateX(${-index * step}px)`,
-            transition: 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
-            willChange: 'transform',
-          }}
-        >
-          {projects.map(p => (
-            <div key={p.id} style={{ flex: `0 0 ${cardWidth}px`, minWidth: 0 }}>
-              <ArtistCard project={p} onSelect={() => onSelect(p)} />
-            </div>
-          ))}
-        </div>
+      <div ref={containerRef} className="flex" style={{ gap: `${GAP}px` }}>
+        {visible.map(p => (
+          <div key={p.id} style={{ flex: `0 0 ${cardWidth}px`, minWidth: 0 }}>
+            <ArtistCard project={p} onSelect={() => onSelect(p)} />
+          </div>
+        ))}
+        {/* fill empty slots on last page so layout stays stable */}
+        {Array.from({ length: 3 - visible.length }).map((_, i) => (
+          <div key={`empty-${i}`} style={{ flex: `0 0 ${cardWidth}px` }} />
+        ))}
       </div>
       <ArrowBtn dir={1} />
+
+      {/* page indicators — one line segment per page */}
+      {totalPages > 1 && (
+        <div className="flex gap-2 mt-5">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i)}
+              style={{
+                flex: 1,
+                height: '2px',
+                border: 'none',
+                cursor: 'pointer',
+                borderRadius: '2px',
+                background: i === page ? '#CF5C36' : 'rgba(238,229,233,0.18)',
+                transition: 'background 0.2s',
+                padding: 0,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
