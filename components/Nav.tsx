@@ -9,11 +9,10 @@ const LINKS = [
   { label: 'Work',    href: '/work' },
   { label: 'Reviews', href: '/reviews' },
   { label: 'FAQ',     href: '/faq' },
-  { label: 'TOS',     href: '/legal' },
 ]
 
 // Full expanded width — must match inner content width
-const OPEN_WIDTH  = 356
+const OPEN_WIDTH  = 310
 const CLOSED_SIZE = 44
 
 export default function Nav() {
