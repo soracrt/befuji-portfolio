@@ -93,24 +93,29 @@ export async function POST(req: Request) {
       pages, contentReady, features, webTimeline,
     })
 
-    await resend.emails.send({
-      from:    'kulaire <onboarding@resend.dev>',
-      to:      process.env.NOTIFY_EMAIL ?? '',
-      subject: `New quote — ${service} · ${name}`,
-      html: `
-        <div style="font-family:sans-serif;max-width:560px;color:#111;font-size:14px;line-height:1.5">
-          <div style="margin-bottom:28px">
-            <p style="margin:0 0 4px;font-size:22px;font-weight:700;color:#111">New quote request</p>
-            <p style="margin:0;color:#CF5C36;font-size:13px;font-weight:500">${service}</p>
+    // Email notification is best-effort — a failure here does not fail the submission
+    try {
+      await resend.emails.send({
+        from:    'kulaire <onboarding@resend.dev>',
+        to:      process.env.NOTIFY_EMAIL ?? '',
+        subject: `New quote — ${service} · ${name}`,
+        html: `
+          <div style="font-family:sans-serif;max-width:560px;color:#111;font-size:14px;line-height:1.5">
+            <div style="margin-bottom:28px">
+              <p style="margin:0 0 4px;font-size:22px;font-weight:700;color:#111">New quote request</p>
+              <p style="margin:0;color:#CF5C36;font-size:13px;font-weight:500">${service}</p>
+            </div>
+            <table style="width:100%;border-collapse:collapse">
+              ${section('Contact', row('Name', name) + row('Email', email) + row('Timezone', timezone) + row('Phone / Discord', contact))}
+              ${trackRows ? section(service, trackRows) : ''}
+              ${descSection}
+            </table>
           </div>
-          <table style="width:100%;border-collapse:collapse">
-            ${section('Contact', row('Name', name) + row('Email', email) + row('Timezone', timezone) + row('Phone / Discord', contact))}
-            ${trackRows ? section(service, trackRows) : ''}
-            ${descSection}
-          </table>
-        </div>
-      `,
-    })
+        `,
+      })
+    } catch (emailErr) {
+      console.error('[api/quote] email notification failed (submission still saved):', emailErr)
+    }
 
     return NextResponse.json({ ok: true })
   } catch (err) {
