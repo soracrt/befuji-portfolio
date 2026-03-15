@@ -1,18 +1,36 @@
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 
-const QUOTES_FILE = join(process.cwd(), 'data', 'quotes.json')
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId:     process.env.R2_ACCESS_KEY_ID ?? '',
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY ?? '',
+  },
+})
 
-function saveQuote(entry: object) {
+const BUCKET   = process.env.R2_BUCKET_NAME ?? ''
+const DATA_KEY = '_quotes.json'
+
+async function saveQuote(entry: object) {
   try {
     let existing: object[] = []
-    try { existing = JSON.parse(readFileSync(QUOTES_FILE, 'utf-8')) } catch {}
+    try {
+      const res  = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: DATA_KEY }))
+      const text = await res.Body?.transformToString()
+      if (text) existing = JSON.parse(text)
+    } catch {}
     existing.unshift(entry)
-    writeFileSync(QUOTES_FILE, JSON.stringify(existing, null, 2))
+    await s3.send(new PutObjectCommand({
+      Bucket:      BUCKET,
+      Key:         DATA_KEY,
+      Body:        JSON.stringify(existing, null, 2),
+      ContentType: 'application/json',
+    }))
   } catch (e) {
-    console.error('[saveQuote] write failed:', e)
+    console.error('[saveQuote] R2 write failed:', e)
   }
 }
 
@@ -84,7 +102,7 @@ export async function POST(req: Request) {
           </tr>`)
       : ''
 
-    saveQuote({
+    await saveQuote({
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
       status: 'new',
