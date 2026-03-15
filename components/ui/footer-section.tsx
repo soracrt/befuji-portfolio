@@ -163,6 +163,7 @@ export function FooterSection() {
               { label: 'Work',    href: '/work' },
               { label: 'FAQ',     href: '/faq' },
               { label: 'Contact', href: '/contact' },
+              { label: 'Legal',   href: '/legal' },
             ].map(({ label, href }) => (
               <Link
                 key={label}
