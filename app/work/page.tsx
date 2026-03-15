@@ -794,9 +794,9 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
 
   return (
     <div
-      className="relative shrink-0 overflow-hidden cursor-pointer group"
+      className="relative overflow-hidden cursor-pointer group"
       style={{
-        width: 'clamp(200px, 26vw, 290px)',
+        width: '100%',
         aspectRatio: '1/1',
         background: '#111',
         borderRadius: '20px',
@@ -826,54 +826,29 @@ function ArtistCard({ project, onSelect }: { project: Project; onSelect: () => v
 // ─── Conveyor reel ────────────────────────────────────────────────────────────
 
 function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (p: Project) => void }) {
-  const scrollRef   = useRef<HTMLDivElement>(null)
-  const isDragging  = useRef(false)
-  const didDrag     = useRef(false)
-  const startX      = useRef(0)
-  const startScroll = useRef(0)
-  const [canLeft,  setCanLeft]  = useState(false)
-  const [canRight, setCanRight] = useState(true)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const [index, setIndex] = useState(0)
+  const GAP = 16
 
-  function updateArrows() {
-    const el = scrollRef.current
+  useEffect(() => {
+    const el = containerRef.current
     if (!el) return
-    setCanLeft(el.scrollLeft > 4)
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
-  }
+    const ro = new ResizeObserver(() => setContainerWidth(el.clientWidth))
+    ro.observe(el)
+    setContainerWidth(el.clientWidth)
+    return () => ro.disconnect()
+  }, [])
 
-  useEffect(() => { updateArrows() }, [projects])
+  useEffect(() => { setIndex(0) }, [projects])
 
-  function nudge(dir: 1 | -1) {
-    scrollRef.current?.scrollBy({ left: dir * (290 + 16) * 2, behavior: 'smooth' })
-  }
+  const total     = projects.length
+  const cardWidth = containerWidth > 0 ? (containerWidth - 2 * GAP) / 3 : 0
+  const step      = cardWidth + GAP
+  const canLeft   = index > 0
+  const canRight  = total > 3 && index < total - 3
 
-  function onMouseDown(e: React.MouseEvent) {
-    isDragging.current  = true
-    didDrag.current     = false
-    startX.current      = e.clientX
-    startScroll.current = scrollRef.current?.scrollLeft ?? 0
-  }
-  function onMouseMove(e: React.MouseEvent) {
-    if (!isDragging.current) return
-    const dx = e.clientX - startX.current
-    if (Math.abs(dx) > 5) didDrag.current = true
-    if (scrollRef.current) scrollRef.current.scrollLeft = startScroll.current - dx
-  }
-  function stopDrag() { isDragging.current = false }
-
-  function onTouchStart(e: React.TouchEvent) {
-    isDragging.current  = true
-    didDrag.current     = false
-    startX.current      = e.touches[0].clientX
-    startScroll.current = scrollRef.current?.scrollLeft ?? 0
-  }
-  function onTouchMove(e: React.TouchEvent) {
-    const dx = e.touches[0].clientX - startX.current
-    if (Math.abs(dx) > 5) didDrag.current = true
-    if (scrollRef.current) scrollRef.current.scrollLeft = startScroll.current - dx
-  }
-
-  if (projects.length === 0) return (
+  if (total === 0) return (
     <p className="font-display font-bold py-6" style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: '#EEE5E9', letterSpacing: '-0.02em' }}>No projects to be shown yet.</p>
   )
 
@@ -881,17 +856,17 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
     const visible = dir === -1 ? canLeft : canRight
     return (
       <button
-        onClick={() => nudge(dir)}
+        onClick={() => setIndex(i => Math.max(0, Math.min(total - 3, i + dir)))}
         className="absolute top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
         style={{
           [dir === -1 ? 'left' : 'right']: '-18px',
-          background:   'rgba(14,14,14,0.9)',
-          border:       '1px solid rgba(238,229,233,0.12)',
+          background:     'rgba(14,14,14,0.9)',
+          border:         '1px solid rgba(238,229,233,0.12)',
           backdropFilter: 'blur(10px)',
-          color:        'rgba(238,229,233,0.7)',
-          opacity:      visible ? 1 : 0,
-          pointerEvents: visible ? 'auto' : 'none',
-          boxShadow:    '0 4px 16px rgba(0,0,0,0.5)',
+          color:          'rgba(238,229,233,0.7)',
+          opacity:        visible ? 1 : 0,
+          pointerEvents:  visible ? 'auto' : 'none',
+          boxShadow:      '0 4px 16px rgba(0,0,0,0.5)',
         }}
         onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.25)' }}
         onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.7)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.12)' }}
@@ -907,23 +882,21 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
   }
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative overflow-hidden">
       <ArrowBtn dir={-1} />
       <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-2"
-        style={{ scrollbarWidth: 'none', cursor: 'grab' }}
-        onScroll={updateArrows}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={stopDrag}
-        onMouseLeave={stopDrag}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={stopDrag}
+        className="flex"
+        style={{
+          gap: `${GAP}px`,
+          transform: `translateX(${-index * step}px)`,
+          transition: 'transform 0.4s ease-in-out',
+          willChange: 'transform',
+        }}
       >
         {projects.map(p => (
-          <ArtistCard key={p.id} project={p} onSelect={() => { if (!didDrag.current) onSelect(p) }} />
+          <div key={p.id} style={{ flex: `0 0 ${cardWidth}px`, minWidth: 0 }}>
+            <ArtistCard project={p} onSelect={() => onSelect(p)} />
+          </div>
         ))}
       </div>
       <ArrowBtn dir={1} />
