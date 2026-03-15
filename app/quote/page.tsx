@@ -112,12 +112,14 @@ const fieldBase = {
   letterSpacing: '-0.01em',
 } as const
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 const FINAL_FIELDS = [
-  { k: 'name',        label: 'Full name',                   ph: 'Your name',                  req: true,  isTextarea: false },
-  { k: 'email',       label: 'Email address',               ph: 'your@email.com',             req: true,  isTextarea: false },
-  { k: 'description', label: 'Project description',         ph: 'Tell us a bit more…',        req: false, isTextarea: true  },
-  { k: 'timezone',    label: 'Timezone',                    ph: 'EST, PST, GMT+2…',           req: false, isTextarea: false },
-  { k: 'contact',     label: 'Phone or Discord (optional)', ph: '+1 555 000 0000 / username', req: false, isTextarea: false },
+  { k: 'name',        label: 'Full name',            ph: 'Your name',                  req: true,  isTextarea: false },
+  { k: 'email',       label: 'Email address',        ph: 'your@email.com',             req: true,  isTextarea: false },
+  { k: 'description', label: 'Project description',  ph: 'Tell us a bit more…',        req: false, isTextarea: true  },
+  { k: 'timezone',    label: 'Timezone',             ph: 'EST, PST, GMT+2…',           req: false, isTextarea: false },
+  { k: 'contact',     label: 'Phone or Discord',     ph: '+1 555 000 0000 / username', req: true,  isTextarea: false },
 ] as const
 
 /* ── Component ────────────────────────────────────────────────────────────── */
@@ -148,7 +150,11 @@ export default function QuotePage() {
   function canAdvance(): boolean {
     if (def.type === 'choice') return !!answers[def.key]
     if (def.type === 'text')   return !!(answers[def.key] as string).trim()
-    if (def.type === 'final')  return !!answers.name.trim() && !!answers.email.trim()
+    if (def.type === 'final')  return (
+      !!answers.name.trim() &&
+      EMAIL_RE.test(answers.email.trim()) &&
+      !!answers.contact.trim()
+    )
     return false
   }
 
@@ -526,17 +532,24 @@ export default function QuotePage() {
                           onBlur={e  => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }}
                         />
                       ) : (
-                        <input
-                          type={k === 'email' ? 'email' : 'text'}
-                          placeholder={ph}
-                          required={req}
-                          value={answers[k as keyof Answers]}
-                          onChange={e => setAnswers(a => ({ ...a, [k]: e.target.value }))}
-                          className="w-full rounded-xl px-4 py-3 font-sans outline-none"
-                          style={fieldBase}
-                          onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
-                          onBlur={e  => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }}
-                        />
+                        <>
+                          <input
+                            type={k === 'email' ? 'email' : 'text'}
+                            placeholder={ph}
+                            required={req}
+                            value={answers[k as keyof Answers]}
+                            onChange={e => setAnswers(a => ({ ...a, [k]: e.target.value }))}
+                            className="w-full rounded-xl px-4 py-3 font-sans outline-none"
+                            style={fieldBase}
+                            onFocus={e => { e.currentTarget.style.border = '1px solid rgba(207,92,54,0.35)' }}
+                            onBlur={e  => { e.currentTarget.style.border = '1px solid rgba(238,229,233,0.08)' }}
+                          />
+                          {k === 'email' && answers.email.trim() && !EMAIL_RE.test(answers.email.trim()) && (
+                            <p className="font-sans mt-1.5" style={{ fontSize: '11px', color: '#f87171' }}>
+                              Enter a valid email address.
+                            </p>
+                          )}
+                        </>
                       )}
                     </div>
                   ))}
