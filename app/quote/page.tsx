@@ -129,6 +129,9 @@ export default function QuotePage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted,  setSubmitted]  = useState(false)
   const [error,      setError]      = useState('')
+  const [tosOpen,    setTosOpen]    = useState(false)
+  const [tosAgreed,  setTosAgreed]  = useState(false)
+  const [tosChecked, setTosChecked] = useState(false)
 
   const TOTAL = 7
   const steps = buildSteps(answers)
@@ -151,6 +154,12 @@ export default function QuotePage() {
 
   function goNext() {
     if (!canAdvance()) return
+    const steps = buildSteps(answers)
+    const nextIsFinal = steps[step] && steps[step].type === 'final'
+    if (nextIsFinal && !tosAgreed) {
+      setTosOpen(true)
+      return
+    }
     setDir('fwd')
     setStep(s => s + 1)
   }
@@ -234,6 +243,137 @@ export default function QuotePage() {
           to   { opacity: 1; transform: translateX(0); }
         }
       `}</style>
+
+      {/* TOS Modal */}
+      {tosOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+        >
+          <div
+            style={{
+              width:        '100%',
+              maxWidth:     '520px',
+              borderRadius: '20px',
+              background:   'rgba(14,14,14,0.95)',
+              border:       '1px solid rgba(238,229,233,0.08)',
+              boxShadow:    '0 40px 120px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04)',
+              overflow:     'hidden',
+              animation:    'slideFwd 0.3s cubic-bezier(0.16,1,0.3,1) both',
+            }}
+          >
+            {/* Header */}
+            <div
+              className="px-6 py-4 flex items-center justify-between"
+              style={{ borderBottom: '1px solid rgba(238,229,233,0.06)' }}
+            >
+              <p className="font-sans text-xs tracking-[0.14em] uppercase" style={{ color: 'rgba(207,92,54,0.8)' }}>
+                Studio Terms
+              </p>
+              <p className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.2)' }}>
+                Read before continuing
+              </p>
+            </div>
+
+            {/* Scrollable terms */}
+            <div
+              className="px-6 py-5 flex flex-col gap-5 overflow-y-auto"
+              style={{ maxHeight: '320px' }}
+            >
+              {[
+                {
+                  num: '01', title: 'Payments',
+                  items: ['50% upfront to begin. No work starts before this clears.', '25% at the midpoint milestone.', '25% on completion, before final files are delivered.'],
+                },
+                {
+                  num: '02', title: 'Revisions',
+                  items: ['2 rounds of revisions per deliverable.', 'Feedback must be submitted as a single consolidated list.', 'Scope changes are quoted separately.'],
+                },
+                {
+                  num: '03', title: 'Pause Fee',
+                  items: ['A $50 fee applies to any client-initiated delay over 5 business days.', 'Projects paused 30+ days without contact may be considered abandoned.'],
+                },
+                {
+                  num: '04', title: 'Portfolio Rights',
+                  items: ['Kulaire retains the right to showcase completed work publicly.', 'Client owns full rights to final deliverables after all payments are made.'],
+                },
+              ].map(({ num, title, items }) => (
+                <div key={num}>
+                  <p className="font-sans text-xs tracking-[0.12em] uppercase mb-2" style={{ color: 'rgba(238,229,233,0.2)' }}>
+                    {num}
+                  </p>
+                  <p className="font-display font-bold mb-2" style={{ fontSize: '13px', color: '#EEE5E9', letterSpacing: '-0.01em' }}>
+                    {title}
+                  </p>
+                  <ul className="flex flex-col gap-1.5">
+                    {items.map((item, i) => (
+                      <li key={i} className="flex gap-2 font-sans" style={{ fontSize: '12px', color: 'rgba(238,229,233,0.45)', lineHeight: 1.6 }}>
+                        <span style={{ color: '#CF5C36', flexShrink: 0 }}>&gt;</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {/* Checkbox + CTA */}
+            <div
+              className="px-6 py-4 flex flex-col gap-4"
+              style={{ borderTop: '1px solid rgba(238,229,233,0.06)' }}
+            >
+              <label className="flex items-start gap-3 cursor-pointer" onClick={() => setTosChecked(c => !c)}>
+                <div
+                  className="flex items-center justify-center shrink-0 mt-0.5"
+                  style={{
+                    width:        '16px',
+                    height:       '16px',
+                    borderRadius: '4px',
+                    border:       `1px solid ${tosChecked ? 'rgba(207,92,54,0.8)' : 'rgba(238,229,233,0.2)'}`,
+                    background:   tosChecked ? 'rgba(207,92,54,0.15)' : 'transparent',
+                    transition:   'all 0.15s ease',
+                    flexShrink:   0,
+                  }}
+                >
+                  {tosChecked && (
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#CF5C36" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
+                </div>
+                <span className="font-sans" style={{ fontSize: '12px', color: 'rgba(238,229,233,0.5)', lineHeight: 1.6 }}>
+                  I have read and agree to the Kulaire Studio Terms.{' '}
+                  <a href="/legal" target="_blank" rel="noopener noreferrer" style={{ color: '#CF5C36', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                    Read full terms
+                  </a>
+                </span>
+              </label>
+
+              <button
+                type="button"
+                disabled={!tosChecked}
+                onClick={() => {
+                  setTosAgreed(true)
+                  setTosOpen(false)
+                  setDir('fwd')
+                  setStep(s => s + 1)
+                }}
+                className="w-full font-display font-bold py-3 rounded-xl transition-all duration-200"
+                style={{
+                  fontSize:   '13px',
+                  letterSpacing: '0.04em',
+                  background: tosChecked ? '#CF5C36'                       : 'rgba(238,229,233,0.05)',
+                  color:      tosChecked ? '#fff'                          : 'rgba(238,229,233,0.2)',
+                  boxShadow:  tosChecked ? '0 0 20px rgba(207,92,54,0.4)' : 'none',
+                  cursor:     tosChecked ? 'pointer'                       : 'not-allowed',
+                }}
+              >
+                I Agree — Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="min-h-screen flex flex-col px-6 sm:px-8 pt-16 sm:pt-20 pb-12">
 
