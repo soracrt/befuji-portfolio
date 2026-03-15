@@ -1,5 +1,19 @@
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
+import { readFileSync, writeFileSync } from 'fs'
+import { join } from 'path'
+
+const QUOTES_FILE = join(process.cwd(), 'data', 'quotes.json')
+
+function saveQuote(entry: object) {
+  try {
+    const existing = JSON.parse(readFileSync(QUOTES_FILE, 'utf-8'))
+    existing.unshift(entry)
+    writeFileSync(QUOTES_FILE, JSON.stringify(existing, null, 2))
+  } catch {
+    writeFileSync(QUOTES_FILE, JSON.stringify([entry], null, 2))
+  }
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -68,6 +82,16 @@ export async function POST(req: Request) {
             </td>
           </tr>`)
       : ''
+
+    saveQuote({
+      id: crypto.randomUUID(),
+      timestamp: new Date().toISOString(),
+      status: 'new',
+      name, email, contact, timezone, service, description,
+      motionWho, videoFor, trackLength, styleRef, existingAssets,
+      adFor, saasVideoFor, platforms, scriptReady, brandKit,
+      pages, contentReady, features, webTimeline,
+    })
 
     await resend.emails.send({
       from:    'kulaire <onboarding@resend.dev>',

@@ -48,7 +48,33 @@ type ClientLog = {
   notes: string
 }
 
-type Section = 'overview' | 'projects' | 'recent' | 'reviews' | 'clients' | 'finance' | 'stats'
+type Section = 'overview' | 'projects' | 'recent' | 'reviews' | 'clients' | 'finance' | 'stats' | 'quotes'
+
+type QuoteEntry = {
+  id: string
+  timestamp: string
+  status: 'new' | 'seen' | 'archived'
+  name: string
+  email: string
+  contact: string
+  timezone: string
+  service: string
+  description: string
+  motionWho?: string
+  videoFor?: string
+  trackLength?: string
+  styleRef?: string
+  existingAssets?: string
+  adFor?: string
+  saasVideoFor?: string
+  platforms?: string
+  scriptReady?: string
+  brandKit?: string
+  pages?: string
+  contentReady?: string
+  features?: string
+  webTimeline?: string
+}
 
 type StatsData = { views: number; artists: number; slots: number; totalMonthlyListeners?: number }
 type EditKey = 'title' | 'category' | 'client'
@@ -203,6 +229,15 @@ function IconStats() {
   )
 }
 
+function IconInbox() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    </svg>
+  )
+}
+
 function IconExternalLink() {
   return (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -319,6 +354,7 @@ const NAV: { id: Section; label: string; icon: React.ReactNode; shortcut: string
   { id: 'clients',  label: 'Clients',  icon: <IconPerson />,  shortcut: '5' },
   { id: 'finance',  label: 'Finance',  icon: <IconDollar />,  shortcut: '6' },
   { id: 'stats',    label: 'Stats',    icon: <IconStats />,   shortcut: '7' },
+  { id: 'quotes',   label: 'Inbox',    icon: <IconInbox />,   shortcut: '8' },
 ]
 
 function DockItem({
@@ -2659,6 +2695,228 @@ function StatsAdminSection({ stats, setStats }: { stats: StatsData; setStats: Re
   )
 }
 
+// ─── Quotes Inbox ─────────────────────────────────────────────────────────────
+
+function QuotesSection({ quotes, setQuotes }: { quotes: QuoteEntry[]; setQuotes: React.Dispatch<React.SetStateAction<QuoteEntry[]>> }) {
+  const [filter, setFilter] = useState<'all' | 'new' | 'archived'>('all')
+  const [selected, setSelected] = useState<QuoteEntry | null>(null)
+
+  const filtered = quotes.filter(q =>
+    filter === 'all' ? q.status !== 'archived' :
+    filter === 'new' ? q.status === 'new' :
+    q.status === 'archived'
+  )
+
+  async function updateStatus(id: string, status: QuoteEntry['status']) {
+    await fetch('/api/admin/quotes', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status }) })
+    setQuotes(prev => prev.map(q => q.id === id ? { ...q, status } : q))
+    if (selected?.id === id) setSelected(prev => prev ? { ...prev, status } : null)
+  }
+
+  async function deleteQuote(id: string) {
+    await fetch('/api/admin/quotes', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+    setQuotes(prev => prev.filter(q => q.id !== id))
+    if (selected?.id === id) setSelected(null)
+  }
+
+  function openQuote(q: QuoteEntry) {
+    setSelected(q)
+    if (q.status === 'new') updateStatus(q.id, 'seen')
+  }
+
+  const newCount = quotes.filter(q => q.status === 'new').length
+
+  return (
+    <div className="max-w-5xl mx-auto px-6 pt-14 pb-24">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <h1 className="font-display font-bold" style={{ fontSize: '22px', color: '#e8e8e8', letterSpacing: '-0.02em' }}>
+            Inbox
+          </h1>
+          {newCount > 0 && (
+            <span className="font-sans rounded-full px-2 py-0.5" style={{ fontSize: '11px', background: 'rgba(207,92,54,0.15)', color: '#CF5C36', border: '1px solid rgba(207,92,54,0.3)' }}>
+              {newCount} new
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1" style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '8px', padding: '3px' }}>
+          {(['all', 'new', 'archived'] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className="font-sans capitalize px-3 py-1 rounded-md transition-all duration-150"
+              style={{ fontSize: '12px', background: filter === f ? '#1e1e1e' : 'transparent', color: filter === f ? '#e8e8e8' : '#555' }}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-24 gap-3">
+          <div style={{ color: '#2a2a2a' }}>
+            <IconInbox />
+          </div>
+          <p className="font-sans" style={{ fontSize: '13px', color: '#333' }}>No inquiries here.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {filtered.map(q => (
+            <button
+              key={q.id}
+              onClick={() => openQuote(q)}
+              className="w-full text-left rounded-xl px-5 py-4 transition-all duration-150"
+              style={{ background: selected?.id === q.id ? '#161616' : '#0f0f0f', border: `1px solid ${selected?.id === q.id ? '#252525' : '#181818'}` }}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  {q.status === 'new' && (
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#CF5C36' }} />
+                  )}
+                  <span className="font-sans font-medium truncate" style={{ fontSize: '13px', color: '#e8e8e8' }}>{q.name}</span>
+                  <span className="font-sans truncate hidden sm:block" style={{ fontSize: '12px', color: '#444' }}>{q.email}</span>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="font-sans" style={{ fontSize: '11px', color: '#CF5C36' }}>{q.service}</span>
+                  <span className="font-sans" style={{ fontSize: '11px', color: '#333' }}>
+                    {new Date(q.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
+              </div>
+              {q.description && (
+                <p className="font-sans mt-1 truncate" style={{ fontSize: '12px', color: '#3a3a3a', paddingLeft: q.status === 'new' ? '18px' : '0' }}>
+                  {q.description}
+                </p>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Detail drawer */}
+      {selected && (
+        <div
+          className="fixed inset-0 z-40 flex justify-end"
+          style={{ background: 'rgba(0,0,0,0.6)' }}
+          onClick={e => { if (e.target === e.currentTarget) setSelected(null) }}
+        >
+          <div
+            className="h-full overflow-y-auto flex flex-col"
+            style={{ width: '100%', maxWidth: '480px', background: '#0a0a0a', borderLeft: '1px solid #181818' }}
+          >
+            {/* Drawer header */}
+            <div className="flex items-center justify-between px-6 py-4 sticky top-0" style={{ background: '#0a0a0a', borderBottom: '1px solid #141414' }}>
+              <div className="flex items-center gap-2">
+                <span className="font-sans font-medium" style={{ fontSize: '13px', color: '#e8e8e8' }}>{selected.name}</span>
+                <span
+                  className="font-sans rounded-full px-2 py-0.5 capitalize"
+                  style={{
+                    fontSize: '10px',
+                    background: selected.status === 'new' ? 'rgba(207,92,54,0.15)' : selected.status === 'archived' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.05)',
+                    color: selected.status === 'new' ? '#CF5C36' : '#444',
+                    border: `1px solid ${selected.status === 'new' ? 'rgba(207,92,54,0.3)' : '#1e1e1e'}`,
+                  }}
+                >
+                  {selected.status}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {selected.status !== 'archived' && (
+                  <button
+                    onClick={() => updateStatus(selected.id, 'archived')}
+                    className="font-sans px-3 py-1 rounded-md transition-opacity hover:opacity-60"
+                    style={{ fontSize: '11px', color: '#555', border: '1px solid #1e1e1e' }}
+                  >
+                    Archive
+                  </button>
+                )}
+                {selected.status === 'archived' && (
+                  <button
+                    onClick={() => updateStatus(selected.id, 'seen')}
+                    className="font-sans px-3 py-1 rounded-md transition-opacity hover:opacity-60"
+                    style={{ fontSize: '11px', color: '#555', border: '1px solid #1e1e1e' }}
+                  >
+                    Unarchive
+                  </button>
+                )}
+                <button
+                  onClick={() => deleteQuote(selected.id)}
+                  className="flex items-center justify-center rounded-md transition-opacity hover:opacity-60"
+                  style={{ width: '26px', height: '26px', color: '#555', border: '1px solid #1e1e1e' }}
+                >
+                  <IconClose />
+                </button>
+              </div>
+            </div>
+
+            {/* Drawer body */}
+            <div className="px-6 py-6 flex flex-col gap-6">
+              {/* Contact info */}
+              <div className="flex flex-col gap-3">
+                <p className="font-sans uppercase tracking-widest" style={{ fontSize: '10px', color: '#333', letterSpacing: '0.12em' }}>Contact</p>
+                {[
+                  ['Name', selected.name],
+                  ['Email', selected.email],
+                  ['Phone / Discord', selected.contact],
+                  ['Timezone', selected.timezone],
+                ].filter(([, v]) => v).map(([label, value]) => (
+                  <div key={label} className="flex gap-3">
+                    <span className="font-sans w-32 shrink-0" style={{ fontSize: '12px', color: '#444' }}>{label}</span>
+                    <span className="font-sans" style={{ fontSize: '12px', color: '#ccc' }}>{value}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ borderTop: '1px solid #141414' }} />
+
+              {/* Service details */}
+              <div className="flex flex-col gap-3">
+                <p className="font-sans uppercase tracking-widest" style={{ fontSize: '10px', color: '#333', letterSpacing: '0.12em' }}>Service</p>
+                {[
+                  ['Service', selected.service],
+                  ['Who', selected.motionWho],
+                  ['Video for', selected.videoFor ?? selected.saasVideoFor ?? selected.adFor],
+                  ['Track length', selected.trackLength],
+                  ['Style ref', selected.styleRef],
+                  ['Existing assets', selected.existingAssets],
+                  ['Platforms', selected.platforms],
+                  ['Script ready', selected.scriptReady],
+                  ['Brand kit', selected.brandKit],
+                  ['Pages', selected.pages],
+                  ['Content ready', selected.contentReady],
+                  ['Features', selected.features],
+                  ['Timeline', selected.webTimeline],
+                ].filter(([, v]) => v).map(([label, value]) => (
+                  <div key={label} className="flex gap-3">
+                    <span className="font-sans w-32 shrink-0" style={{ fontSize: '12px', color: '#444' }}>{label}</span>
+                    <span className="font-sans" style={{ fontSize: '12px', color: '#ccc' }}>{value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {selected.description && (
+                <>
+                  <div style={{ borderTop: '1px solid #141414' }} />
+                  <div className="flex flex-col gap-3">
+                    <p className="font-sans uppercase tracking-widest" style={{ fontSize: '10px', color: '#333', letterSpacing: '0.12em' }}>Description</p>
+                    <p className="font-sans leading-relaxed" style={{ fontSize: '12px', color: '#aaa' }}>{selected.description}</p>
+                  </div>
+                </>
+              )}
+
+              <div style={{ borderTop: '1px solid #141414' }} />
+              <p className="font-sans" style={{ fontSize: '11px', color: '#2a2a2a' }}>
+                Received {new Date(selected.timestamp).toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 function Dashboard() {
@@ -2666,6 +2924,7 @@ function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([])
   const [reviews, setReviews] = useState<Review[]>([])
   const [clients, setClients] = useState<ClientLog[]>([])
+  const [quotes, setQuotes] = useState<QuoteEntry[]>([])
   const [stats, setStats] = useState<StatsData>({ views: 2500000, artists: 17, slots: 2 })
   const [loading, setLoading] = useState(true)
   const [currency, setCurrency] = useState<DisplayCurrency>('USD')
@@ -2676,17 +2935,19 @@ function Dashboard() {
       fetch('/api/reviews', { cache: 'no-store' }).then(r => r.json()),
       fetch('/api/admin/clients', { cache: 'no-store' }).then(r => r.json()),
       fetch('/api/admin/stats', { cache: 'no-store' }).then(r => r.json()),
-    ]).then(([projectData, reviewData, clientData, statsData]) => {
+      fetch('/api/admin/quotes', { cache: 'no-store' }).then(r => r.json()),
+    ]).then(([projectData, reviewData, clientData, statsData, quoteData]) => {
       setProjects(Array.isArray(projectData) ? projectData : [])
       setReviews(Array.isArray(reviewData) ? reviewData : [])
       setClients(Array.isArray(clientData) ? clientData : [])
+      setQuotes(Array.isArray(quoteData) ? quoteData : [])
       if (statsData && typeof statsData === 'object') setStats(s => ({ ...s, ...statsData }))
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [])
 
   useEffect(() => {
-    const order: Section[] = ['overview', 'projects', 'recent', 'reviews', 'clients', 'finance', 'stats']
+    const order: Section[] = ['overview', 'projects', 'recent', 'reviews', 'clients', 'finance', 'stats', 'quotes']
     function onKey(e: KeyboardEvent) {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       const idx = parseInt(e.key) - 1
@@ -2721,6 +2982,8 @@ function Dashboard() {
           <ClientsSection clients={clients} setClients={setClients} />
         ) : section === 'stats' ? (
           <StatsAdminSection stats={stats} setStats={setStats} />
+        ) : section === 'quotes' ? (
+          <QuotesSection quotes={quotes} setQuotes={setQuotes} />
         ) : (
           <FinanceSection clients={clients} currency={currency} setCurrency={setCurrency} />
         )}
