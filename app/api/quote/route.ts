@@ -7,11 +7,12 @@ const QUOTES_FILE = join(process.cwd(), 'data', 'quotes.json')
 
 function saveQuote(entry: object) {
   try {
-    const existing = JSON.parse(readFileSync(QUOTES_FILE, 'utf-8'))
+    let existing: object[] = []
+    try { existing = JSON.parse(readFileSync(QUOTES_FILE, 'utf-8')) } catch {}
     existing.unshift(entry)
     writeFileSync(QUOTES_FILE, JSON.stringify(existing, null, 2))
-  } catch {
-    writeFileSync(QUOTES_FILE, JSON.stringify([entry], null, 2))
+  } catch (e) {
+    console.error('[saveQuote] write failed:', e)
   }
 }
 
