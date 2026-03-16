@@ -1456,16 +1456,17 @@ export default function WorkPage() {
   // Reset to page 0 when tab changes
   useEffect(() => { setPage(0) }, [activeTab])
 
-  // Show hotbar once tabs section scrolls out of view
+  // Show hotbar when scrolling down, hide when scrolling up
   useEffect(() => {
-    const el = tabsRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowHotbar(!entry.isIntersecting),
-      { threshold: 0, rootMargin: '0px' }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
+    let lastY = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y > lastY) setShowHotbar(true)
+      else setShowHotbar(false)
+      lastY = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   const filtered    = projects.filter(p => matchesTab(p.category, activeTab))
