@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
 const SYSTEM = `You are a helpful assistant for Kulaire, a premium motion graphics and web development studio. Answer questions about Kulaire's services concisely and honestly using the information below. If asked something outside this scope, politely redirect to contacting the team.
 
 GENERAL:
@@ -29,7 +27,8 @@ WEBSITES:
 Keep responses short, direct, and on-brand — no fluff. Never invent prices or timelines not listed above.`
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) {
     return NextResponse.json({ error: 'API key not configured' }, { status: 503 })
   }
 
@@ -39,6 +38,9 @@ export async function POST(req: NextRequest) {
     if (!Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: 'Invalid messages' }, { status: 400 })
     }
+
+    // Initialize client per-request so it always picks up the current env var
+    const client = new Anthropic({ apiKey })
 
     const stream = await client.messages.stream({
       model: 'claude-haiku-4-5-20251001',
@@ -62,8 +64,9 @@ export async function POST(req: NextRequest) {
     return new Response(readable, {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     })
-  } catch (err) {
-    console.error('[faq-chat]', err)
-    return NextResponse.json({ error: 'Failed to get response' }, { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('[faq-chat] error:', message)
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
