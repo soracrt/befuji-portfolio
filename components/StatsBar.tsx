@@ -85,7 +85,7 @@ export default function StatsBar() {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetch('/api/admin/stats', { cache: 'no-store' })
+    fetch('/api/stats', { cache: 'no-store' })
       .then(r => r.json())
       .then((data: Partial<StatsData>) => setStats(s => ({ ...s, ...data })))
       .catch(() => {})
