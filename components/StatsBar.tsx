@@ -61,11 +61,11 @@ function StatBlock({
   const count = useCountUp(target, 1400 + delay, started)
 
   return (
-    <div className="flex flex-col items-center text-center gap-2">
-      {/* Headline — small, muted */}
+    <div className="flex flex-col items-center text-center gap-4">
+      {/* Headline — white, bold, larger */}
       <span
-        className="font-display font-bold text-[10px] tracking-[0.18em] uppercase"
-        style={{ color: 'rgba(238,229,233,0.35)' }}
+        className="font-display font-bold text-lg tracking-[0.12em] uppercase"
+        style={{ color: '#FFFFFF' }}
       >
         {headline}
       </span>
@@ -83,10 +83,10 @@ function StatBlock({
         {formatNum(count)}{suffix}
       </span>
 
-      {/* Subtitle — small, muted */}
+      {/* Subtitle — muted, smaller */}
       <span
-        className="font-display font-bold text-[10px] tracking-[0.18em] uppercase"
-        style={{ color: 'rgba(238,229,233,0.35)' }}
+        className="font-display font-medium text-xs tracking-[0.14em] uppercase"
+        style={{ color: 'rgba(238,229,233,0.4)' }}
       >
         {subtitle}
       </span>
