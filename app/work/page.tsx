@@ -1217,6 +1217,55 @@ function ScaledIframe({ src, title }: { src: string; title: string }) {
   )
 }
 
+function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: string }; index: number; total: number }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      style={{ position: 'relative', marginLeft: index === 0 ? 0 : -8, zIndex: total - index, flexShrink: 0 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div
+        style={{
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          border: '2px solid #080808',
+          overflow: 'hidden',
+          background: '#1a1a1a',
+        }}
+      >
+        {c.avatar ? (
+          <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e1e1e' }}>
+            <span className="font-display font-bold" style={{ fontSize: 10, color: '#CF5C36' }}>
+              {c.name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )}
+      </div>
+      {/* Hover name */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 'calc(100% + 6px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.22s ease',
+        }}
+      >
+        <span className="font-sans text-xs" style={{ color: '#fff', fontWeight: 500, letterSpacing: '0.01em' }}>
+          {c.name}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function ContributorStack({ contributors }: { contributors: { name: string; avatar?: string }[] }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -1233,100 +1282,68 @@ function ContributorStack({ contributors }: { contributors: { name: string; avat
   }, [open])
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span className="font-sans text-xs tracking-[0.08em] uppercase" style={{ color: 'rgba(238,229,233,0.25)' }}>
-        Made by
-      </span>
-      <div ref={ref} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-        {/* Avatar stack */}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {visible.map((c, i) => (
-            <div
-              key={i}
-              title={c.name}
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                border: '2px solid #080808',
-                marginLeft: i === 0 ? 0 : -8,
-                zIndex: visible.length - i,
-                overflow: 'hidden',
-                background: '#1a1a1a',
-                flexShrink: 0,
-              }}
-            >
-              {c.avatar ? (
-                <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e1e1e' }}>
-                  <span className="font-display font-bold" style={{ fontSize: 10, color: '#CF5C36' }}>
-                    {c.name.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-              )}
+    <div ref={ref} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+      {visible.map((c, i) => (
+        <ContributorAvatar key={i} c={c} index={i} total={contributors.length} />
+      ))}
+
+      {/* Overflow button */}
+      {overflow.length > 0 && (
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: '50%',
+            border: '2px solid #080808',
+            marginLeft: -8,
+            zIndex: 0,
+            background: '#1e1e1e',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}
+        >
+          <span className="font-sans" style={{ fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>
+            +{overflow.length}
+          </span>
+        </button>
+      )}
+
+      {/* Overflow dropdown */}
+      {open && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 10px)',
+            left: 0,
+            background: '#0f0f0f',
+            border: '1px solid #1e1e1e',
+            borderRadius: 14,
+            padding: '8px 0',
+            minWidth: 180,
+            zIndex: 50,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+          }}
+        >
+          {contributors.map((c, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 14px' }}>
+              <div style={{ width: 26, height: 26, borderRadius: '50%', overflow: 'hidden', background: '#1a1a1a', flexShrink: 0 }}>
+                {c.avatar ? (
+                  <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span className="font-display font-bold" style={{ fontSize: 9, color: '#CF5C36' }}>{c.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                )}
+              </div>
+              <span className="font-sans text-xs" style={{ color: '#fff', letterSpacing: '0.01em' }}>{c.name}</span>
             </div>
           ))}
-
-          {/* Overflow pill */}
-          {overflow.length > 0 && (
-            <button
-              onClick={() => setOpen(o => !o)}
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                border: '2px solid #080808',
-                marginLeft: -8,
-                zIndex: 0,
-                background: '#1e1e1e',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                flexShrink: 0,
-              }}
-            >
-              <span className="font-sans" style={{ fontSize: 9, fontWeight: 700, color: 'rgba(238,229,233,0.6)', letterSpacing: '-0.02em' }}>
-                +{overflow.length}
-              </span>
-            </button>
-          )}
         </div>
-
-        {/* Dropdown */}
-        {open && overflow.length > 0 && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 'calc(100% + 10px)',
-              left: 0,
-              background: '#0f0f0f',
-              border: '1px solid #1e1e1e',
-              borderRadius: 14,
-              padding: '8px 0',
-              minWidth: 180,
-              zIndex: 50,
-              boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
-            }}
-          >
-            {contributors.map((c, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 14px' }}>
-                <div style={{ width: 26, height: 26, borderRadius: '50%', overflow: 'hidden', background: '#1a1a1a', flexShrink: 0 }}>
-                  {c.avatar ? (
-                    <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span className="font-display font-bold" style={{ fontSize: 9, color: '#CF5C36' }}>{c.name.charAt(0).toUpperCase()}</span>
-                    </div>
-                  )}
-                </div>
-                <span className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.7)', letterSpacing: '0.01em' }}>{c.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }
