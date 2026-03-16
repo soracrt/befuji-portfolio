@@ -20,8 +20,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'kulaire',
-  description: 'motion designed to move.',
+  title: 'Kulaire | Creative Studio',
+  description: 'Motion graphics, video editing, and web development for artists, brands, and businesses that want to stand out.',
   icons: {
     icon: '/icon.png',
     shortcut: '/icon.png',
