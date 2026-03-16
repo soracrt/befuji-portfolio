@@ -1645,6 +1645,39 @@ export default function WorkPage() {
         </div>
       </div>
 
+      {/* ── Reviews ── */}
+      {reviews.length > 0 && (
+        <div className="px-4 sm:px-8 py-12 sm:py-20">
+          <div className="max-w-5xl mx-auto">
+
+            <FadeIn>
+              <div className="mb-10">
+                <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
+                  What they say
+                </p>
+                <div className="flex items-center gap-5">
+                  <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+                    What my {activeTab === 'Website Development' ? 'web' : activeTab === 'Motion Graphics' ? 'motion graphics' : 'commercial'} clients say.
+                  </h2>
+                  <Link href="/reviews" className="font-sans text-sm shrink-0" style={{ color: '#CF5C36', letterSpacing: '0.01em' }}>
+                    See all →
+                  </Link>
+                </div>
+              </div>
+            </FadeIn>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+              {reviews.map((r, i) => (
+                <FadeIn key={r.id} delay={i * 50}>
+                  <WorkReviewCard review={r} />
+                </FadeIn>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      )}
+
       {/* ── Process timeline ── */}
       <ProcessTimeline tab={activeTab} />
 
@@ -1702,39 +1735,6 @@ export default function WorkPage() {
           get a quote →
         </Link>
       </div>
-
-      {/* ── Reviews ── */}
-      {reviews.length > 0 && (
-        <div className="px-4 sm:px-8 py-12 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-
-            <FadeIn>
-              <div className="mb-10">
-                <p className="font-sans text-xs tracking-[0.14em] uppercase mb-2" style={{ color: 'rgba(207,92,54,0.7)' }}>
-                  What they say
-                </p>
-                <div className="flex items-center gap-5">
-                  <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: '#EEE5E9', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                    What my {activeTab === 'Website Development' ? 'web' : activeTab === 'Motion Graphics' ? 'motion graphics' : 'commercial'} clients say.
-                  </h2>
-                  <Link href="/reviews" className="font-sans text-sm shrink-0" style={{ color: '#CF5C36', letterSpacing: '0.01em' }}>
-                    See all →
-                  </Link>
-                </div>
-              </div>
-            </FadeIn>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-              {reviews.map((r, i) => (
-                <FadeIn key={r.id} delay={i * 50}>
-                  <WorkReviewCard review={r} />
-                </FadeIn>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      )}
 
       {/* ── Floating category hotbar ── */}
       <div
