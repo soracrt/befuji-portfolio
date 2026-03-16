@@ -142,27 +142,19 @@ function FaqChatbot() {
         body: JSON.stringify({ messages: next }),
       })
 
-      if (!res.ok) throw new Error('Server error')
-      if (!res.body) throw new Error('No body')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Server error')
 
-      const reader = res.body.getReader()
-      const decoder = new TextDecoder()
-      let accumulated = ''
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        accumulated += decoder.decode(value, { stream: true })
-        setMessages(m => {
-          const copy = [...m]
-          copy[copy.length - 1] = { role: 'assistant', content: accumulated }
-          return copy
-        })
-      }
-    } catch {
       setMessages(m => {
         const copy = [...m]
-        copy[copy.length - 1] = { role: 'assistant', content: 'Something went wrong. Try again or reach out directly.' }
+        copy[copy.length - 1] = { role: 'assistant', content: data.text ?? '' }
+        return copy
+      })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong. Try again or reach out directly.'
+      setMessages(m => {
+        const copy = [...m]
+        copy[copy.length - 1] = { role: 'assistant', content: msg }
         return copy
       })
     } finally {

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 
 const SYSTEM = `You are a helpful assistant for Kulaire, a premium motion graphics and web development studio. Answer questions about Kulaire's services concisely and honestly using the information below. If asked something outside this scope, politely redirect to contacting the team.
 
@@ -39,34 +38,33 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid messages' }, { status: 400 })
     }
 
-    // Initialize client per-request so it always picks up the current env var
-    const client = new Anthropic({ apiKey })
-
-    const stream = await client.messages.stream({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 512,
-      system: SYSTEM,
-      messages,
-    })
-
-    const encoder = new TextEncoder()
-    const readable = new ReadableStream({
-      async start(controller) {
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-            controller.enqueue(encoder.encode(chunk.delta.text))
-          }
-        }
-        controller.close()
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
       },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 512,
+        system: SYSTEM,
+        messages,
+      }),
     })
 
-    return new Response(readable, {
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-    })
+    if (!res.ok) {
+      const err = await res.text()
+      console.error('[faq-chat] Anthropic error:', err)
+      return NextResponse.json({ error: err }, { status: 500 })
+    }
+
+    const data = await res.json()
+    const text: string = data.content?.[0]?.text ?? ''
+    return NextResponse.json({ text })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[faq-chat] error:', message)
+    console.error('[faq-chat]', message)
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
