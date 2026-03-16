@@ -2,6 +2,7 @@ import Hero from '@/components/Hero'
 import StatsBar from '@/components/StatsBar'
 import WhatIDo from '@/components/WhatIDo'
 import FeaturedWork from '@/components/FeaturedWork'
+import MiniFaq from '@/components/MiniFaq'
 import Footer from '@/components/Footer'
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <StatsBar />
       <WhatIDo />
       <FeaturedWork />
+      <MiniFaq />
       <Footer />
     </main>
   )
