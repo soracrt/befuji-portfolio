@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     canonical: 'https://kulaire.com',
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/icon.png',
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
   openGraph: {
     title: 'Kulaire | Motion & Web Studio',
