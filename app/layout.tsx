@@ -22,21 +22,27 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Kulaire — Built to be remembered.',
   description: 'An elite collective of editors and developers. High-impact motion for artists, performance ads for brands, and minimalist web for SaaS.',
+  metadataBase: new URL('https://kulaire.com'),
+  alternates: {
+    canonical: 'https://kulaire.com',
+  },
   icons: {
-    icon: '/icon.png',
-    shortcut: '/icon.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
     apple: '/icon.png',
   },
   openGraph: {
-    title: 'Kulaire — Built to be remembered.',
-    description: 'Elite motion graphics and minimalist web design studio.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    title: 'Kulaire | Motion & Web Studio',
+    description: 'Motion and Web designed to be remembered. Elite creative services for brands and creators.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Kulaire Motion Graphics Showcase' }],
     type: 'website',
+    url: 'https://kulaire.com',
+    siteName: 'Kulaire',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kulaire',
-    description: 'Motion and Web designed to be remembered.',
+    title: 'Kulaire | Motion & Web Studio',
+    description: 'Motion and Web designed to be remembered. Elite creative services for brands and creators.',
     images: ['/og-image.png'],
   },
 }
