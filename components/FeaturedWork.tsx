@@ -101,7 +101,7 @@ export default function FeaturedWork() {
   useEffect(() => {
     // Always fetch fresh — sessionStorage can hold stale isRecent values
     // if the admin toggled a project since the last visit.
-    fetch('/api/admin/projects', { cache: 'no-store' })
+    fetch('/api/projects', { cache: 'no-store' })
       .then(r => r.json())
       .then((data: Project[]) => {
         if (Array.isArray(data)) {

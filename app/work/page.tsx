@@ -1423,7 +1423,7 @@ export default function WorkPage() {
   const tabsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetch('/api/admin/projects')
+    fetch('/api/projects')
       .then(r => r.json())
       .then((data: Project[]) => { if (Array.isArray(data)) setProjects(data) })
       .catch(() => {})
