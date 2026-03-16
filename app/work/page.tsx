@@ -1180,6 +1180,42 @@ function BrowserChrome({ url, onClose, onToggleMax }: { url: string; onClose: ()
   )
 }
 
+function ScaledIframe({ src, title }: { src: string; title: string }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+  const REF_W = 1440
+
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const update = () => setScale(el.clientWidth / REF_W)
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    update()
+    return () => ro.disconnect()
+  }, [])
+
+  return (
+    <div ref={wrapRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+      <iframe
+        src={src}
+        title={title}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: REF_W,
+          height: `${100 / scale}%`,
+          border: 'none',
+          transformOrigin: 'top left',
+          transform: `scale(${scale})`,
+        }}
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+      />
+    </div>
+  )
+}
+
 function WebsiteCard({ project }: { project: Project }) {
   const [previewing, setPreviewing] = useState(false)
   const [maximized,  setMaximized]  = useState(false)
@@ -1222,12 +1258,7 @@ function WebsiteCard({ project }: { project: Project }) {
           onToggleMax={() => setMaximized(false)}
         />
         <div style={{ position: 'relative', flex: 1, overflow: 'hidden', borderRadius: '0 0 24px 24px' }}>
-          <iframe
-            src={absUrl}
-            title={project.title}
-            style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-          />
+          <ScaledIframe src={absUrl} title={project.title} />
         </div>
       </div>
     </div>,
@@ -1250,12 +1281,7 @@ function WebsiteCard({ project }: { project: Project }) {
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column' }}>
               <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(m => !m)} />
               <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
-                <iframe
-                  src={absUrl}
-                  title={project.title}
-                  style={{ position: 'absolute', top: 0, left: 0, width: 'calc(100% + 20px)', height: 'calc(100% + 20px)', border: 'none' }}
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                />
+                <ScaledIframe src={absUrl} title={project.title} />
               </div>
             </div>
           ) : (
