@@ -20,12 +20,24 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Kulaire | Creative Studio',
-  description: 'Motion graphics, video editing, and web development for artists, brands, and businesses that want to stand out.',
+  title: 'Kulaire — Built to be remembered.',
+  description: 'An elite collective of editors and developers. High-impact motion for artists, performance ads for brands, and minimalist web for SaaS.',
   icons: {
     icon: '/icon.png',
     shortcut: '/icon.png',
     apple: '/icon.png',
+  },
+  openGraph: {
+    title: 'Kulaire — Built to be remembered.',
+    description: 'Elite motion graphics and minimalist web design studio.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kulaire',
+    description: 'Motion and Web designed to be remembered.',
+    images: ['/og-image.png'],
   },
 }
 
