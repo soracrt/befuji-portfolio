@@ -977,7 +977,14 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
               {project.title}
             </p>
             {project.artistName && (
-              <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.artistName}</p>
+              <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>
+                by{' '}
+                {project.artistLink ? (
+                  <a href={project.artistLink} target="_blank" rel="noopener noreferrer" className="transition-colors duration-150 hover:text-[#EEE5E9]" style={{ color: 'rgba(238,229,233,0.35)' }}>{project.artistName}</a>
+                ) : (
+                  project.artistName
+                )}
+              </p>
             )}
             {project.editedBy && (
               <p className="font-sans text-xs mt-0.5" style={{ color: 'rgba(238,229,233,0.35)' }}>
@@ -1072,7 +1079,14 @@ function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpan
         {(project.artistName || project.monthlyListeners) && (
           <div className="flex items-center gap-2 flex-wrap">
             {project.artistName && (
-              <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.65)' }}>{project.artistName}</span>
+              <span className="font-sans text-sm font-medium" style={{ color: 'rgba(238,229,233,0.65)' }}>
+                by{' '}
+                {project.artistLink ? (
+                  <a href={project.artistLink} target="_blank" rel="noopener noreferrer" className="transition-colors duration-150 hover:text-[#EEE5E9]" style={{ color: 'rgba(238,229,233,0.65)' }}>{project.artistName}</a>
+                ) : (
+                  project.artistName
+                )}
+              </span>
             )}
             {project.artistName && project.monthlyListeners && (
               <span style={{ color: 'rgba(238,229,233,0.2)' }}>·</span>
