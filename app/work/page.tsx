@@ -1230,7 +1230,7 @@ function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: st
   const [hovered, setHovered] = useState(false)
   return (
     <div
-      style={{ position: 'relative', marginLeft: index === 0 ? 0 : -8, zIndex: total - index, flexShrink: 0 }}
+      style={{ position: 'relative', marginLeft: index === 0 ? 0 : -10, zIndex: total - index, flexShrink: 0 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -1303,11 +1303,13 @@ function ContributorStack({ contributors }: { contributors: { name: string; avat
         <button
           onClick={() => setOpen(o => !o)}
           style={{
-            width: 28,
-            height: 28,
+            width: 25,
+            height: 25,
             borderRadius: '50%',
-            border: '2px solid #080808',
-            marginLeft: -8,
+            border: '1.5px solid rgba(255,255,255,0.55)',
+            outline: '1.5px solid rgba(255,255,255,0.15)',
+            outlineOffset: '1.5px',
+            marginLeft: -10,
             zIndex: 0,
             background: '#1e1e1e',
             display: 'flex',
