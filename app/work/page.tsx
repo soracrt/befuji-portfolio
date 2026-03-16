@@ -1162,13 +1162,18 @@ function FeaturedVideoSection({ project, onExpand }: { project: Project; onExpan
 
 // ─── Website card ─────────────────────────────────────────────────────────────
 
-function BrowserChrome({ url, onClose, onToggleMax }: { url: string; onClose: () => void; onToggleMax: () => void }) {
+function BrowserChrome({ url, onClose, onToggleMax, contributors }: {
+  url: string
+  onClose: () => void
+  onToggleMax: () => void
+  contributors?: { name: string; avatar?: string }[]
+}) {
   return (
     <div
       className="flex items-center gap-2 px-3 shrink-0"
-      style={{ height: 33, background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}
+      style={{ height: 36, background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}
     >
-      <div className="flex gap-1">
+      <div className="flex gap-1 shrink-0">
         <button onClick={onClose}     className="w-2 h-2 rounded-full transition-opacity hover:opacity-80" style={{ background: '#FF5F57' }} />
         <span                         className="w-2 h-2 rounded-full"                                     style={{ background: '#FFBD2E' }} />
         <button onClick={onToggleMax} className="w-2 h-2 rounded-full transition-opacity hover:opacity-80" style={{ background: '#28C840' }} />
@@ -1176,7 +1181,11 @@ function BrowserChrome({ url, onClose, onToggleMax }: { url: string; onClose: ()
       <span className="font-sans truncate flex-1 text-center" style={{ fontSize: '11px', color: 'rgba(238,229,233,0.3)', letterSpacing: '0.02em' }}>
         {url.replace(/^https?:\/\//, '')}
       </span>
-      <div style={{ width: 36 }} />
+      <div style={{ minWidth: 36, display: 'flex', justifyContent: 'flex-end' }}>
+        {contributors && contributors.length > 0 && (
+          <ContributorStack contributors={contributors} />
+        )}
+      </div>
     </div>
   )
 }
@@ -1245,11 +1254,11 @@ function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: st
           </div>
         )}
       </div>
-      {/* Hover name */}
+      {/* Hover name — appears above */}
       <div
         style={{
           position: 'absolute',
-          top: 'calc(100% + 6px)',
+          bottom: 'calc(100% + 6px)',
           left: '50%',
           transform: 'translateX(-50%)',
           whiteSpace: 'nowrap',
@@ -1388,6 +1397,7 @@ function WebsiteCard({ project }: { project: Project }) {
           url={absUrl}
           onClose={() => { setMaximized(false); setPreviewing(false) }}
           onToggleMax={() => setMaximized(false)}
+          contributors={project.contributors}
         />
         <div style={{ position: 'relative', flex: 1, overflow: 'hidden', borderRadius: '0 0 24px 24px' }}>
           <ScaledIframe src={absUrl} title={project.title} />
@@ -1411,7 +1421,7 @@ function WebsiteCard({ project }: { project: Project }) {
           {previewing && absUrl ? (
             /* Absolute overlay fills the aspect-ratio card; chrome is 33px, iframe fills the rest */
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column' }}>
-              <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(m => !m)} />
+              <BrowserChrome url={absUrl} onClose={() => { setMaximized(false); setPreviewing(false) }} onToggleMax={() => setMaximized(m => !m)} contributors={project.contributors} />
               <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
                 <ScaledIframe src={absUrl} title={project.title} />
               </div>
@@ -1526,12 +1536,6 @@ function WebsiteCard({ project }: { project: Project }) {
           {/* Case study button hidden for now */}
         </div>
 
-        {/* Contributors */}
-        {project.contributors && project.contributors.length > 0 && (
-          <div className="mt-1">
-            <ContributorStack contributors={project.contributors} />
-          </div>
-        )}
       </div>
 
       </div>
