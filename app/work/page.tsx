@@ -1391,23 +1391,7 @@ function WebsiteCard({ project }: { project: Project }) {
             View website
           </a>
 
-          {project.caseStudyUrl && (
-            <a
-              href={project.caseStudyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-sans text-xs tracking-[0.08em] uppercase px-5 py-2.5 rounded-full transition-all duration-200"
-              style={{
-                background:   'transparent',
-                color:        'rgba(238,229,233,0.65)',
-                border:       '1px solid rgba(238,229,233,0.18)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#EEE5E9'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.35)' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(238,229,233,0.65)'; e.currentTarget.style.borderColor = 'rgba(238,229,233,0.18)' }}
-            >
-              Case study
-            </a>
-          )}
+          {/* Case study button hidden for now */}
         </div>
       </div>
 
