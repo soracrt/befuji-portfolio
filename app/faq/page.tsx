@@ -338,27 +338,7 @@ export default function FaqPage() {
             />
           </FadeIn>
 
-          {/* Chatbot */}
-          <FadeIn>
-            <div className="mt-24" style={{ borderTop: '1px solid #1a1a1a', paddingTop: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className="mb-8" style={{ maxWidth: 680, width: '100%' }}>
-                <h2
-                  className="font-display font-bold mb-2"
-                  style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}
-                >
-                  Still confused?
-                </h2>
-                <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.4)', lineHeight: 1.6 }}>
-                  Ask our assistant — or{' '}
-                  <Link href="/contact" style={{ color: '#CF5C36', textDecoration: 'none' }}>
-                    reach out directly
-                  </Link>
-                  .
-                </p>
-              </div>
-              <FaqChatbot />
-            </div>
-          </FadeIn>
+          {/* Chatbot — hidden until Anthropic billing is active */}
 
         </div>
       </div>
