@@ -47,11 +47,12 @@ function fmt(t: number) {
 }
 
 // paddingBottom: '56.25%' = 16:9, '100%' = 1:1
-function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false, autoUnmute = false }: {
+function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false, autoUnmute = false, hideFullscreen = false }: {
   src: string
   paddingBottom?: string
   priority?: boolean
   autoUnmute?: boolean
+  hideFullscreen?: boolean
 }) {
   const videoRef       = useRef<HTMLVideoElement>(null)
   const containerRef   = useRef<HTMLDivElement>(null)
@@ -231,9 +232,11 @@ function CustomVideoPlayer({ src, paddingBottom = '56.25%', priority = false, au
               </div>
             </div>
             <span className="ml-auto font-mono text-[11px] text-white/40 tabular-nums">{currentTime} / {duration}</span>
-            <button onClick={toggleFullscreen} className="text-white/70 hover:text-white transition-colors" aria-label="Fullscreen">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
-            </button>
+            {!hideFullscreen && (
+              <button onClick={toggleFullscreen} className="text-white/70 hover:text-white transition-colors" aria-label="Fullscreen">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -968,7 +971,7 @@ function ArtistModal({ project, onClose }: { project: Project; onClose: () => vo
         </button>
 
         {/* Video card */}
-        <CustomVideoPlayer src={project.video} paddingBottom="100%" priority autoUnmute />
+        <CustomVideoPlayer src={project.video} paddingBottom="100%" priority autoUnmute hideFullscreen />
 
         {/* Title + pill below video */}
         <div className="flex items-center justify-between gap-4 mt-4 px-1">
