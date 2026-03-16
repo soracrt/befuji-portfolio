@@ -1227,12 +1227,21 @@ function ScaledIframe({ src, title }: { src: string; title: string }) {
 }
 
 function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: string }; index: number; total: number }) {
-  const [hovered, setHovered] = useState(false)
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
+
+  function handleEnter() {
+    if (!ref.current) return
+    const r = ref.current.getBoundingClientRect()
+    setPos({ x: r.left + r.width / 2, y: r.top })
+  }
+
   return (
     <div
+      ref={ref}
       style={{ position: 'relative', marginLeft: index === 0 ? 0 : -10, zIndex: total - index, flexShrink: 0 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={handleEnter}
+      onMouseLeave={() => setPos(null)}
     >
       <div
         style={{
@@ -1243,6 +1252,7 @@ function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: st
           boxShadow: '0 0 0 3px rgba(255,255,255,0.15)',
           overflow: 'hidden',
           background: '#1a1a1a',
+          cursor: 'default',
         }}
       >
         {c.avatar ? (
@@ -1255,23 +1265,29 @@ function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: st
           </div>
         )}
       </div>
-      {/* Hover name — appears above */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 'calc(100% + 6px)',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          whiteSpace: 'nowrap',
-          pointerEvents: 'none',
-          opacity: hovered ? 1 : 0,
-          transition: 'opacity 0.22s ease',
-        }}
-      >
-        <span className="font-sans text-xs" style={{ color: '#fff', fontWeight: 500, letterSpacing: '0.01em' }}>
+
+      {/* Fixed tooltip — bypasses all overflow:hidden ancestors */}
+      {pos && typeof window !== 'undefined' && createPortal(
+        <span
+          className="font-sans text-xs"
+          style={{
+            position: 'fixed',
+            left: pos.x,
+            top: pos.y - 8,
+            transform: 'translate(-50%, -100%)',
+            color: '#fff',
+            fontWeight: 500,
+            letterSpacing: '0.01em',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 9999,
+            textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+          }}
+        >
           {c.name}
-        </span>
-      </div>
+        </span>,
+        document.body
+      )}
     </div>
   )
 }
