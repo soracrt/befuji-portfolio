@@ -18,6 +18,7 @@ type Project = {
   description?: string
   websiteUrl?: string
   caseStudyUrl?: string
+  contributors?: { name: string; avatar?: string }[]
   subcategory?: 'featured' | 'client' | 'personal'
   artistName?: string
   monthlyListeners?: number
@@ -1216,6 +1217,120 @@ function ScaledIframe({ src, title }: { src: string; title: string }) {
   )
 }
 
+function ContributorStack({ contributors }: { contributors: { name: string; avatar?: string }[] }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const visible = contributors.slice(0, 2)
+  const overflow = contributors.slice(2)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span className="font-sans text-xs tracking-[0.08em] uppercase" style={{ color: 'rgba(238,229,233,0.25)' }}>
+        Made by
+      </span>
+      <div ref={ref} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+        {/* Avatar stack */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {visible.map((c, i) => (
+            <div
+              key={i}
+              title={c.name}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                border: '2px solid #080808',
+                marginLeft: i === 0 ? 0 : -8,
+                zIndex: visible.length - i,
+                overflow: 'hidden',
+                background: '#1a1a1a',
+                flexShrink: 0,
+              }}
+            >
+              {c.avatar ? (
+                <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e1e1e' }}>
+                  <span className="font-display font-bold" style={{ fontSize: 10, color: '#CF5C36' }}>
+                    {c.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Overflow pill */}
+          {overflow.length > 0 && (
+            <button
+              onClick={() => setOpen(o => !o)}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                border: '2px solid #080808',
+                marginLeft: -8,
+                zIndex: 0,
+                background: '#1e1e1e',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                flexShrink: 0,
+              }}
+            >
+              <span className="font-sans" style={{ fontSize: 9, fontWeight: 700, color: 'rgba(238,229,233,0.6)', letterSpacing: '-0.02em' }}>
+                +{overflow.length}
+              </span>
+            </button>
+          )}
+        </div>
+
+        {/* Dropdown */}
+        {open && overflow.length > 0 && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 'calc(100% + 10px)',
+              left: 0,
+              background: '#0f0f0f',
+              border: '1px solid #1e1e1e',
+              borderRadius: 14,
+              padding: '8px 0',
+              minWidth: 180,
+              zIndex: 50,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+            }}
+          >
+            {contributors.map((c, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 14px' }}>
+                <div style={{ width: 26, height: 26, borderRadius: '50%', overflow: 'hidden', background: '#1a1a1a', flexShrink: 0 }}>
+                  {c.avatar ? (
+                    <img src={c.avatar} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span className="font-display font-bold" style={{ fontSize: 9, color: '#CF5C36' }}>{c.name.charAt(0).toUpperCase()}</span>
+                    </div>
+                  )}
+                </div>
+                <span className="font-sans text-xs" style={{ color: 'rgba(238,229,233,0.7)', letterSpacing: '0.01em' }}>{c.name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function WebsiteCard({ project }: { project: Project }) {
   const [previewing, setPreviewing] = useState(false)
   const [maximized,  setMaximized]  = useState(false)
@@ -1393,6 +1508,13 @@ function WebsiteCard({ project }: { project: Project }) {
 
           {/* Case study button hidden for now */}
         </div>
+
+        {/* Contributors */}
+        {project.contributors && project.contributors.length > 0 && (
+          <div className="mt-1">
+            <ContributorStack contributors={project.contributors} />
+          </div>
+        )}
       </div>
 
       </div>
