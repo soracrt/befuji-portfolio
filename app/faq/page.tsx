@@ -87,6 +87,33 @@ const CATEGORY_LABELS: Record<Category, string> = {
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
+const SUGGESTIONS = [
+  'How fast is turnaround?',
+  'What does a website cost?',
+  'Do you offer retainers?',
+]
+
+function TypingDots() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 2px' }}>
+      {[0, 1, 2].map(i => (
+        <span
+          key={i}
+          style={{
+            display: 'inline-block',
+            width: 5,
+            height: 5,
+            borderRadius: '50%',
+            background: '#CF5C36',
+            animation: 'chat-dot 1.2s ease-in-out infinite',
+            animationDelay: `${i * 0.18}s`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 function FaqChatbot() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -98,17 +125,15 @@ function FaqChatbot() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  async function send() {
-    const text = input.trim()
+  async function send(override?: string) {
+    const text = (override ?? input).trim()
     if (!text || streaming) return
     setInput('')
 
     const next: Message[] = [...messages, { role: 'user', content: text }]
     setMessages(next)
     setStreaming(true)
-
-    const placeholder: Message = { role: 'assistant', content: '' }
-    setMessages(m => [...m, placeholder])
+    setMessages(m => [...m, { role: 'assistant', content: '' }])
 
     try {
       const res = await fetch('/api/faq-chat', {
@@ -117,7 +142,9 @@ function FaqChatbot() {
         body: JSON.stringify({ messages: next }),
       })
 
+      if (!res.ok) throw new Error('Server error')
       if (!res.body) throw new Error('No body')
+
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let accumulated = ''
@@ -145,85 +172,110 @@ function FaqChatbot() {
   }
 
   function handleKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      send()
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
   }
+
+  const isEmpty = messages.length === 0
 
   return (
     <div
       style={{
-        background: '#0a0a0a',
-        border: '1px solid #1a1a1a',
-        borderRadius: 20,
+        background: '#080808',
+        border: '1px solid #1e1e1e',
+        borderRadius: 24,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        maxWidth: 680,
       }}
     >
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 18px', borderBottom: '1px solid #141414' }}>
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#CF5C36', display: 'inline-block', boxShadow: '0 0 8px rgba(207,92,54,0.6)' }} />
+        <span className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(238,229,233,0.3)' }}>
+          Kulaire Assistant
+        </span>
+      </div>
+
       {/* Messages */}
       <div
+        className="chat-scroll"
         style={{
-          minHeight: 240,
-          maxHeight: 380,
+          minHeight: 220,
+          maxHeight: 360,
           overflowY: 'auto',
-          padding: '20px 20px 8px',
+          padding: '18px 18px 10px',
           display: 'flex',
           flexDirection: 'column',
-          gap: 12,
+          gap: 10,
         }}
-        className="hide-scrollbar"
       >
-        {messages.length === 0 && (
-          <p className="font-sans text-sm" style={{ color: 'rgba(238,229,233,0.2)', textAlign: 'center', margin: 'auto' }}>
-            Ask anything about services, pricing, or timelines.
-          </p>
+        {isEmpty && (
+          <div style={{ margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <p className="font-sans text-xs tracking-[0.06em]" style={{ color: 'rgba(238,229,233,0.18)', textAlign: 'center' }}>
+              Ask anything about services, pricing, or timelines.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+              {SUGGESTIONS.map(s => (
+                <button
+                  key={s}
+                  onClick={() => send(s)}
+                  className="font-sans text-xs"
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: 999,
+                    border: '1px solid #1e1e1e',
+                    background: '#0f0f0f',
+                    color: 'rgba(238,229,233,0.45)',
+                    cursor: 'pointer',
+                    letterSpacing: '0.02em',
+                    transition: 'border-color 0.2s, color 0.2s',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(207,92,54,0.4)'; (e.currentTarget as HTMLButtonElement).style.color = '#EEE5E9' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#1e1e1e'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(238,229,233,0.45)' }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
+
         {messages.map((m, i) => (
-          <div
-            key={i}
-            style={{
-              display: 'flex',
-              justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
-            }}
-          >
+          <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
             <div
               className="font-sans text-sm leading-relaxed"
               style={{
-                maxWidth: '80%',
-                padding: '10px 14px',
-                borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                background: m.role === 'user' ? '#CF5C36' : '#141414',
-                color: m.role === 'user' ? '#fff' : 'rgba(238,229,233,0.8)',
+                maxWidth: '78%',
+                padding: '9px 14px',
+                borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                background: m.role === 'user' ? '#CF5C36' : '#111',
+                color: m.role === 'user' ? '#fff' : 'rgba(238,229,233,0.75)',
                 border: m.role === 'assistant' ? '1px solid #1a1a1a' : 'none',
                 whiteSpace: 'pre-wrap',
               }}
             >
-              {m.content}
-              {m.role === 'assistant' && m.content === '' && streaming && (
-                <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#CF5C36', animation: 'pulse 1s ease-in-out infinite', verticalAlign: 'middle' }} />
-              )}
+              {m.role === 'assistant' && m.content === '' && streaming
+                ? <TypingDots />
+                : m.content
+              }
             </div>
           </div>
         ))}
         <div ref={bottomRef} />
       </div>
 
-      {/* Divider */}
-      <div style={{ height: 1, background: '#1a1a1a' }} />
-
       {/* Input */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, padding: '12px 14px' }}>
+      <div style={{ borderTop: '1px solid #141414', display: 'flex', alignItems: 'flex-end', gap: 10, padding: '10px 14px 12px' }}>
         <textarea
           ref={inputRef}
           rows={1}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Type your question..."
+          placeholder="Ask a question..."
           disabled={streaming}
-          className="font-sans text-sm hide-scrollbar"
+          className="font-sans text-sm chat-scroll"
           style={{
             flex: 1,
             background: 'transparent',
@@ -231,30 +283,31 @@ function FaqChatbot() {
             outline: 'none',
             resize: 'none',
             color: '#EEE5E9',
-            lineHeight: 1.5,
-            maxHeight: 100,
+            lineHeight: 1.6,
+            maxHeight: 96,
             overflowY: 'auto',
+            caretColor: '#CF5C36',
           }}
         />
         <button
-          onClick={send}
+          onClick={() => send()}
           disabled={!input.trim() || streaming}
           style={{
-            width: 34,
-            height: 34,
+            width: 32,
+            height: 32,
             borderRadius: '50%',
-            background: input.trim() && !streaming ? '#CF5C36' : '#1a1a1a',
-            border: 'none',
+            background: input.trim() && !streaming ? '#CF5C36' : '#161616',
+            border: '1px solid ' + (input.trim() && !streaming ? '#CF5C36' : '#1e1e1e'),
             cursor: input.trim() && !streaming ? 'pointer' : 'default',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            transition: 'background 0.2s ease',
+            transition: 'background 0.2s ease, border-color 0.2s ease',
           }}
           aria-label="Send"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
           </svg>
         </button>

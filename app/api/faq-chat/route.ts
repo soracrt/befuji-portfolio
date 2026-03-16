@@ -29,6 +29,10 @@ WEBSITES:
 Keep responses short, direct, and on-brand — no fluff. Never invent prices or timelines not listed above.`
 
 export async function POST(req: NextRequest) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: 'API key not configured' }, { status: 503 })
+  }
+
   try {
     const { messages } = await req.json()
 
