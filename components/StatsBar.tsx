@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 type StatsData = { views: number; artists: number; totalMonthlyListeners: number }
 
 const BLOCKS: { key: keyof StatsData; label: string }[] = [
-  { key: 'artists',               label: "Artists We've Worked With" },
+  { key: 'artists',               label: "Artists Worked With" },
   { key: 'views',                 label: 'Total Views'               },
   { key: 'totalMonthlyListeners', label: 'Monthly Listeners'         },
 ]
@@ -57,7 +57,7 @@ function StatBlock({
     <div className="flex flex-col gap-3 items-center text-center">
       {/* Label — Inter bold, full white */}
       <span
-        className="font-display font-bold text-[11px] tracking-[0.22em] uppercase"
+        className="font-display font-bold text-[11px] tracking-[0.14em] uppercase whitespace-nowrap"
         style={{ color: '#EEE5E9' }}
       >
         {label}
