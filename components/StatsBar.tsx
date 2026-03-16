@@ -57,7 +57,7 @@ function StatBlock({
     <div className="flex flex-col gap-3 items-center text-center">
       {/* Label — Inter bold, full white */}
       <span
-        className="font-display font-bold text-[11px] tracking-[0.14em] uppercase whitespace-nowrap"
+        className="font-display font-bold text-[11px] tracking-[0.14em] uppercase"
         style={{ color: '#EEE5E9' }}
       >
         {label}
