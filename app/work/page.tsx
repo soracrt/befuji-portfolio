@@ -840,7 +840,8 @@ function ConveyorReel({ projects, onSelect }: { projects: Project[]; onSelect: (
     return () => ro.disconnect()
   }, [])
 
-  useEffect(() => { setPage(0) }, [projects])
+  const projectIds = projects.map(p => p.id).join(',')
+  useEffect(() => { setPage(0) }, [projectIds])
 
   const total      = projects.length
   const totalPages = Math.ceil(total / 3)
