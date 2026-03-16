@@ -1236,10 +1236,12 @@ function ContributorAvatar({ c, index, total }: { c: { name: string; avatar?: st
     >
       <div
         style={{
-          width: 28,
-          height: 28,
+          width: 25,
+          height: 25,
           borderRadius: '50%',
-          border: '2px solid #080808',
+          border: '1.5px solid rgba(255,255,255,0.55)',
+          outline: '1.5px solid rgba(255,255,255,0.15)',
+          outlineOffset: '1.5px',
           overflow: 'hidden',
           background: '#1a1a1a',
         }}
