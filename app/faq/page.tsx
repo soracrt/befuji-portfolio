@@ -118,6 +118,7 @@ function FaqChatbot() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [streaming, setStreaming] = useState(false)
+  const [remaining, setRemaining] = useState(15)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -127,12 +128,13 @@ function FaqChatbot() {
 
   async function send(override?: string) {
     const text = (override ?? input).trim()
-    if (!text || streaming) return
+    if (!text || streaming || remaining <= 0) return
     setInput('')
 
     const next: Message[] = [...messages, { role: 'user', content: text }]
     setMessages(next)
     setStreaming(true)
+    setRemaining(r => Math.max(0, r - 1))
     setMessages(m => [...m, { role: 'assistant', content: '' }])
 
     try {
@@ -189,6 +191,9 @@ function FaqChatbot() {
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#CF5C36', display: 'inline-block', boxShadow: '0 0 8px rgba(207,92,54,0.6)' }} />
         <span className="font-sans text-xs tracking-[0.1em] uppercase" style={{ color: 'rgba(238,229,233,0.3)' }}>
           Kulaire Assistant
+        </span>
+        <span className="font-sans text-xs ml-auto" style={{ color: remaining <= 5 ? 'rgba(207,92,54,0.7)' : 'rgba(238,229,233,0.2)', letterSpacing: '0.02em' }}>
+          {remaining} / 15
         </span>
       </div>
 
@@ -269,7 +274,7 @@ function FaqChatbot() {
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKey}
           placeholder="Ask a question..."
-          disabled={streaming}
+          disabled={streaming || remaining <= 0}
           className="font-sans text-sm chat-scroll"
           style={{
             flex: 1,
@@ -286,14 +291,14 @@ function FaqChatbot() {
         />
         <button
           onClick={() => send()}
-          disabled={!input.trim() || streaming}
+          disabled={!input.trim() || streaming || remaining <= 0}
           style={{
             width: 32,
             height: 32,
             borderRadius: '50%',
-            background: input.trim() && !streaming ? '#CF5C36' : '#161616',
-            border: '1px solid ' + (input.trim() && !streaming ? '#CF5C36' : '#1e1e1e'),
-            cursor: input.trim() && !streaming ? 'pointer' : 'default',
+            background: input.trim() && !streaming && remaining > 0 ? '#CF5C36' : '#161616',
+            border: '1px solid ' + (input.trim() && !streaming && remaining > 0 ? '#CF5C36' : '#1e1e1e'),
+            cursor: input.trim() && !streaming && remaining > 0 ? 'pointer' : 'default',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
