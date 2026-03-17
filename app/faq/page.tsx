@@ -143,6 +143,7 @@ function FaqChatbot() {
       })
 
       const data = await res.json()
+      if (res.status === 429) throw new Error(data.error)
       if (!res.ok) throw new Error(data.error ?? 'Server error')
 
       setMessages(m => {

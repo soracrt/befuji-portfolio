@@ -1,5 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// ─── Rate limiter — 15 messages per IP per hour ───────────────────────────────
+const rateMap = new Map<string, { count: number; resetAt: number }>()
+const LIMIT = 15
+const WINDOW = 60 * 60 * 1000 // 1 hour
+
+function checkRate(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateMap.get(ip)
+  if (!entry || now > entry.resetAt) {
+    rateMap.set(ip, { count: 1, resetAt: now + WINDOW })
+    return true
+  }
+  if (entry.count >= LIMIT) return false
+  entry.count++
+  return true
+}
+
 const SYSTEM = `You are a helpful assistant for Kulaire, a premium motion graphics and web development studio. Answer questions about Kulaire's services concisely and honestly using the information below. If asked something outside this scope, politely redirect to contacting the team.
 
 GENERAL:
@@ -26,6 +43,11 @@ WEBSITES:
 Keep responses short, direct, and on-brand — no fluff. Never invent prices or timelines not listed above.`
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+  if (!checkRate(ip)) {
+    return NextResponse.json({ error: 'Too many messages. Try again in an hour.' }, { status: 429 })
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
     return NextResponse.json({ error: 'API key not configured' }, { status: 503 })
