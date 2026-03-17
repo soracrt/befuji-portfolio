@@ -181,8 +181,6 @@ function FaqChatbot() {
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: 680,
-        margin: '0 auto',
         width: '100%',
       }}
     >
@@ -350,8 +348,8 @@ export default function FaqPage() {
 
           {/* Chatbot */}
           <FadeIn>
-            <div className="mt-24" style={{ borderTop: '1px solid #1a1a1a', paddingTop: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className="mb-8" style={{ maxWidth: 680, width: '100%' }}>
+            <div className="mt-24" style={{ borderTop: '1px solid #1a1a1a', paddingTop: '4rem' }}>
+              <div className="mb-8">
                 <h2
                   className="font-display font-bold mb-2"
                   style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#EEE5E9', letterSpacing: '-0.04em', lineHeight: 0.95 }}
