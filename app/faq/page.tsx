@@ -319,6 +319,10 @@ function FaqChatbot() {
 export default function FaqPage() {
   const [active, setActive] = useState<Category>('General')
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <main>
       <div className="pt-32 pb-24 px-8">
