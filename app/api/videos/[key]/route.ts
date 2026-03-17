@@ -17,6 +17,11 @@ export async function GET(
   { params }: { params: { key: string } }
 ) {
   const key = params.key
+
+  // Block path traversal — only allow plain video filenames
+  if (!/^[\w\-]+\.(mp4|mov|webm)$/i.test(key)) {
+    return new Response('Not found', { status: 404 })
+  }
   const range = req.headers.get('range') ?? undefined
 
   try {

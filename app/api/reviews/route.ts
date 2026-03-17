@@ -4,6 +4,11 @@ import fs from 'fs/promises'
 import path from 'path'
 import { Resend } from 'resend'
 
+function requireAdmin(req: Request): boolean {
+  const key = req.headers.get('x-admin-key')
+  return !!key && key === process.env.ADMIN_PASSWORD
+}
+
 export const dynamic = 'force-dynamic'
 
 const s3 = new S3Client({
@@ -115,7 +120,7 @@ export async function POST(req: Request) {
       text: String(text).slice(0, 400),
       featured: false,
       category: category ? String(category) : 'commercial',
-      approved: body.approved === true,
+      approved: false,
       createdAt: new Date().toISOString().slice(0, 10),
     }
     const reviews = await readReviews()
@@ -130,6 +135,7 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  if (!requireAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const { id, ...updates } = await req.json()
     const reviews = await readReviews() as { id: string }[]
@@ -146,6 +152,7 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  if (!requireAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const { id } = await req.json()
     const reviews = await readReviews() as { id: string }[]
@@ -159,6 +166,7 @@ export async function DELETE(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  if (!requireAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const { order } = await req.json()
     if (!Array.isArray(order)) return NextResponse.json({ error: 'Invalid order' }, { status: 400 })

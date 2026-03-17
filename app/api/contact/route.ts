@@ -1,7 +1,21 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-export async function POST(req: Request) {
+const rateMap = new Map<string, { count: number; resetAt: number }>()
+function checkRate(ip: string) {
+  const now = Date.now(), entry = rateMap.get(ip)
+  if (!entry || now > entry.resetAt) { rateMap.set(ip, { count: 1, resetAt: now + 3_600_000 }); return true }
+  if (entry.count >= 5) return false
+  entry.count++; return true
+}
+function esc(s: unknown) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+  if (!checkRate(ip)) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+
   try {
     const { name, email, purpose, description } = await req.json()
     if (!name || !email) {
@@ -18,10 +32,10 @@ export async function POST(req: Request) {
         to,
         subject: `New contact from ${name}`,
         html: `
-          <p><strong>${name}</strong> · <a href="mailto:${email}">${email}</a></p>
-          <p style="color:#666;margin:4px 0">${purpose || '—'}</p>
+          <p><strong>${esc(name)}</strong> · <a href="mailto:${esc(email)}">${esc(email)}</a></p>
+          <p style="color:#666;margin:4px 0">${esc(purpose) || '—'}</p>
           <blockquote style="border-left:3px solid #CF5C36;margin:12px 0;padding:0 12px;color:#333">
-            ${description || '—'}
+            ${esc(description) || '—'}
           </blockquote>
         `,
       })

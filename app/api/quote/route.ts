@@ -1,6 +1,17 @@
 import { Resend } from 'resend'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
+
+const rateMap = new Map<string, { count: number; resetAt: number }>()
+function checkRate(ip: string) {
+  const now = Date.now(), entry = rateMap.get(ip)
+  if (!entry || now > entry.resetAt) { rateMap.set(ip, { count: 1, resetAt: now + 3_600_000 }); return true }
+  if (entry.count >= 5) return false
+  entry.count++; return true
+}
+function esc(s: unknown) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
 
 const s3 = new S3Client({
   region: 'auto',
@@ -40,8 +51,8 @@ function row(label: string, value: string | undefined) {
   if (!value) return ''
   return `
     <tr>
-      <td style="padding:7px 0;color:#888;width:44%;vertical-align:top;font-size:13px">${label}</td>
-      <td style="padding:7px 0;font-weight:500;font-size:13px;color:#111">${value}</td>
+      <td style="padding:7px 0;color:#888;width:44%;vertical-align:top;font-size:13px">${esc(label)}</td>
+      <td style="padding:7px 0;font-weight:500;font-size:13px;color:#111">${esc(value)}</td>
     </tr>`
 }
 
@@ -55,7 +66,9 @@ function section(title: string, content: string) {
     ${content}`
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+  if (!checkRate(ip)) return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   try {
     const body = await req.json()
     const {
@@ -97,7 +110,7 @@ export async function POST(req: Request) {
       ? section('Project description', `
           <tr>
             <td colspan="2" style="padding:8px 0 4px;font-size:13px;color:#333;line-height:1.7">
-              ${String(description).replace(/\n/g, '<br/>')}
+              ${esc(description).replace(/\n/g, '<br/>')}
             </td>
           </tr>`)
       : ''
