@@ -27,7 +27,7 @@ export default function Hero() {
             textShadow: '0 0 12px rgba(238,229,233,0.4), 0 0 28px rgba(238,229,233,0.15)',
           }}
         >
-          Limited spots left in March
+          Limited spots left in April
         </span>
       </div>
 
